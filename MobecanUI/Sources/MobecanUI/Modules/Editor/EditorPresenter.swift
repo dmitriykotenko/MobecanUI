@@ -57,36 +57,37 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
     Interactor.OutputValue == OutputValue,
     Interactor.SomeError == SomeError {
     
-    interactor.initialValue
-      .bind(to: _initialValue)
-      .disposed(by: disposeBag)
-    
-    let validValue = _value.asObservable().filterSuccess()
-    
-    let save = _saveButtonTap.withLatestFrom(validValue).share(replay: 1, scope: .forever)
-    
-    save.bind(to: interactor.save).disposed(by: disposeBag)
-    
-    save.map { _ in true }.bind(to: _isSaving).disposed(by: disposeBag)
-
-    let savingFailed = interactor.valueSaved.filterFailure().share()
+      interactor.initialValue
+        .bind(to: _initialValue)
+        .disposed(by: disposeBag)
       
-    // After value is successfully saved, the module must be immediately closed,
-    // so we don't need to send `.success` to view controller.
-    savingFailed
-      .map { _ in false }
-      .bind(to: _isSaving).disposed(by: disposeBag)
-
-    savingFailed.flatMap { [weak self] error -> Observable<SomeError?> in
-        Observable.concat(
-          .just(error),
-          // Hide error message after value has been changed by user.
-          self?._value.skip(1).take(1).map { _ in nil } ?? .never()
-          // FIXME: should we use .doNotDisturbMode instead of resetting error?
-        )
-      }
-      .map { [errorFormatter] error in error.flatMap(errorFormatter) }
-      .bind(to: _errorText)
-      .disposed(by: disposeBag)
+      let validValue = _value.asObservable().filterSuccess()
+      
+      let save = _saveButtonTap.withLatestFrom(validValue).share(replay: 1, scope: .forever)
+      
+      save.bind(to: interactor.save).disposed(by: disposeBag)
+      
+      save.map { _ in true }.bind(to: _isSaving).disposed(by: disposeBag)
+      
+      let savingFailed = interactor.valueSaved.filterFailure().share()
+      
+      // After value is successfully saved, the module must be immediately closed,
+      // so we don't need to send `.success` to view controller.
+      savingFailed
+        .map { _ in false }
+        .bind(to: _isSaving).disposed(by: disposeBag)
+      
+      savingFailed
+        .flatMap { [weak self] error -> Observable<SomeError?> in
+          Observable.concat(
+            .just(error),
+            // Hide error message after value has been changed by user.
+            self?._value.skip(1).take(1).map { _ in nil } ?? .never()
+            // FIXME: should we use .doNotDisturbMode instead of resetting error?
+          )
+        }
+        .map { [errorFormatter] error in error.flatMap(errorFormatter) }
+        .bind(to: _errorText)
+        .disposed(by: disposeBag)
   }
 }

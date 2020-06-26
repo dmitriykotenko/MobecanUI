@@ -32,7 +32,10 @@ open class ListInteractor<Query, Element, ElementEvent, SomeError: Error>: ListI
 
    public init<Loader: ListLoader>(loader: Loader,
                                    eventHandler: @escaping (ElementEvent) -> Bool)
-    where Loader.Query == Query, Loader.Element == Element, Loader.SomeError == SomeError {
+    where
+    Loader.Query == Query,
+    Loader.Element == Element,
+    Loader.SomeError == SomeError {
       
       self.loader = { loader.load($0) }
       self.eventHandler = eventHandler
