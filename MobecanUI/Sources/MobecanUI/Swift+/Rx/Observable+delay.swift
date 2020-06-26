@@ -1,0 +1,31 @@
+//  Copyright © 2020 Mobecan. All rights reserved.
+
+import RxCocoa
+import RxSwift
+import SwiftDateTime
+
+
+public extension ObservableType {
+  
+  func delay(_ dueTime: Duration,
+             scheduler: SchedulerType) -> Observable<Element> {
+    return delay(dueTime.toRxTimeInterval, scheduler: scheduler)
+  }
+}
+
+
+public extension PrimitiveSequence {
+  
+  func delay(_ dueTime: Duration,
+             scheduler: SchedulerType) -> PrimitiveSequence<Trait, Element> {
+      return delay(dueTime.toRxTimeInterval, scheduler: scheduler)
+  }
+}
+
+
+public extension SharedSequenceConvertibleType {
+  
+  func delay(_ dueTime: Duration) -> SharedSequence<SharingStrategy, Element> {
+    return delay(dueTime.toRxTimeInterval)
+  }
+}
