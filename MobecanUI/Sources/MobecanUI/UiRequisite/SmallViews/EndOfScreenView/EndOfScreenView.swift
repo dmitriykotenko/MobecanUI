@@ -30,7 +30,7 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
 
   public var value: AnyObserver<Button.Value?> { button.value }
 
-  @RxDriverOutput(0) var height: Driver<CGFloat>
+  @RxDriverOutput(0) public var height: Driver<CGFloat>
   public var buttonTap: Observable<Button.Action> { button.tap }
 
   public let contentView: UIView
