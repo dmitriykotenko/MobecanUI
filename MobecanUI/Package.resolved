@@ -1,0 +1,133 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Kingfisher",
+        "repositoryURL": "https://github.com/onevcat/Kingfisher",
+        "state": {
+          "branch": null,
+          "revision": "910d808ade2a576e1a292ceb458a6fa43f67f594",
+          "version": "5.14.0"
+        }
+      },
+      {
+        "package": "Logger",
+        "repositoryURL": "https://github.com/f-meloni/Logger",
+        "state": {
+          "branch": null,
+          "revision": "53c3ecca5abe8cf46697e33901ee774236d94cce",
+          "version": "0.2.3"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "2b1809051b4a65c1d7f5233331daa24572cd7fca",
+          "version": "8.1.1"
+        }
+      },
+      {
+        "package": "PackageConfig",
+        "repositoryURL": "https://github.com/shibapm/PackageConfig.git",
+        "state": {
+          "branch": null,
+          "revision": "bf90dc69fa0792894b08a0b74cf34029694ae486",
+          "version": "0.13.0"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "09b3becb37cb2163919a3842a4c5fa6ec7130792",
+          "version": "2.2.1"
+        }
+      },
+      {
+        "package": "Rocket",
+        "repositoryURL": "https://github.com/shibapm/Rocket",
+        "state": {
+          "branch": null,
+          "revision": "f75c9736733b489a3456b4f3a47cf13adb99f197",
+          "version": "0.9.2"
+        }
+      },
+      {
+        "package": "RxGesture",
+        "repositoryURL": "https://github.com/RxSwiftCommunity/RxGesture",
+        "state": {
+          "branch": null,
+          "revision": "867f176b6695829e350fafc00b5a849bb46a1857",
+          "version": "3.0.3"
+        }
+      },
+      {
+        "package": "RxKeyboard",
+        "repositoryURL": "https://github.com/RxSwiftCommunity/RxKeyboard",
+        "state": {
+          "branch": null,
+          "revision": "ed5940a7e29c3a4b4925b2d76260f793d311d58e",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "RxOptional",
+        "repositoryURL": "https://github.com/RxSwiftCommunity/RxOptional",
+        "state": {
+          "branch": null,
+          "revision": "98a1895918e9ba9735a15207dd9c7120e9f51843",
+          "version": "4.1.0"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
+        "state": {
+          "branch": null,
+          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
+          "version": "5.1.1"
+        }
+      },
+      {
+        "package": "SnapKit",
+        "repositoryURL": "https://github.com/SnapKit/SnapKit",
+        "state": {
+          "branch": null,
+          "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
+          "version": "5.0.1"
+        }
+      },
+      {
+        "package": "SwiftDateTime",
+        "repositoryURL": "https://github.com/dmitriykotenko/SwiftDateTime",
+        "state": {
+          "branch": null,
+          "revision": "6a6565d8175112f2389987537d029b183c18be03",
+          "version": "0.1.2"
+        }
+      },
+      {
+        "package": "SwiftShell",
+        "repositoryURL": "https://github.com/kareman/SwiftShell",
+        "state": {
+          "branch": null,
+          "revision": "beebe43c986d89ea5359ac3adcb42dac94e5e08a",
+          "version": "4.1.2"
+        }
+      },
+      {
+        "package": "Yams",
+        "repositoryURL": "https://github.com/jpsim/Yams",
+        "state": {
+          "branch": null,
+          "revision": "c947a306d2e80ecb2c0859047b35c73b8e1ca27f",
+          "version": "2.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
