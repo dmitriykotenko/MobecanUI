@@ -91,6 +91,10 @@ public extension UIView {
     return self
   }
   
+  func border(_ border: Border) -> Self {
+    return borderColor(border.color).borderWidth(border.width)
+  }
+  
   func fitToContent(axis: [NSLayoutConstraint.Axis]) -> Self {
     axis.forEach {
       setContentHuggingPriority(.required, for: $0)

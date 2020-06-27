@@ -5,18 +5,15 @@ import UIKit
 
 public extension UIView {
   
-  // TODO: Border struct
   static func strikedOut(_ contentView: UIView,
-                         lineWidth: CGFloat,
-                         lineColor: UIColor) -> UIView {
-    
+                         border: Border) -> UIView {
     let topLine = UIView
-      .spacer(height: lineWidth)
-      .backgroundColor(lineColor)
+      .spacer(height: border.width)
+      .backgroundColor(border.color)
       
     return .zstack([
-      .top(topLine),
-      contentView
+      contentView,
+      ClickThroughView.top(topLine)
     ])
   }
 }
