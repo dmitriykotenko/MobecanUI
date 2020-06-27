@@ -40,16 +40,12 @@ public class NavigationPresenter: NavigationPresenterProtocol {
       .disposed(by: disposeBag)
     
     _backButtonTap
-      .withLatestFrom(_viewControllers)
-      .filter { $0.count > 1 }
-      .mapToVoid()
+      .filterWith(_viewControllers.map { $0.count > 1 })
       .bind(to: interactor.pop)
       .disposed(by: disposeBag)
     
     _backButtonTap
-      .withLatestFrom(_viewControllers)
-      .filter { $0.count <= 1 }
-      .mapToVoid()
+      .filterWith(_viewControllers.map { $0.count <= 1 })
       .bind(to: interactor.userWantsToCloseNavigationController)
       .disposed(by: disposeBag)
   }

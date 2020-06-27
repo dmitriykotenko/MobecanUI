@@ -32,7 +32,6 @@ public class RxOutput<Element>: ObserverType {
       fatalError("Binding error to RxOutput: \(error)")
     case .completed:
       fatalError("Binding .completed to RxOutput.")
-//      break
     }
   }
 }
