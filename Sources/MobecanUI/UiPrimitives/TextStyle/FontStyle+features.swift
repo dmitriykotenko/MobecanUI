@@ -14,4 +14,9 @@ public extension FontStyle {
     .featureIdentifier: kNumberCaseType,
     .typeIdentifier: kLowerCaseNumbersSelector
   ]
+  
+  static let smallCaps: FontFeature = [
+    .featureIdentifier: kLetterCaseType,
+    .typeIdentifier: kSmallCapsSelector
+  ]
 }
