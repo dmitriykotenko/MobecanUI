@@ -8,10 +8,8 @@ import RxCocoa
 
 public class TabButton: UIButton {
   
-  public var tintColors: [(state: UIControl.State, color: UIColor)] = [] {
-    didSet {
-      updateColors()
-    }
+  public var colorsByState: [ButtonColorsState] = [] {
+    didSet { updateColors() }
   }
   
   override open var isEnabled: Bool { didSet { updateColors() } }
@@ -43,31 +41,57 @@ public class TabButton: UIButton {
 
     placeTitleBelowImage(spacing: spacing)
 
-    tintColors = [
-      (.normal, .black),
-      (.highlighted, .red),
-      (.selected, .blue),
-      ([.selected, .highlighted], UIColor.blue.withBrightnessMultiplied(by: 0.8))
+    colorsByState = [
+      .normal(title: .black, tint: .black),
+      .highlighted(title: .red, tint: .red),
+      .selected(title: .blue, tint: .blue),
+      .init(
+        state: [.selected, .highlighted],
+        colors: .init(
+          title: UIColor.blue.withBrightnessMultiplied(by: 0.8),
+          tint: UIColor.blue.withBrightnessMultiplied(by: 0.8)
+        )
+      )
     ]
     
     updateColors()
   }
   
   private func updateColors() {
-    updateTitleTintColors()
-    updateImageTintColor()
+    updateTitleColor()
+    updateTintColor()
+    updateBackgroundColor()
+    updateShadowColor()
   }
   
-  private func updateTitleTintColors() {
-    tintColors.forEach { state, color in
-      setTitleColor(color, for: state)
+  private func updateTitleColor() {
+    colorsByState.forEach {
+      setTitleColor($0.colors.title, for: $0.state)
     }
   }
   
-  private func updateImageTintColor() {
-    tintColors
+  private func updateTintColor() {
+    let newTintColor = colorsByState
       .first { $0.state == state }
-      .map { self.tintColor = $0.color }
+      .map { $0.colors.tint }
+    
+    newTintColor.map { self.tintColor = $0 }
+  }
+  
+  private func updateBackgroundColor() {
+    let newBackgroundColor = colorsByState
+      .first { $0.state == state }
+      .map { $0.colors.background }
+    
+    newBackgroundColor.map { self.backgroundColor = $0 }
+  }
+  
+  private func updateShadowColor() {
+    let newShadowColor = colorsByState
+      .first { $0.state == state }
+      .map { $0.colors.shadow }
+    
+    newShadowColor.map { self.layer.shadowColor = $0?.cgColor }
   }
 
   override open var frame: CGRect { didSet { placeTitleBelowImage() } }

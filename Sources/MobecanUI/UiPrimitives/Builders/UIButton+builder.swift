@@ -137,3 +137,12 @@ public extension DiverseButton {
     return self
   }
 }
+
+
+public extension TabButton {
+  
+  func colors(_ colors: [ButtonColorsState]) -> Self {
+    self.colorsByState = colors
+    return self
+  }
+}
