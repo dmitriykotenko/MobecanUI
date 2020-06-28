@@ -9,14 +9,14 @@ import UIKit
 open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataView {
   
   public typealias ViewEvent = Tap<Value>
-
+  
   public struct IconAndTexts: Equatable {
-    public let iconUrl: URL?
+    public let icon: Image?
     public let texts: Labels.Texts
     
-    public init(iconUrl: URL?,
+    public init(icon: Image?,
                 texts: Labels.Texts) {
-      self.iconUrl = iconUrl
+      self.icon = icon
       self.texts = texts
     }
   }
@@ -24,14 +24,12 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   @RxUiInput(nil) public var value: AnyObserver<Value?>
 
   public var viewEvents: Observable<Tap<Value>> {
-    privateTap.withLatestFrom(_value.filterNil()).map { Tap($0) }
+    rx.tapGesture().when(.recognized)
+      .withLatestFrom(_value.filterNil())
+      .map { Tap($0) }
   }
-  
-  private lazy var privateTap = rx.tapGesture().when(.recognized).share()
 
-  private let iconView: UIImageView
-  private let iconPlaceholder: UIImage?
-
+  private let iconContainer: ImageViewContainer
   private let labels: Labels
   private let backgroundView: UIView
 
@@ -39,27 +37,12 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
-  public override init(frame: CGRect) {
-    self.iconView = UIImageView()
-    self.iconPlaceholder = nil
-    self.labels = .empty
-    self.backgroundView = UIView()
-    
-    super.init(frame: .zero)
-    
-    addSubviews(spacing: 0, insets: .zero)
-    bindToInputs()
-    highlightOnTaps(disposeBag: disposeBag)
-  }
-  
-  public init(iconView: UIImageView,
-              iconPlaceholder: UIImage? = nil,
+  public init(iconContainer: ImageViewContainer,
               labels: Labels,
               backgroundView: UIView,
               spacing: CGFloat,
               insets: UIEdgeInsets) {
-    self.iconView = iconView
-    self.iconPlaceholder = iconPlaceholder
+    self.iconContainer = iconContainer
     self.labels = labels
     self.backgroundView = backgroundView
     
@@ -76,13 +59,16 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
       .zstack([
         backgroundView,
         .hstack(
-          alignment: .top,
+          alignment: .fill,
           spacing: spacing,
-          [iconView, labels.view()],
+          [iconContainer.containerView, labels.view()],
           insets: insets
         )
       ])
     )
+
+    /// Align image to labels if necessary.
+    iconContainer.alignImage(inside: self)
   }
   
   private func bindToInputs() {
@@ -98,12 +84,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   }
   
   private func displayValue(iconAndTexts: IconAndTexts?) {
-    if let iconUrl = iconAndTexts?.iconUrl {
-      iconView.kf.setImage(with: iconUrl, placeholder: iconPlaceholder)
-    } else {
-      iconView.image = iconPlaceholder
-    }
-    
+    iconContainer.display(image: iconAndTexts?.icon)
     (iconAndTexts?.texts).map { labels.display(texts: $0) }
   }
  
@@ -111,4 +92,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   open func formatValue(_ value: Value?) -> Observable<IconAndTexts?> {
     return .just(nil)
   }
+  
+  open override var forFirstBaselineLayout: UIView { labels.firstBaselineLabel }
+  open override var forLastBaselineLayout: UIView { labels.lastBaselineLabel }
 }

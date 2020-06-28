@@ -10,6 +10,8 @@ public protocol LabelsGrid {
   static var empty: Self { get }
   
   func view() -> UIView
-  
   func display(texts: Texts)
+    
+  var firstBaselineLabel: UIView { get }
+  var lastBaselineLabel: UIView { get }
 }

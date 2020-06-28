@@ -3,7 +3,7 @@
 import UIKit
 
 
-public struct ThreeLinesLabelsGrid: LabelsGrid {
+public struct FourLinesLabelsGrid: LabelsGrid {
   
   public struct Spacing {
     
@@ -18,48 +18,55 @@ public struct ThreeLinesLabelsGrid: LabelsGrid {
     
     public static let zero = Spacing(vertical: 0, horizontal: 0)
   }
-
+  
   public struct Texts: Equatable {
-    public let top: String?
-    public let topRight: String?
-    public let middle: String?
-    public let bottom: String?
+    let top: String?
+    let topRight: String?
+    let firstMiddle: String?
+    let secondMiddle: String?
+    let bottom: String?
     
     public init(top: String?,
                 topRight: String?,
-                middle: String?,
+                firstMiddle: String?,
+                secondMiddle: String?,
                 bottom: String?) {
       self.top = top
       self.topRight = topRight
-      self.middle = middle
+      self.firstMiddle = firstMiddle
+      self.secondMiddle = secondMiddle
       self.bottom = bottom
     }
   }
 
-   let topLabel: UILabel
-   let topRightLabel: UILabel
-   let middleLabel: UILabel
-   let bottomLabel: UILabel
+  let topLabel: UILabel
+  let topRightLabel: UILabel
+  let firstMiddleLabel: UILabel
+  let secondMiddleLabel: UILabel
+  let bottomLabel: UILabel
   
   private let spacing: Spacing
   
   public init(topLabel: UILabel,
               topRightLabel: UILabel,
-              middleLabel: UILabel,
+              firstMiddleLabel: UILabel,
+              secondMiddleLabel: UILabel,
               bottomLabel: UILabel,
               spacing: Spacing) {
     self.topLabel = topLabel
     self.topRightLabel = topRightLabel
-    self.middleLabel = middleLabel
+    self.firstMiddleLabel = firstMiddleLabel
+    self.secondMiddleLabel = secondMiddleLabel
     self.bottomLabel = bottomLabel
     
     self.spacing = spacing
   }
-  
-  public static var empty = ThreeLinesLabelsGrid(
+
+  public static var empty = FourLinesLabelsGrid(
     topLabel: UILabel(),
     topRightLabel: UILabel(),
-    middleLabel: UILabel(),
+    firstMiddleLabel: UILabel(),
+    secondMiddleLabel: UILabel(),
     bottomLabel: UILabel(),
     spacing: .zero
   )
@@ -72,11 +79,12 @@ public struct ThreeLinesLabelsGrid: LabelsGrid {
       [
         .hstack(
           alignment: .firstBaseline,
-          distribution: .fill,
+          distribution: .equalSpacing,
           spacing: spacing.horizontal,
           [topLabel, topRightLabel]
         ),
-        middleLabel,
+        firstMiddleLabel,
+        secondMiddleLabel,
         bottomLabel
       ]
     )
@@ -85,7 +93,11 @@ public struct ThreeLinesLabelsGrid: LabelsGrid {
   public func display(texts: Texts) {
     topLabel.text = texts.top
     topRightLabel.text = texts.topRight
-    middleLabel.text = texts.middle
+    firstMiddleLabel.text = texts.firstMiddle
+    secondMiddleLabel.text = texts.secondMiddle
     bottomLabel.text = texts.bottom
   }
+  
+  public var firstBaselineLabel: UIView { topLabel }
+  public var lastBaselineLabel: UIView { bottomLabel }
 }

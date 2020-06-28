@@ -54,7 +54,7 @@ public class CheckmarkView: UIView {
     
     switch verticalInset {
     case nil:
-      return .centered(axis: [.vertical], stack)
+      return .centeredVertically(stack)
     case let inset?:
       return .zstack([stack], insets: .vertical(inset))
     }

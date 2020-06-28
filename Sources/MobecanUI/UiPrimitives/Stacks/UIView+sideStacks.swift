@@ -7,74 +7,106 @@ import UIKit
 
 public extension UIView {
 
-  static func top(_ subview: UIView, inset: CGFloat = 0) -> Self {
+  static func top(_ subview: UIView,
+                  inset: CGFloat = 0,
+                  priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
-      $0.top.equalToSuperview().inset(inset)
+      $0.top.equalToSuperview().inset(inset).priority(priority)
       $0.leading.trailing.equalToSuperview()
     }
     
     return superview
   }
   
-  static func bottom(_ subview: UIView, inset: CGFloat = 0) -> Self {
+  static func bottom(_ subview: UIView,
+                     inset: CGFloat = 0,
+                     priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
-      $0.bottom.equalToSuperview().inset(inset)
+      $0.bottom.equalToSuperview().inset(inset).priority(priority)
       $0.leading.trailing.equalToSuperview()
     }
     
     return superview
   }
   
-  static func leading(_ subview: UIView, inset: CGFloat = 0) -> Self {
+  static func leading(_ subview: UIView,
+                      inset: CGFloat = 0,
+                      priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
       $0.top.bottom.equalToSuperview()
-      $0.leading.equalToSuperview().inset(inset)
+      $0.leading.equalToSuperview().inset(inset).priority(priority)
     }
     
     return superview
   }
   
-  static func trailing(_ subview: UIView, inset: CGFloat = 0) -> Self {
+  static func trailing(_ subview: UIView,
+                       inset: CGFloat = 0,
+                       priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
       $0.top.bottom.equalToSuperview()
-      $0.trailing.equalToSuperview().inset(inset)
+      $0.trailing.equalToSuperview().inset(inset).priority(priority)
     }
     
     return superview
   }
 
-  static func centered(axis: [NSLayoutConstraint.Axis] = [.horizontal, .vertical],
-                       _ subview: UIView) -> Self {
+  static func centeredHorizontally(_ subview: UIView,
+                                   offset: CGFloat = 0,
+                                   priority: ConstraintPriority = .required) -> Self {
+    let superview = Self()
+    
+    superview.addSubview(subview)
+    
+    subview.snp.makeConstraints {
+      $0.centerX.equalToSuperview().offset(offset).priority(priority)
+      $0.top.bottom.equalToSuperview()
+    }
+    
+    return superview
+  }
+
+  static func centeredVertically(_ subview: UIView,
+                                 offset: CGFloat = 0,
+                                 priority: ConstraintPriority = .required) -> Self {
+    let superview = Self()
+    
+    superview.addSubview(subview)
+    
+    subview.snp.makeConstraints {
+      $0.leading.trailing.equalToSuperview()
+      $0.centerY.equalToSuperview().offset(offset).priority(priority)
+    }
+    
+    return superview
+  }
+
+  static func centered(_ subview: UIView,
+                       offset: CGSize = .zero,
+                       priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
     superview.addSubview(subview)
 
-    if axis.contains(.horizontal) {
-      subview.snp.makeConstraints { $0.centerX.equalToSuperview() }
-    } else {
-      subview.snp.makeConstraints { $0.leading.trailing.equalToSuperview() }
-    }
-
-    if axis.contains(.vertical) {
-      subview.snp.makeConstraints { $0.centerY.equalToSuperview() }
-    } else {
-      subview.snp.makeConstraints { $0.top.bottom.equalToSuperview() }
+    subview.snp.makeConstraints {
+      $0.centerX.equalToSuperview().offset(offset.width).priority(priority)
+      $0.centerY.equalToSuperview().offset(offset.height).priority(priority)
     }
 
     return superview
@@ -82,14 +114,15 @@ public extension UIView {
   
   static func topLeading(_ subview: UIView,
                          topInset: CGFloat = 0,
-                         leadingInset: CGFloat = 0) -> Self {
+                         leadingInset: CGFloat = 0,
+                         priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
     
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
-      $0.top.equalToSuperview().inset(topInset)
-      $0.leading.equalToSuperview().inset(leadingInset)
+      $0.top.equalToSuperview().inset(topInset).priority(priority)
+      $0.leading.equalToSuperview().inset(leadingInset).priority(priority)
     }
     
     return superview
@@ -97,14 +130,15 @@ public extension UIView {
 
   static func topTrailing(_ subview: UIView,
                           topInset: CGFloat = 0,
-                          trailingInset: CGFloat = 0) -> Self {
+                          trailingInset: CGFloat = 0,
+                          priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
-      $0.top.equalToSuperview().inset(topInset)
-      $0.trailing.equalToSuperview().inset(trailingInset)
+      $0.top.equalToSuperview().inset(topInset).priority(priority)
+      $0.trailing.equalToSuperview().inset(trailingInset).priority(priority)
     }
     
     return superview
