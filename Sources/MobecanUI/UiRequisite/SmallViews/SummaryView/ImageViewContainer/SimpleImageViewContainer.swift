@@ -20,7 +20,7 @@ public extension ImageViewContainer {
 open class SimpleImageViewContainer: ImageViewContainer {
   
   public enum VerticalPlacement {
-    case center(CGFloat)
+    case center
     case top(CGFloat)
     case bottom(CGFloat)
     case firstBaseline(CGFloat)
@@ -45,16 +45,16 @@ open class SimpleImageViewContainer: ImageViewContainer {
   }
   
   private static func containerView(_ imageView: UIImageView,
-                                    verticalPlacement: VerticalPlacement) -> ClickThroughView {
+                                    verticalPlacement: VerticalPlacement) -> UIView {
     switch verticalPlacement {
     case .top(let offset):
-      return .top(imageView, inset: offset)
+      return .vstack([imageView, .stretchableSpacer()], insets: .top(offset))
     case .bottom(let offset):
-      return .bottom(imageView, inset: offset)
-    case .center(let offset):
-      return .centeredVertically(imageView, offset: offset)
-    case .firstBaseline(let offset):
-      return .top(imageView, inset: offset, priority: .minimum)
+      return .vstack([.stretchableSpacer(), imageView], insets: .bottom(offset))
+    case .center:
+      return .centeredVertically(imageView)
+    case .firstBaseline:
+      return .vstack([.stretchableSpacer(), imageView, .stretchableSpacer()])
     }
   }
   

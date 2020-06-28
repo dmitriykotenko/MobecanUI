@@ -30,9 +30,9 @@ final class SummaryViewTests: XCTestCase {
   func testCenterImagePlacement() {
     check(
       imageView: UIImageView().size(imageSize),
-      placement: .center(2),
+      placement: .center,
       summaryViewSize: .init(width: 320, height: imageSize.height + 50),
-      expectedImageViewFrame: .init(origin: .init(x: 0, y: 27), size: imageSize)
+      expectedImageViewFrame: .init(origin: .init(x: 0, y: 25), size: imageSize)
     )
   }
   
