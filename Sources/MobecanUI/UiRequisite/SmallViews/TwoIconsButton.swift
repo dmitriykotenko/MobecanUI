@@ -80,7 +80,7 @@ public class TwoIconsButton: UIView {
   }
   
   private func addSubviews(spacing: CGFloat) {
-    addSingleSubview(
+    putSubview(
       .hstack(distribution: .fill, spacing: spacing, [
         leadingIconView,
         titleLabel,

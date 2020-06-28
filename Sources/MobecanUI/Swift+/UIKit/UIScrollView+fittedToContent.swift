@@ -17,7 +17,7 @@ public extension UIScrollView {
     
     let contentSize = content.frame.inset(by: insets).size
     
-    addSingleSubview(content, insets: insets)
+    putSubview(content, insets: insets)
     
     switch axis {
     case .horizontal:

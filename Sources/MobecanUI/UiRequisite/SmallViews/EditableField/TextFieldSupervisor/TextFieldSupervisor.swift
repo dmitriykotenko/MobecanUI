@@ -43,7 +43,7 @@ public class TextFieldSupervisor<Value>: UIControl, UITextFieldDelegate {
     
     super.init(frame: .zero)
     
-    addSingleSubview(textField)
+    putSubview(textField)
     setupTextField()
     setupOutput()
     

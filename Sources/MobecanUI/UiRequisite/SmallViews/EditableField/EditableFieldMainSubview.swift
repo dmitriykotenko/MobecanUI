@@ -34,7 +34,7 @@ public class EditableFieldVerticalLayout: EditableFieldLayout {
   }
   
   open func mainSubview(_ subviews: EditableFieldSubviews) -> UIView {
-    let editorContainer: UIView = .zstack(padding: valueEditorInsets, [subviews.valueEditor])
+    let editorContainer: UIView = .zstack([subviews.valueEditor], insets: valueEditorInsets)
     
     return .vstack(
       alignment: .fill,

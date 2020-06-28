@@ -68,7 +68,7 @@ private class ErrorContainer: UIView {
   }
   
   private func addSubviews() {
-    addSingleSubview(
+    putSubview(
       .zstack([
         .veryFlexibleContainer(errorLabel),
         containerView

@@ -73,7 +73,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
       scrollView: initScrollView
     )
     
-    view.addSingleSubview(scrollableView)
+    view.putSubview(scrollableView)
   }
   
   public func setPresenter<Presenter: EditorPresenterProtocol>(_ presenter: Presenter)

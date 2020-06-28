@@ -38,7 +38,7 @@ public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareVie
     // Set transparent background.
     backgroundView = UIView()
     
-    let mainSubview = UIView.zstack(padding: labelInsets, [label])
+    let mainSubview = UIView.zstack([label], insets: labelInsets)
     
     contentView.addSubview(mainSubview)
     

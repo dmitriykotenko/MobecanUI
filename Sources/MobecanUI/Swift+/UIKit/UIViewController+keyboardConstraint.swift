@@ -11,7 +11,7 @@ import UIKit
 public extension UIViewController {
 
   func pinBottomEdgeToKeyboard(subview: UIView,
-                               padding: CGFloat,
+                               spacing: CGFloat,
                                disposeBag: DisposeBag) {
     
     var bottomConstraint: Constraint?
@@ -21,7 +21,7 @@ public extension UIViewController {
       
       bottomConstraint = $0.bottom
         .equalToSuperview()
-        .inset(padding)
+        .inset(spacing)
         .priority(.high)
         .constraint
     }
@@ -33,7 +33,7 @@ public extension UIViewController {
           delay: 0,
           options: .curveEaseInOut,
           animations: {
-            bottomConstraint?.update(inset: keyboardHeight + padding)
+            bottomConstraint?.update(inset: keyboardHeight + spacing)
             self?.view.layoutIfNeeded()
         },
           completion: nil

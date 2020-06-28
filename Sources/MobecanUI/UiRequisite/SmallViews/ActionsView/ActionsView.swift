@@ -35,7 +35,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
   }
 
   private let contentView: ContentView
-  private let contentViewPadding: UIEdgeInsets
+  private let contentViewInsets: UIEdgeInsets
 
   private let errorDisplayer: ActionsViewErrorDisplayer<ContentView>
   private let checkboxer: ActionsViewCheckboxer<ContentView>
@@ -46,12 +46,12 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init(contentView: ContentView,
-              padding: UIEdgeInsets = .zero,
+              insets: UIEdgeInsets = .zero,
               errorDisplayer: ActionsViewErrorDisplayer<ContentView>,
               checkboxer: ActionsViewCheckboxer<ContentView>,
               swiper: ActionsViewSwiper<ContentView>) {
     self.contentView = contentView
-    self.contentViewPadding = padding
+    self.contentViewInsets = insets
     
     self.errorDisplayer = errorDisplayer
     self.checkboxer = checkboxer
@@ -65,7 +65,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
   private func addSubviews() {
     let checkboxIngredient = checkboxer.setup(
       contentView: contentView,
-      containerView: .zstack(padding: contentViewPadding, [contentView])
+      containerView: .zstack([contentView], insets: contentViewInsets)
     )
     
     let errorIngredient = errorDisplayer.setup(
@@ -78,7 +78,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
       containerView: errorIngredient.containerView
     )
     
-    addSingleSubview(swiperIngredient.containerView)
+    putSubview(swiperIngredient.containerView)
     
     Observable
       .merge(

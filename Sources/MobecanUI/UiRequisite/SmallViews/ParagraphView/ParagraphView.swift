@@ -27,7 +27,7 @@ open class ParagraphView<Value>: UIView {
   
     super.init(frame: .zero)
     
-    addSingleSubview(
+    putSubview(
       .vstack(spacing: spacing, [titleLabel, content.bodyView])
     )
     

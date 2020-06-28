@@ -40,7 +40,7 @@ public class PuckButton: UIControl {
   }
   
   private func addSubviews() {
-    addSingleSubview(
+    putSubview(
       .zstack(
         [backgroundView, iconView]
       )

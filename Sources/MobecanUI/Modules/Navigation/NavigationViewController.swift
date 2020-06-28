@@ -28,7 +28,7 @@ open class NavigationViewController: UIViewController {
   private func buildInterface() {
     worker.willMove(toParent: self)
     
-    view.addSingleSubview(worker.view)
+    view.putSubview(worker.view)
     
     addChild(worker)
   }

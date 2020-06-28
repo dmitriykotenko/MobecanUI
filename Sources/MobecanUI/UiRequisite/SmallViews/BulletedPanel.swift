@@ -39,13 +39,13 @@ public class BulletedPanel: UIView {
   private func addSubviews(alignment: IconTextAlignment,
                            spacing: CGFloat,
                            insets: UIEdgeInsets) {
-    addSingleSubview(
+    putSubview(
       UIView.hstack(
         alignment: alignment,
-        padding: insets,
         spacing: spacing,
         icon: icon,
-        label: label
+        label: label,
+        insets: insets
       )      
     )
   }

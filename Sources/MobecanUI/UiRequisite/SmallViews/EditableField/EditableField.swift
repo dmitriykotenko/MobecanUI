@@ -86,7 +86,7 @@ public class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UI
   
   private func addSubviews(subviews: EditableFieldSubviews,
                            layout: EditableFieldLayout) {
-    addSingleSubview(
+    putSubview(
       layout.mainSubview(subviews)
     )
   }

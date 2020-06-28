@@ -48,7 +48,7 @@ public class EditableFieldBackground: UIView {
   }
   
   private func addSubviews() {
-    addSingleSubview(.zstack(allBackgrounds))
+    putSubview(.zstack(allBackgrounds))
   }
   
   private func setupVisibleSubview() {

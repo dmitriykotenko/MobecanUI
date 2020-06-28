@@ -19,16 +19,16 @@ public class CheckmarkView: UIView {
   public init(selectedView: UIView,
               notSelectedView: UIView,
               isSelected: Bool = false,
-              horizontalPadding: CGFloat,
-              verticalPadding: CGFloat? = nil) {
+              horizontalInset: CGFloat,
+              verticalInset: CGFloat? = nil) {
     self.selectedView = selectedView
     self.notSelectedView = notSelectedView
     
     super.init(frame: .zero)
 
     addSubviews(
-      horizontalPadding: horizontalPadding,
-      verticalPadding: verticalPadding
+      horizontalInset: horizontalInset,
+      verticalInset: verticalInset
     )
     
     _setIsSelected
@@ -41,22 +41,22 @@ public class CheckmarkView: UIView {
     setIsSelected.onNext(isSelected)
   }
   
-  private func addSubviews(horizontalPadding: CGFloat,
-                           verticalPadding: CGFloat?) {
-    addSingleSubview(
-      mainSubview(verticalPadding: verticalPadding),
-      insets: .horizontal(horizontalPadding)
+  private func addSubviews(horizontalInset: CGFloat,
+                           verticalInset: CGFloat?) {
+    putSubview(
+      mainSubview(verticalInset: verticalInset),
+      insets: .horizontal(horizontalInset)
     )
   }
 
-  private func mainSubview(verticalPadding: CGFloat?) -> UIView {
+  private func mainSubview(verticalInset: CGFloat?) -> UIView {
     let stack = UIView.zstack([notSelectedView, selectedView])
     
-    switch verticalPadding {
+    switch verticalInset {
     case nil:
       return .centered(axis: [.vertical], stack)
-    case let padding?:
-      return .zstack(padding: .vertical(padding), [stack])
+    case let inset?:
+      return .zstack([stack], insets: .vertical(inset))
     }
   }
 }

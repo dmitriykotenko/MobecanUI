@@ -81,7 +81,7 @@ open class RadioButton<Element: Equatable>: UIView {
     // TODO: Investigate why .isLayoutMarginsRelativeArrangement breaks the layout
     horizontalStack.isLayoutMarginsRelativeArrangement = false
 
-    addSingleSubview(horizontalStack, insets: insets)
+    putSubview(horizontalStack, insets: insets)
   }
     
 

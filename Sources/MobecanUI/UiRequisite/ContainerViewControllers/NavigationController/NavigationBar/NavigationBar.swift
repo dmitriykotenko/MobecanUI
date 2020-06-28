@@ -139,7 +139,7 @@ public class NavigationBar: ClickThroughView {
     view.subviews.forEach { $0.removeFromSuperview() }
 
     blurStyle.map {
-      view.addSingleSubview(.blur(style: $0))
+      view.putSubview(.blur(style: $0))
     }
   }
 

@@ -35,7 +35,7 @@ public class SwitchView: UIView {
   }
   
   private func addSubviews(spacing: CGFloat) {
-    addSingleSubview(
+    putSubview(
       .hstack(
         alignment: .center,
         spacing: spacing,

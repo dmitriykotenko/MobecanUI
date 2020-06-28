@@ -58,12 +58,12 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
     self.respectSafeArea = respectSafeArea
     
     self.contentView = UIView.vstack(
-      padding: insets,
       spacing: spacing,
       [hintLabel] +
       subviews.additionalViews +
       [errorLabel] +
-      [button]
+      [button],
+      insets: insets
     )
     
     super.init(frame: .zero)
@@ -74,7 +74,7 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
   }
   
   private func addSubviews() {
-    addSingleSubview(
+    putSubview(
       respectSafeArea ? .safeAreaZstack([contentView]) : contentView
     )
   }

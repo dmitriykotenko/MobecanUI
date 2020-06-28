@@ -44,7 +44,7 @@ public class IllustrationView: UIView {
     
     super.init(frame: .zero)
     
-    addSingleSubview(
+    putSubview(
       .vstack(
         alignment: .center,
         [

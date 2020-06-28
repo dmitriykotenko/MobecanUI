@@ -50,7 +50,7 @@ public class RatingView: UIView {
   }
   
   private func addSubviews() {
-    addSingleSubview(.hstack(stars))
+    putSubview(.hstack(stars))
   }
   
   private func starButton() -> UIButton {

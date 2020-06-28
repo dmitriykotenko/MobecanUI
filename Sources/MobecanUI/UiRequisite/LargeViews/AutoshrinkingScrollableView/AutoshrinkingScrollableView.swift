@@ -38,7 +38,7 @@ public class AutoshrinkingScrollableView: WindowListeningView {
     self.scrollView.contentInsetAdjustmentBehavior = .never
     self.scrollView.alwaysBounceVertical = false
     
-    addSingleSubview(self.scrollView)
+    putSubview(self.scrollView)
 
     self.windowChanged
       .delay(0.milliseconds) // wait until superview finishes its layout

@@ -72,13 +72,15 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
 
   private func addSubviews(spacing: CGFloat,
                            insets: UIEdgeInsets) {
-    addSingleSubview(
+    putSubview(
       .zstack([
         backgroundView,
-        .hstack(alignment: .top, padding: insets, spacing: spacing, [
-          iconView,
-          labels.view()
-        ])
+        .hstack(
+          alignment: .top,
+          spacing: spacing,
+          [iconView, labels.view()],
+          insets: insets
+        )
       ])
     )
   }

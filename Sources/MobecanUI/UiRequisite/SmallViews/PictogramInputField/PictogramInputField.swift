@@ -40,7 +40,7 @@ public class PictogramInputField: UIView {
   }
   
   private func addSubviews() {
-    addSingleSubview(
+    putSubview(
       .zstack([
         .centered(textField),
         label

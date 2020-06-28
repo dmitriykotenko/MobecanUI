@@ -9,30 +9,30 @@ public extension UIView {
   
   static func card(roundedCorners: [Corner] = .allCorners,
                    cornerRadius: CGFloat,
-                   padding: UIEdgeInsets,
-                   _ subview: UIView) -> UIView {
+                   _ subview: UIView,
+                   insets: UIEdgeInsets = .zero) -> UIView {
     
     return card(
       roundedCorners: roundedCorners,
       cornerRadius: cornerRadius,
-      padding: padding,
-      [subview]
+      [subview],
+      insets: insets
     )
   }
   
   static func card(roundedCorners: [Corner] = .allCorners,
                    cornerRadius: CGFloat,
-                   padding: UIEdgeInsets,
-                   _ subviews: [UIView] = []) -> UIView {
+                   _ subviews: [UIView] = [],
+                   insets: UIEdgeInsets = .zero) -> UIView {
     let minimumSize = CGSize(
-      width: padding.left + padding.right,
-      height: padding.top + padding.bottom
+      width: insets.left + insets.right,
+      height: insets.top + insets.bottom
     )
     
     // Do not insert vertical stack if card content must be empty.
     let card = subviews.isEmpty ?
       UIView().minimumSize(minimumSize) :
-      UIView.vstack(padding: padding, subviews)
+      UIView.vstack(subviews, insets: insets)
     
     return card
       .cornerRadius(cornerRadius)

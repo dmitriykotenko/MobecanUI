@@ -50,7 +50,7 @@ public class CheckboxView<NestedValue>: UIView, DataView, EventfulView {
   }
   
   private func addSubviews(insets: UIEdgeInsets) {
-    addSingleSubview(
+    putSubview(
       .hstack(
         alignment: .top,
         [checkmark, label]

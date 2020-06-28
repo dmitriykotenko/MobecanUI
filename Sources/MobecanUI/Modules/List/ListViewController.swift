@@ -43,9 +43,9 @@ open class ListViewController<Query, Element, ElementEvent>: UIViewController {
   private func buildInterface() {
     tableView.tableHeaderView = tableViewHeader
     
-    view.addSingleSubview(
+    view.putSubview(
       .vstack([
-        .safeAreaZstack(padding: titleLabelInsets, [titleLabel]),
+        .safeAreaZstack([titleLabel], insets: titleLabelInsets),
         tableView
       ])
     )

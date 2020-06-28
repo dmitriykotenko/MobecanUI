@@ -99,20 +99,20 @@ public extension UIButton {
     return numberOfLines(0).lineBreakMode(.byWordWrapping)
   }
 
-  func imageTitlePadding(_ imageTitlePadding: CGFloat,
-                         forContentPadding contentPadding: UIEdgeInsets = .zero) -> Self {
+  func imageTitlePadding(_ imageTitleSpacing: CGFloat,
+                         forContentInsets contentInsets: UIEdgeInsets = .zero) -> Self {
     contentEdgeInsets = UIEdgeInsets(
-      top: contentPadding.top,
-      left: contentPadding.left,
-      bottom: contentPadding.bottom,
-      right: contentPadding.right + imageTitlePadding
+      top: contentInsets.top,
+      left: contentInsets.left,
+      bottom: contentInsets.bottom,
+      right: contentInsets.right + imageTitleSpacing
     )
     
     titleEdgeInsets = UIEdgeInsets(
       top: 0,
-      left: imageTitlePadding,
+      left: imageTitleSpacing,
       bottom: 0,
-      right: -imageTitlePadding
+      right: -imageTitleSpacing
     )
     
     return self

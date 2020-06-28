@@ -112,7 +112,7 @@ public extension UIView {
   }
   
   func withSingleSubview(_ subview: UIView) -> Self {
-    addSingleSubview(subview)
+    putSubview(subview)
     return self
   }
 }

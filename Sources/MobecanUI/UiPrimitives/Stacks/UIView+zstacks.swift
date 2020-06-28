@@ -7,25 +7,25 @@ import UIKit
 
 public extension UIView {
   
-  static func zstack(padding: UIEdgeInsets = .zero,
-                     _ subviews: [UIView]) -> Self {
+  static func zstack(_ subviews: [UIView],
+                     insets: UIEdgeInsets = .zero) -> Self {
     let stack = Self()
     
     subviews.forEach { subview in
       stack.addSubview(subview)
-      subview.snp.makeConstraints { $0.edges.equalToSuperview().inset(padding) }
+      subview.snp.makeConstraints { $0.edges.equalToSuperview().inset(insets) }
     }
     
     return stack
   }
   
-  static func safeAreaZstack(padding: UIEdgeInsets = .zero,
-                             _ subviews: [UIView]) -> Self {
+  static func safeAreaZstack(_ subviews: [UIView],
+                             insets: UIEdgeInsets = .zero) -> Self {
     let stack = Self()
     
     subviews.forEach { subview in
       stack.addSubview(subview)
-      subview.snp.makeConstraints { $0.edges.equalTo(stack.safeAreaLayoutGuide).inset(padding) }
+      subview.snp.makeConstraints { $0.edges.equalTo(stack.safeAreaLayoutGuide).inset(insets) }
     }
     
     return stack

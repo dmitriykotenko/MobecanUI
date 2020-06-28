@@ -151,7 +151,7 @@ open class NavigationController: UIViewController {
     
     newViewController.map {
       addChild($0)
-      contentView.addSingleSubview($0.view)
+      contentView.putSubview($0.view)
     }
     
     _futureViewControllers.onNext(update.new)

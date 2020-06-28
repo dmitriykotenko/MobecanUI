@@ -3,31 +3,30 @@
 import UIKit
 
 
-/// Button with enlarged line spacing.
 public class IconTextButton: DiverseButton {
   
   override public var contentEdgeInsets: UIEdgeInsets {
     set {
-      super.contentEdgeInsets = newValue.with(right: newValue.right + innerPadding)
+      super.contentEdgeInsets = newValue.with(right: newValue.right + spacing)
     }
     get {
       let superInsets = super.contentEdgeInsets
-      return superInsets.with(right: superInsets.right - innerPadding)
+      return superInsets.with(right: superInsets.right - spacing)
     }
   }
   
-  private let innerPadding: CGFloat
+  private let spacing: CGFloat
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
-  public init(innerPadding: CGFloat = 0) {
-    self.innerPadding = innerPadding
+  public init(spacing: CGFloat = 0) {
+    self.spacing = spacing
     
     super.init(frame: .zero)
 
     contentHorizontalAlignment = .left
     
-    titleEdgeInsets = .init(left: innerPadding, right: -innerPadding)
+    titleEdgeInsets = .init(left: spacing, right: -spacing)
     
     contentEdgeInsets = .zero
   }

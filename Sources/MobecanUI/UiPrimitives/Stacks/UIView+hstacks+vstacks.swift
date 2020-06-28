@@ -6,86 +6,86 @@ import UIKit
 
 
 public extension UIView {
-
+  
   static func hstack<Subviews: Sequence>(alignment: UIStackView.Alignment = .fill,
                                          distribution: UIStackView.Distribution? = nil,
-                                         padding: UIEdgeInsets = .zero,
                                          spacing: CGFloat? = nil,
-                                         _ subviews: Subviews) -> UIView where Subviews.Element == UIView {
+                                         _ subviews: Subviews,
+                                         insets: UIEdgeInsets = .zero) -> UIView where Subviews.Element == UIView {
     return .zstack([
       stackView(
         axis: .horizontal,
         alignment: alignment,
         distribution: distribution,
-        padding: padding,
         spacing: spacing,
-        subviews: subviews
+        subviews: subviews,
+        insets: insets
       )
     ])
   }
-
+  
   /// Returns horizontal stack
   /// with icon's vertical center visually aligned with vertical center of label's first line.
   static func hstack(distribution: UIStackView.Distribution? = nil,
                      alignment: IconTextAlignment = .xHeight,
-                     padding: UIEdgeInsets = .zero,
                      spacing: CGFloat? = nil,
                      icon: UIImageView,
-                     label: UILabel) -> UIView {
+                     label: UILabel,
+                     insets: UIEdgeInsets = .zero) -> UIView {
     
     let labelHeight = alignment.height(font: label.font)
     let iconHeight = icon.frame.height
     
     let iconBottomOffset = (labelHeight - iconHeight) / 2
     
-    let iconContainer = UIView.zstack(padding: .bottom(iconBottomOffset), [icon])
+    let iconContainer = UIView.zstack([icon], insets: .bottom(iconBottomOffset))
     
     return .hstack(
       alignment: .firstBaseline,
       distribution: distribution,
-      padding: padding,
       spacing: spacing,
-      [iconContainer, label]
+      [iconContainer, label],
+      insets: insets
     )
   }
-
+  
   static func vstack<Subviews: Sequence>(alignment: UIStackView.Alignment = .fill,
                                          distribution: UIStackView.Distribution? = nil,
-                                         padding: UIEdgeInsets = .zero,
                                          spacing: CGFloat? = nil,
-                                         _ subviews: Subviews) -> UIView where Subviews.Element == UIView {
+                                         _ subviews: Subviews,
+                                         insets: UIEdgeInsets = .zero) -> UIView where Subviews.Element == UIView {
     return
       .zstack([
         stackView(
           axis: .vertical,
           alignment: alignment,
           distribution: distribution,
-          padding: padding,
           spacing: spacing,
-          subviews: subviews
+          subviews: subviews,
+          insets: insets
         )
-    ])
+      ])
   }
-
+  
   private static func stackView<Subviews: Sequence>(axis: NSLayoutConstraint.Axis,
                                                     alignment: UIStackView.Alignment = .fill,
                                                     distribution: UIStackView.Distribution? = nil,
-                                                    padding: UIEdgeInsets = .zero,
                                                     spacing: CGFloat? = nil,
-                                                    subviews: Subviews)
+                                                    subviews: Subviews,
+                                                    insets: UIEdgeInsets = .zero)
     -> UIStackView where Subviews.Element == UIView {
       
-    let stack = UIStackView(arrangedSubviews: Array(subviews))
-    
-    stack.axis = axis
-    stack.alignment = alignment
-    distribution.map { stack.distribution = $0 }
-    spacing.map { stack.spacing = $0 }
-    
-    stack.isLayoutMarginsRelativeArrangement = true
-    stack.insetsLayoutMarginsFromSafeArea = false
-    stack.layoutMargins = padding
-    
-    return stack
+      let stack = UIStackView(arrangedSubviews: Array(subviews))
+      
+      stack.axis = axis
+      stack.alignment = alignment
+      distribution.map { stack.distribution = $0 }
+      spacing.map { stack.spacing = $0 }
+      
+      stack.isLayoutMarginsRelativeArrangement = true
+      stack.insetsLayoutMarginsFromSafeArea = false
+      stack.layoutMargins = insets
+      
+      return stack
   }
 }

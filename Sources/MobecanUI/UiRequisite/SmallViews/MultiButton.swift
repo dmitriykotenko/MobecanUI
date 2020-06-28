@@ -27,19 +27,19 @@ public class MultiButton<Value: Equatable, Button: UIButton, Action: Equatable>:
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init(_ buttons: [(Value, Button, Action)],
-              padding: UIEdgeInsets = .zero) {
+              insets: UIEdgeInsets = .zero) {
     self.buttons = buttons
     
     super.init(frame: .zero)
     
-    addSubviews(padding: padding)
+    addSubviews(insets: insets)
     setupButtonVisibilities()
   }
   
-  private func addSubviews(padding: UIEdgeInsets) {
-    addSingleSubview(
+  private func addSubviews(insets: UIEdgeInsets) {
+    putSubview(
       .hstack(buttons.map { $0.1 }),
-      insets: padding
+      insets: insets
     )
   }
   

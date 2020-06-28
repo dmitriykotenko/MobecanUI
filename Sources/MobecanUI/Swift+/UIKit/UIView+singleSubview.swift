@@ -15,17 +15,17 @@ public enum SubviewPosition {
 
 public extension UIView {
   
-  func addSingleSubview(_ subview: UIView,
-                        _ position: SubviewPosition? = nil,
-                        insets: UIEdgeInsets = .zero) {
+  func putSubview(_ subview: UIView,
+                  _ position: SubviewPosition? = nil,
+                  insets: UIEdgeInsets = .zero) {
     addSubview(subview, position: position)
     
     subview.snp.makeConstraints { $0.edges.equalToSuperview().inset(insets) }
   }
   
-  func addSingleSubviewInsideSafeArea(_ subview: UIView,
-                                      _ position: SubviewPosition? = nil,
-                                      insets: UIEdgeInsets = .zero) {
+  func putSubviewInsideSafeArea(_ subview: UIView,
+                                _ position: SubviewPosition? = nil,
+                                insets: UIEdgeInsets = .zero) {
     addSubview(subview, position: position)
     
     subview.snp.makeConstraints { $0.edges.equalTo(safeAreaLayoutGuide).inset(insets) }

@@ -71,7 +71,7 @@ public class PictogramLabel: UIView {
   private func displayText(_ text: String?) {    
     mainSubview.subviews.forEach { $0.removeFromSuperview() }
     
-    mainSubview.addSingleSubview(
+    mainSubview.putSubview(
       .hstack(
         alignment: .bottom,
         spacing: spacing,
