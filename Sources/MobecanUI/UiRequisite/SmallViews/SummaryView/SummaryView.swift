@@ -31,7 +31,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
 
   private let iconContainer: ImageViewContainer
   private let labels: Labels
-  private let backgroundView: UIView
+  private let backgroundView: UIView?
 
   private let disposeBag = DisposeBag()
   
@@ -39,7 +39,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   
   public init(iconContainer: ImageViewContainer,
               labels: Labels,
-              backgroundView: UIView,
+              backgroundView: UIView? = nil,
               spacing: CGFloat,
               insets: UIEdgeInsets) {
     self.iconContainer = iconContainer
@@ -55,16 +55,15 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
 
   private func addSubviews(spacing: CGFloat,
                            insets: UIEdgeInsets) {
+    backgroundView.map { putSubview($0) }
+    
     putSubview(
-      .zstack([
-        backgroundView,
-        .hstack(
-          alignment: .fill,
-          spacing: spacing,
-          [iconContainer.containerView, labels.view()],
-          insets: insets
-        )
-      ])
+      .hstack(
+        alignment: .fill,
+        spacing: spacing,
+        [iconContainer.containerView, .vstack([labels.view(), .stretchableSpacer()])],
+        insets: insets
+      )
     )
 
     /// Align image to labels if necessary.

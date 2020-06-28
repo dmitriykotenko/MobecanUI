@@ -52,7 +52,13 @@ open class SimpleImageViewContainer: ImageViewContainer {
     case .bottom(let offset):
       return .vstack([.stretchableSpacer(), imageView], insets: .bottom(offset))
     case .center:
-      return .centeredVertically(imageView)
+      let topSpacer = UIView.stretchableSpacer()
+      let bottomSpacer = UIView.stretchableSpacer()
+      let containerView = UIView.vstack([topSpacer, imageView, bottomSpacer])
+      
+      topSpacer.snp.makeConstraints { $0.height.equalTo(bottomSpacer) }
+      
+      return containerView
     case .firstBaseline:
       return .vstack([.stretchableSpacer(), imageView, .stretchableSpacer()])
     }

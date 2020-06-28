@@ -9,6 +9,14 @@ import RxTest
 final class SummaryViewTests: XCTestCase {
 
   let imageSize = CGSize(width: 7, height: 7)
+  
+  let labels = ThreeLinesLabelsGrid(
+    topLabel: UILabel().text("Death is only the beginning."),
+    topRightLabel: UILabel().text("TR"),
+    middleLabel: UILabel().text("M"),
+    bottomLabel: UILabel().text("B"),
+    spacing: .zero
+  )
 
   func testTopImagePlacement() {
     check(
@@ -21,6 +29,7 @@ final class SummaryViewTests: XCTestCase {
   func testBottomImagePlacement() {
     check(
       imageView: UIImageView().size(imageSize),
+      labels: labels,
       placement: .bottom(5),
       summaryViewSize: .init(width: 320, height: imageSize.height + 9),
       expectedImageViewFrame: .init(origin: .init(x: 0, y: 4), size: imageSize)
@@ -30,6 +39,7 @@ final class SummaryViewTests: XCTestCase {
   func testCenterImagePlacement() {
     check(
       imageView: UIImageView().size(imageSize),
+      labels: labels,
       placement: .center,
       summaryViewSize: .init(width: 320, height: imageSize.height + 50),
       expectedImageViewFrame: .init(origin: .init(x: 0, y: 25), size: imageSize)
@@ -38,14 +48,6 @@ final class SummaryViewTests: XCTestCase {
   
   func testFirstBaselineImagePlacement() {
     let imageView = UIImageView().size(imageSize)
-    
-    let labels = ThreeLinesLabelsGrid(
-      topLabel: UILabel().text("Death is only the beginning."),
-      topRightLabel: UILabel().text("TR"),
-      middleLabel: UILabel().text("M"),
-      bottomLabel: UILabel().text("B"),
-      spacing: .zero
-    )
     
     let summaryView =
       SummaryView<Int, ThreeLinesLabelsGrid>(
