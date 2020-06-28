@@ -49,10 +49,10 @@ final class SummaryViewTests: XCTestCase {
     
     let summaryView =
       SummaryView<Int, ThreeLinesLabelsGrid>(
-        iconContainer: SimpleImageViewContainer(
+        iconContainer: .simple(
           imageView: imageView,
           placeholder: nil,
-          verticalPlacement: .firstBaseline(10)
+          placement: .firstBaseline(10)
         ),
         labels: labels,
         backgroundView: UIView(),
@@ -83,10 +83,10 @@ final class SummaryViewTests: XCTestCase {
                      expectedImageViewFrame: CGRect) {
     let summaryView =
       SummaryView<Int, ThreeLinesLabelsGrid>(
-        iconContainer: SimpleImageViewContainer(
+        iconContainer: .simple(
           imageView: imageView,
           placeholder: nil,
-          verticalPlacement: placement
+          placement: placement
         ),
         labels: labels,
         backgroundView: UIView(),

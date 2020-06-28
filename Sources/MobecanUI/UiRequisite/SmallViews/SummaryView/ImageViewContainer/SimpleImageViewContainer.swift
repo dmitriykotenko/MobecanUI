@@ -6,7 +6,7 @@ import UIKit
 public extension ImageViewContainer {
   
   static func simple(imageView: UIImageView,
-                     placeholder: UIImage,
+                     placeholder: UIImage? = nil,
                      placement: SimpleImageViewContainer.VerticalPlacement) -> ImageViewContainer {
     SimpleImageViewContainer(
       imageView: imageView,
@@ -26,32 +26,39 @@ open class SimpleImageViewContainer: ImageViewContainer {
     case firstBaseline(CGFloat)
   }
   
-  public let imageView: UIImageView
-  public let containerView: UIView
-  
   public let placeholder: UIImage?
   public let verticalPlacement: VerticalPlacement
   
   public init(imageView: UIImageView,
               placeholder: UIImage? = nil,
               verticalPlacement: VerticalPlacement) {
-    self.imageView = imageView
     self.placeholder = placeholder
     self.verticalPlacement = verticalPlacement
     
+    super.init(
+      imageView: imageView,
+      containerView: SimpleImageViewContainer.containerView(
+        imageView,
+        verticalPlacement: verticalPlacement
+      )
+    )
+  }
+  
+  private static func containerView(_ imageView: UIImageView,
+                                    verticalPlacement: VerticalPlacement) -> ClickThroughView {
     switch verticalPlacement {
     case .top(let offset):
-      containerView = ClickThroughView.top(imageView, inset: offset)
+      return .top(imageView, inset: offset)
     case .bottom(let offset):
-      containerView = ClickThroughView.bottom(imageView, inset: offset)
+      return .bottom(imageView, inset: offset)
     case .center(let offset):
-      containerView = ClickThroughView.centeredVertically(imageView, offset: offset)
+      return .centeredVertically(imageView, offset: offset)
     case .firstBaseline(let offset):
-      containerView = ClickThroughView.top(imageView, inset: offset, priority: .minimum)
+      return .top(imageView, inset: offset, priority: .minimum)
     }
   }
   
-  public func alignImage(inside superview: UIView) {
+  override open func alignImage(inside superview: UIView) {
     switch verticalPlacement {
     case .firstBaseline(let offset):
       imageView.snp.makeConstraints { $0.bottom.equalTo(superview.snp.firstBaseline).offset(offset) }
@@ -60,7 +67,7 @@ open class SimpleImageViewContainer: ImageViewContainer {
     }
   }
   
-  public func display(image: Image?) {
+  override open func display(image: Image?) {
     switch image {
     case .image(let image):
       imageView.image = image

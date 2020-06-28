@@ -3,10 +3,17 @@
 import UIKit
 
 
-public protocol ImageViewContainer {
+open class ImageViewContainer {
 
-  var containerView: UIView { get }
+  let imageView: UIImageView
+  let containerView: UIView
 
-  func alignImage(inside superview: UIView)
-  func display(image: Image?)
+  open func alignImage(inside superview: UIView) {}
+  open func display(image: Image?) {}
+  
+  init(imageView: UIImageView,
+       containerView: UIView) {
+    self.imageView = imageView
+    self.containerView = containerView
+  }
 }
