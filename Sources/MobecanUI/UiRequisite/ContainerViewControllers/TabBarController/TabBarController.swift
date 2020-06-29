@@ -76,6 +76,7 @@ public class TabBarController: UIViewController {
     tabBar.snp.makeConstraints {
       $0.leading.trailing.equalToSuperview()
       $0.bottom.equalToSuperview()
+      $0.top.equalTo(view.safeAreaLayoutGuide.snp.bottom)
     }
     
     tabBar.tabTap.debug("Tab-Tap")
