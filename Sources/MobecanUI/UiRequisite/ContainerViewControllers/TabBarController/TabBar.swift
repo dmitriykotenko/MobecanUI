@@ -43,6 +43,6 @@ public class TabBar: UIView {
   
   private func addSubviews() {
     putSubview(backgroundView)
-    putSubviewInsideSafeArea(radioButton)
+    putSubview(.top(radioButton))
   }
 }
