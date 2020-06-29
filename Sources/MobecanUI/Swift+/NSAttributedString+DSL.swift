@@ -18,4 +18,17 @@ public extension NSAttributedString {
   static func plain(_ string: String) -> NSAttributedString {
     return NSAttributedString(string: string)
   }
+  
+  static func colored(_ string: String,
+                      textColor: UIColor? = nil,
+                      backgroundColor: UIColor? = nil) -> NSAttributedString {
+    var attributes: [NSAttributedString.Key: Any] = [:]
+    attributes[.foregroundColor] = textColor
+    attributes[.backgroundColor] = backgroundColor
+    
+    return NSAttributedString(
+      string: string,
+      attributes: attributes
+    )
+  }
 }
