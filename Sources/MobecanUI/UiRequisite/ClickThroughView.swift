@@ -7,10 +7,10 @@ import UIKit
 ///
 /// If another view is placed behind `ClickThroughView`,
 /// the user can tap or scroll this another view.
-public class ClickThroughView: UIView {
+open class ClickThroughView: UIView {
   
-  override public func hitTest(_ point: CGPoint,
-                               with event: UIEvent?) -> UIView? {
+  override open func hitTest(_ point: CGPoint,
+                             with event: UIEvent?) -> UIView? {
     let hit = super.hitTest(point, with: event)
     
     switch hit {
