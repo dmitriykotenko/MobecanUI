@@ -12,4 +12,8 @@ public class BoilerplateModule: Module {
   public init(_ viewController: UIViewController) {
     self.viewController = viewController
   }
+  
+  public convenience init(_ view: UIView) {
+    self.init(BoilerplateViewController(view: view))
+  }
 }

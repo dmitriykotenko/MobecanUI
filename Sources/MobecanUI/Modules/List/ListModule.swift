@@ -9,7 +9,7 @@ open class ListModule<Query, Element, ElementEvent, SomeError: Error>: Module {
   open var elementEvent: Observable<ElementEvent> { interactor.unhandledElementEvents }
   open var finished: Observable<Void> { .never() }
   
-  open var viewController: UIViewController { return view }
+  open var viewController: UIViewController { view }
 
   public let interactor: ListInteractor<Query, Element, ElementEvent, SomeError>
   public let presenter: ListPresenter<Query, Element, ElementEvent, SomeError>
