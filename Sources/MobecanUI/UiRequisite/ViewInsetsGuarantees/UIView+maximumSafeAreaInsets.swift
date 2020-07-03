@@ -16,7 +16,7 @@ extension UIView {
   }
   
   func maximumSafeAreaInsetsListener(windowChanged: Observable<Void>) -> SafeAreaInsetsListener {
-    return SafeAreaInsetsListener(
+    SafeAreaInsetsListener(
       view: self,
       windowChanged: windowChanged,
       transform: { [weak self] in self?.maximumSafeAreaInsets ?? .zero }
@@ -28,7 +28,7 @@ extension UIView {
 private extension UIResponder {
     
   var parentViewController: UIViewController? {
-    return (next as? UIViewController) ?? next?.parentViewController
+    (next as? UIViewController) ?? next?.parentViewController
   }
 }
 

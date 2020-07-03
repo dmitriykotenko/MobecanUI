@@ -5,8 +5,8 @@ import UIKit
 
 public extension UIButton {
   
-  /// Button without autolayout, styles and other enchancements.
+  /// Button without autolayout, styles and other enhancements.
   static func raw(frame: CGRect) -> UIButton {
-    return UIButton(frame: frame)
+    UIButton(frame: frame)
   }
 }

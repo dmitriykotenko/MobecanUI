@@ -24,27 +24,27 @@ public extension UIEdgeInsets {
   }
   
   static func vertical(_ amount: CGFloat) -> UIEdgeInsets {
-    return UIEdgeInsets(top: amount, bottom: amount)
+    UIEdgeInsets(top: amount, bottom: amount)
   }
   
   static func horizontal(_ amount: CGFloat) -> UIEdgeInsets {
-    return UIEdgeInsets(left: amount, right: amount)
+    UIEdgeInsets(left: amount, right: amount)
   }
   
   static func top(_ amount: CGFloat) -> UIEdgeInsets {
-    return UIEdgeInsets(top: amount)
+    UIEdgeInsets(top: amount)
   }
   
   static func bottom(_ amount: CGFloat) -> UIEdgeInsets {
-    return UIEdgeInsets(bottom: amount)
+    UIEdgeInsets(bottom: amount)
   }
   
   static func left(_ amount: CGFloat) -> UIEdgeInsets {
-    return UIEdgeInsets(left: amount)
+    UIEdgeInsets(left: amount)
   }
   
   static func right(_ amount: CGFloat) -> UIEdgeInsets {
-    return UIEdgeInsets(right: amount)
+    UIEdgeInsets(right: amount)
   }
   
   init(top: CGFloat? = nil,
@@ -65,7 +65,7 @@ public extension UIEdgeInsets {
             right: CGFloat? = nil,
             vertical: CGFloat? = nil,
             horizontal: CGFloat? = nil) -> UIEdgeInsets {
-    return UIEdgeInsets(
+    UIEdgeInsets(
       top: vertical ?? top ?? self.top,
       left: horizontal ?? left ?? self.left,
       bottom: vertical ?? bottom ?? self.bottom,
@@ -75,7 +75,7 @@ public extension UIEdgeInsets {
   
   static func + (this: UIEdgeInsets,
                  that: UIEdgeInsets) -> UIEdgeInsets {
-    return UIEdgeInsets(
+    UIEdgeInsets(
       top: this.top + that.top,
       left: this.left + that.left,
       bottom: this.bottom + that.bottom,

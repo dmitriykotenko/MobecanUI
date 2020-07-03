@@ -13,6 +13,6 @@ public struct Checker<InputValue, OutputValue, SomeError: Error> {
   }
   
   public static func alwaysTrue() -> Checker {
-    return Checker { _, _ in true }
+    Checker { _, _ in true }
   }
 }

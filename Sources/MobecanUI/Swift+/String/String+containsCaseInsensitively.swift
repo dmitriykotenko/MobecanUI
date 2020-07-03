@@ -4,6 +4,6 @@
 public extension String {
   
   func containsCaseInsensitively(_ otherString: String) -> Bool {
-    return lowercased().contains(otherString.lowercased())
+    lowercased().contains(otherString.lowercased())
   }
 }

@@ -150,11 +150,11 @@ public class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UI
   
   @discardableResult
   public func startEditing() -> Bool {
-    return valueEditor.focusableView.becomeFirstResponder()
+    valueEditor.focusableView.becomeFirstResponder()
   }
   
   @discardableResult
   public func endEditing() -> Bool {
-    return valueEditor.focusableView.resignFirstResponder()
+    valueEditor.focusableView.resignFirstResponder()
   }
 }

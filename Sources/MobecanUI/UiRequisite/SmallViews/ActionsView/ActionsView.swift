@@ -31,7 +31,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
   @RxOutput public var viewEvents: Observable<ViewEvent>
 
   public var nestedViewEvents: Observable<ContentView.ViewEvent> {
-    return contentView.viewEvents
+    contentView.viewEvents
   }
 
   private let contentView: ContentView

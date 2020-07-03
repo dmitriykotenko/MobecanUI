@@ -6,7 +6,7 @@ import UIKit
 public extension UIEdgeInsets {
   
   var negated: UIEdgeInsets {
-    return UIEdgeInsets(
+    UIEdgeInsets(
       top: -top,
       left: -left,
       bottom: -bottom,

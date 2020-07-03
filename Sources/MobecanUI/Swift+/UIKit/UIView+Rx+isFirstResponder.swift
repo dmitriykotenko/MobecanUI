@@ -8,7 +8,7 @@ import UIKit
 public extension Reactive where Base: UIView {
 
   var isFirstResponder: Driver<Bool> {
-    return FirstResponderListener(view: base).asObservable()
+    FirstResponderListener(view: base).asObservable()
       .asDriver(onErrorJustReturn: false)
   }
 }
@@ -53,6 +53,6 @@ private class FirstResponderListener: ObservableConvertibleType {
   }
   
   func asObservable() -> Observable<Bool> {
-    return relay.asObservable().keepStrongReference(to: self)
+    relay.asObservable().keepStrongReference(to: self)
   }
 }

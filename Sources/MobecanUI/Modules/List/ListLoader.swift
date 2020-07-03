@@ -22,10 +22,10 @@ public struct FunctionalListLoader<Query, Element, SomeError: Error>: ListLoader
   }
   
   public static func immediate(elements: [Element]) -> FunctionalListLoader {
-    return .init { _ in .just(.success(elements)) }
+    .init { _ in .just(.success(elements)) }
   }
   
   public func load(_ query: Query) -> Single<Result<[Element], SomeError>> {
-    return privateLoad(query)
+    privateLoad(query)
   }
 }

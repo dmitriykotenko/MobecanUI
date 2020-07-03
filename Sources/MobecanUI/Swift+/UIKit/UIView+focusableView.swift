@@ -6,7 +6,7 @@ import UIKit
 public extension UIView {
   
   var canBeFocused: Bool {
-    return focusableView.canBecomeFirstResponder
+    focusableView.canBecomeFirstResponder
   }
   
   var focusableView: UIView {

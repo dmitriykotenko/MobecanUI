@@ -189,14 +189,13 @@ private extension Observable where Element: UIPanGestureRecognizer {
               axis: NSLayoutConstraint.Axis,
               attractor: Observable<CGFloat>,
               bounds: Observable<ClosedRange<CGFloat>>) -> Observable<CGFloat> {
-    return
-      map { $0.translation(in: view).component(for: axis) }
+    map { $0.translation(in: view).component(for: axis) }
       .withLatestFrom(attractor) { translation, attractor in translation + attractor }
       .clippedWith(bounds: bounds)
   }
   
   func velocity(in view: UIView, axis: NSLayoutConstraint.Axis) -> Observable<CGFloat> {
-    return map {
+    map {
       $0.velocity(in: view).component(for: axis)
     }
   }

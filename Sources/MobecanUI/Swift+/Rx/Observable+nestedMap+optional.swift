@@ -8,13 +8,13 @@ import RxSwift
 public extension Observable where Element: OptionalType {
   
   func nestedMap<T>(transform: @escaping (Element.Wrapped) -> T) -> Observable<T?> {
-    return map {
+    map {
       $0.value.map(transform)
     }
   }
   
   func nestedFlatMap<T>(transform: @escaping (Element.Wrapped) -> T?) -> Observable<T?> {
-    return map {
+    map {
       $0.value.flatMap(transform)
     }
   }
@@ -24,13 +24,13 @@ public extension Observable where Element: OptionalType {
 public extension SharedSequenceConvertibleType where Element: OptionalType {
   
   func nestedMap<T>(transform: @escaping (Element.Wrapped) -> T) -> SharedSequence<SharingStrategy, T?> {
-    return map {
+    map {
       $0.value.map(transform)
     }
   }
   
   func nestedFlatMap<T>(transform: @escaping (Element.Wrapped) -> T?) -> SharedSequence<SharingStrategy, T?> {
-    return map {
+    map {
       $0.value.flatMap(transform)
     }
   }

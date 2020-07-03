@@ -20,7 +20,7 @@ public class RxUiInput<Element>: ObservableType {
   }
   
   public var wrappedValue: AnyObserver<Element> {
-    return AnyObserver { [weak self] in
+    AnyObserver { [weak self] in
       switch $0 {
       case .next(let element):
         self?.behaviorRelay?.accept(element) ?? self?.publishRelay.accept(element)
@@ -34,8 +34,7 @@ public class RxUiInput<Element>: ObservableType {
   
   public func subscribe<Observer>(_ observer: Observer) -> Disposable
     where Observer: ObserverType, Element == Observer.Element {
-      return
-        behaviorRelay?.observeOn(MainScheduler.instance).subscribe(observer)
-        ?? publishRelay.observeOn(MainScheduler.instance).subscribe(observer)
+    behaviorRelay?.observeOn(MainScheduler.instance).subscribe(observer)
+      ?? publishRelay.observeOn(MainScheduler.instance).subscribe(observer)
   }
 }

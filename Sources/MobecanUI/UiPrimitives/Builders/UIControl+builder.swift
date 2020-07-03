@@ -11,7 +11,7 @@ public extension UIControl {
   }
   
   func disabled() -> Self {
-    return enabled(false)
+    enabled(false)
   }
   
   func selected(_ selected: Bool) -> Self {

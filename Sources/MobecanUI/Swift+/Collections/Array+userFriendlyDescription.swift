@@ -4,7 +4,7 @@
 public extension Array {
   
   func userFriendlyDescription<Key, Value>() -> String where Element == [Key: Value] {
-    return map { $0.userFriendlyDescription }
+    map { $0.userFriendlyDescription }
       .mkStringWithNewLine()
   }
 }

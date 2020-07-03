@@ -6,11 +6,11 @@ import RxSwift
 public extension Observable {
 
   func nilIf<T>(_ predicate: Observable<Bool>) -> Observable<T?> where T? == Element {
-    return Observable.combineLatest(predicate, self) { $0 ? nil : $1 }
+    Observable.combineLatest(predicate, self) { $0 ? nil : $1 }
   }
 
   func nilIfNot<T>(_ predicate: Observable<Bool>) -> Observable<T?> where T? == Element {
-    return nilIf(predicate.map { !$0 })
+    nilIf(predicate.map { !$0 })
   }
 
   func nilIf(_ predicate: Observable<Bool>) -> Observable<Element?> {

@@ -8,7 +8,7 @@ public extension UIViewController {
   static func alert(title: String? = nil,
                     message: String? = nil,
                     actions: [AlertAction]) -> UIAlertController {
-    return alertController(
+    alertController(
       title: title,
       message: message,
       style: .alert,
@@ -19,7 +19,7 @@ public extension UIViewController {
   static func actionSheet(title: String? = nil,
                           message: String? = nil,
                           actions: [AlertAction]) -> UIAlertController {
-    return alertController(
+    alertController(
       title: title,
       message: message,
       style: .actionSheet,
@@ -56,7 +56,7 @@ public extension UIViewController {
     
     public static func `default`(title: String,
                                  handler: ((UIAlertAction) -> Void)? = nil) -> AlertAction {
-      return AlertAction(
+      AlertAction(
         style: .default,
         title: title,
         handler: handler
@@ -65,7 +65,7 @@ public extension UIViewController {
     
     public static func cancel(title: String,
                               handler: ((UIAlertAction) -> Void)? = nil) -> AlertAction {
-      return AlertAction(
+      AlertAction(
         style: .cancel,
         title: title,
         handler: handler
@@ -74,7 +74,7 @@ public extension UIViewController {
     
     public static func destructive(title: String,
                                    handler: ((UIAlertAction) -> Void)? = nil) -> AlertAction {
-      return AlertAction(
+      AlertAction(
         style: .destructive,
         title: title,
         handler: handler

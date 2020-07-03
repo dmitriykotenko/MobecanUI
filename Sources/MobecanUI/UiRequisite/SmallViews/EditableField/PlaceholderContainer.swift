@@ -17,7 +17,7 @@ extension UITextField: PlaceholderContainer {}
 public extension PlaceholderContainer {
   
   var rxPlaceholder: Binder<String?> {
-    return Binder(
+    Binder(
       self,
       binding: { view, placeholder in view.placeholder = placeholder }
     )

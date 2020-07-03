@@ -6,7 +6,7 @@ import UIKit
 public extension UIView {
 
   func superviews(upTo finalSuperview: UIView) -> [UIView] {
-    return Array(
+    Array(
       andSuperviews(upTo: finalSuperview).dropFirst()
     )
   }

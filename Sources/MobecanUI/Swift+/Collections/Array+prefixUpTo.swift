@@ -4,7 +4,7 @@
 public extension Array {
   
   func prefixUpTo(_ predicate: (Element) -> Bool) -> [Element] {
-    return foldWhile([]) { array, element in
+    foldWhile([]) { array, element in
       predicate(element) ? .stop(array + [element]) : .next(array + [element])
     }
   }

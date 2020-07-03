@@ -10,10 +10,12 @@ public struct Age: Equatable, Codable, Comparable, CustomStringConvertible {
   }
 
   public var description: String {
-    return (years == 1) ? "1 year" : "\(years) years"
+    (years == 1) ? "1 year" :
+      (years == -1) ? "-1 year" :
+      "\(years) years"
   }
   
   public static func < (this: Age, that: Age) -> Bool {
-    return this.years < that.years
+    this.years < that.years
   }
 }

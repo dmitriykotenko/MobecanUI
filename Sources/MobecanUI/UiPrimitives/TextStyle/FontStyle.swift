@@ -32,7 +32,7 @@ public struct FontStyle: Lensable {
                    weight: UIFont.Weight? = nil,
                    traits: FontTraits? = nil,
                    features: [FontFeature]? = nil) -> FontStyle {
-    return with(
+    with(
       FontStyle(
         familyName: familyName,
         size: size,
@@ -44,7 +44,7 @@ public struct FontStyle: Lensable {
   }
   
   public func with(_ fontStyle: FontStyle) -> FontStyle {
-    return FontStyle(
+    FontStyle(
       familyName: fontStyle.familyName ?? familyName,
       size: fontStyle.size ?? size,
       weight: fontStyle.weight ?? weight,

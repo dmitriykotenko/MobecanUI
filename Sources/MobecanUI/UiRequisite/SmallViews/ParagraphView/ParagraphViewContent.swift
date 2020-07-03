@@ -23,8 +23,8 @@ public struct ParagraphViewContent<Value> {
 
   public static func dataView<BodyView: DataView>(_ bodyView: BodyView) -> ParagraphViewContent<Value>
     where BodyView.Value == Value {
-    
-      return ParagraphViewContent(bodyView: bodyView, body: bodyView.value)
+
+      ParagraphViewContent(bodyView: bodyView, body: bodyView.value)
   }
 }
 
@@ -32,7 +32,7 @@ public struct ParagraphViewContent<Value> {
 extension ParagraphViewContent where Value == String {
   
   public static func plainText(label: UILabel) -> ParagraphViewContent<String> {
-    return ParagraphViewContent(
+    ParagraphViewContent(
       bodyView: label,
       body: label.rx.text.asObserver()
     )

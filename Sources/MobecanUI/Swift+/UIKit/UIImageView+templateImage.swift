@@ -7,7 +7,7 @@ public extension UIImageView {
 
   var templateImage: UIImage? {
     get {
-      return image?.withRenderingMode(.alwaysTemplate)
+      image?.withRenderingMode(.alwaysTemplate)
     }
     
     set {

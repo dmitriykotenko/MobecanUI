@@ -9,19 +9,19 @@ import UIKit
 extension ActionsView {
   
   public var deleteEvents: Observable<Value> {
-    return viewEvents.compactMap {
+    viewEvents.compactMap {
       if case .delete(let value) = $0 { return value } else { return nil }
     }
   }
   
   public var selectEvents: Observable<Value> {
-    return viewEvents.compactMap {
+    viewEvents.compactMap {
       if case .select(let value) = $0 { return value } else { return nil }
     }
   }
   
   public var deselectEvents: Observable<Value> {
-    return viewEvents.compactMap {
+    viewEvents.compactMap {
       if case .deselect(let value) = $0 { return value } else { return nil }
     }
   }

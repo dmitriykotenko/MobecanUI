@@ -16,10 +16,10 @@ public struct EditableFieldTexts {
   }
   
   public static var empty: EditableFieldTexts {
-    return EditableFieldTexts(title: nil, placeholder: nil, hint: nil)
+    EditableFieldTexts(title: nil, placeholder: nil, hint: nil)
   }
   
   public static var sample: EditableFieldTexts {
-    return EditableFieldTexts(title: "Field", placeholder: "Placeholder", hint: "Hint")
+    EditableFieldTexts(title: "Field", placeholder: "Placeholder", hint: "Hint")
   }
 }

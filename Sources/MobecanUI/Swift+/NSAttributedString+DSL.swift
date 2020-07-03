@@ -16,7 +16,7 @@ public extension NSAttributedString {
   }
   
   static func plain(_ string: String) -> NSAttributedString {
-    return NSAttributedString(string: string)
+    NSAttributedString(string: string)
   }
   
   static func colored(_ string: String,

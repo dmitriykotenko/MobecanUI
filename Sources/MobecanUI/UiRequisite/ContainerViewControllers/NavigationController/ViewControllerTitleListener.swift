@@ -27,6 +27,7 @@ private extension UIViewController {
   
   func titleListener(changeHandler: @escaping (UIViewController, NSKeyValueObservedChange<String?>) -> Void)
     -> NSKeyValueObservation {
-      return observe(\.title, options: [.new], changeHandler: changeHandler)
+      
+      observe(\.title, options: [.new], changeHandler: changeHandler)
   }
 }

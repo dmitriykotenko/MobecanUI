@@ -7,13 +7,13 @@ import RxSwift
 public extension ObservableType {
 
   func became(_ comparison: @escaping (Element, Element) -> Bool) -> Observable<(Element, Element)> {
-    return withPrevious()
+    withPrevious()
       .filter { comparison($0, $1) }
   }
 
   /// Every time the value becomes nil, emits last non-nil value.
   func becameNil<NestedElement>() -> Observable<Element> where Element == NestedElement? {
-    return withPrevious()
+    withPrevious()
       .filter { $0 != nil && $1 == nil }.map { $0.0 }
   }
 

@@ -11,13 +11,9 @@ public struct PhoneNumber: Codable, Equatable, CustomStringConvertible {
     self.digits = unsanitizedString.filter { $0.isDecimalDigit }
   }
   
-  public var inInternationalFormat: String {
-    return "+\(digits)"
-  }
+  public var inInternationalFormat: String { "+\(digits)" }
   
-  public var description: String {
-    return digits
-  }
+  public var description: String { digits }
   
   public static var sample = PhoneNumber(unsanitizedString: "+7 666 13-13-13-5")
   
@@ -28,7 +24,7 @@ public struct PhoneNumber: Codable, Equatable, CustomStringConvertible {
 private extension Character {
   
   var isDecimalDigit: Bool {
-    return unicodeScalars.allSatisfy {
+    unicodeScalars.allSatisfy {
       CharacterSet(charactersIn: "0123456789").contains($0)
     }
   }

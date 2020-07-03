@@ -27,7 +27,7 @@ public enum NavigationEvent: Equatable {
 public extension Observable where Element == NavigationEvent {
   
   var pushes: Observable<Module> {
-    return compactMap {
+    compactMap {
       switch $0 {
       case .push(let module):
         return module
@@ -38,7 +38,7 @@ public extension Observable where Element == NavigationEvent {
   }
 
   var pops: Observable<Void> {
-    return compactMap {
+    compactMap {
       switch $0 {
       case .push, .popTo:
         return nil
@@ -49,7 +49,7 @@ public extension Observable where Element == NavigationEvent {
   }
 
   var popsTo: Observable<Module.Type> {
-    return compactMap {
+    compactMap {
       switch $0 {
       case .push, .pop:
         return nil

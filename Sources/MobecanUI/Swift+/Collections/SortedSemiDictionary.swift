@@ -15,10 +15,10 @@ public struct SortedSemiDictionary<Key: Hashable, SemiKey, Value> {
   
   public let keyExtractor: (SemiKey) -> Key
   
-  public static func empty(keyExctractor: @escaping (SemiKey) -> Key) -> SortedSemiDictionary<Key, SemiKey, Value> {
-    return SortedSemiDictionary(
+  public static func empty(keyExtractor: @escaping (SemiKey) -> Key) -> SortedSemiDictionary<Key, SemiKey, Value> {
+    SortedSemiDictionary(
       semiKeysAndValues: [],
-      keyExtractor: keyExctractor
+      keyExtractor: keyExtractor
     )
   }
   
@@ -34,7 +34,7 @@ public struct SortedSemiDictionary<Key: Hashable, SemiKey, Value> {
   }
   
   public func value(semiKey: SemiKey) -> Value? {
-    return pairs[keyExtractor(semiKey)]?.1
+    pairs[keyExtractor(semiKey)]?.1
   }
   
   public func with(newSemiKeys: [SemiKey],

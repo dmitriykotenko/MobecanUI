@@ -8,7 +8,7 @@ import UIKit
 public extension Reactive where Base: UIButton {
 
   func foreground(for state: UIControl.State = .normal) -> Binder<ButtonForeground> {
-    return Binder(base) { button, foreground in
+    Binder(base) { button, foreground in
       button.setForeground(foreground, for: state)
     }
   }

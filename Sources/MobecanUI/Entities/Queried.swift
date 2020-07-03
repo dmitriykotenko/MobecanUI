@@ -13,13 +13,12 @@ public struct Queried<Query, Result>: CustomStringConvertible {
   }
   
   public var description: String {
-    return
-      "Query: \(query)\n" +
-      "Result: \(result)"
+    "Query: \(query)\n" +
+    "Result: \(result)"
   }
   
   public func map<OtherResult>(_ transform: (Result) -> OtherResult) -> Queried<Query, OtherResult> {
-    return Queried<Query, OtherResult>(
+    Queried<Query, OtherResult>(
       query: query,
       result: transform(result)
     )

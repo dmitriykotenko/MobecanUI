@@ -29,7 +29,7 @@ class TableViewCellTuner<Element, Event> {
   
   func cellAndEvents(element: Element,
                      relativePosition: RowRelativePosition) -> (UITableViewCell, Observable<Event>) {
-    
-    return cellAndEvents(tableView, element, relativePosition)
+
+    cellAndEvents(tableView, element, relativePosition)
   }
 }

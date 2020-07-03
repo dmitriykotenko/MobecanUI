@@ -7,7 +7,7 @@ import RxSwift
 public extension ObservableType {
   
   func mapToVoid() -> Observable<Void> {
-    return map { _ in () }
+    map { _ in () }
   }
 }
 
@@ -15,7 +15,7 @@ public extension ObservableType {
 public extension SharedSequenceConvertibleType {
   
   func mapToVoid() -> SharedSequence<SharingStrategy, Void> {
-    return map { _ in () }
+    map { _ in () }
   }
 }
 
@@ -23,11 +23,11 @@ public extension SharedSequenceConvertibleType {
 public extension ObservableType where Element == Void {
   
   func mapToTrue() -> Observable<Bool> {
-    return map { _ in true }
+    map { _ in true }
   }
 
   func mapToFalse() -> Observable<Bool> {
-    return map { _ in false }
+    map { _ in false }
   }
 }
 
@@ -35,10 +35,10 @@ public extension ObservableType where Element == Void {
 public extension SharedSequenceConvertibleType where Element == Void {
   
   func mapToTrue() -> SharedSequence<SharingStrategy, Bool> {
-    return map { _ in true }
+    map { _ in true }
   }
   
   func mapToFalse() -> SharedSequence<SharingStrategy, Bool> {
-    return map { _ in false }
+    map { _ in false }
   }
 }

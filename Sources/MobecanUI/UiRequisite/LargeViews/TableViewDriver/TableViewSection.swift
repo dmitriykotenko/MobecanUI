@@ -13,11 +13,11 @@ public struct TableViewSection<Header, Element> {
   }
   
   public var withoutElements: TableViewSection<Header, Element> {
-    return TableViewSection(header: header, elements: [])
+    TableViewSection(header: header, elements: [])
   }
   
   public func filterElements(_ predicate: (Element) -> Bool) -> Self {
-    return TableViewSection(
+    TableViewSection(
       header: header,
       elements: elements.filter(predicate)
     )
@@ -25,8 +25,8 @@ public struct TableViewSection<Header, Element> {
 
   public func mapElements<OtherElement>(_ transform: (Element) -> OtherElement)
     -> TableViewSection<Header, OtherElement> {
-    
-      return TableViewSection<Header, OtherElement>(
+      
+      TableViewSection<Header, OtherElement>(
         header: header,
         elements: elements.map(transform)
       )
@@ -34,7 +34,8 @@ public struct TableViewSection<Header, Element> {
   
   public func compactMapElements<OtherElement>(_ transform: (Element) -> OtherElement?)
     -> TableViewSection<Header, OtherElement> {
-      return TableViewSection<Header, OtherElement>(
+      
+      TableViewSection<Header, OtherElement>(
         header: header,
         elements: elements.compactMap(transform)
       )
@@ -46,7 +47,7 @@ extension TableViewSection: Equatable where Header: Equatable, Element: Equatabl
   
   public static func == (this: TableViewSection<Header, Element>,
                          that: TableViewSection<Header, Element>) -> Bool {
-    return this.header == that.header && this.elements == that.elements
+    this.header == that.header && this.elements == that.elements
   }
 }
 

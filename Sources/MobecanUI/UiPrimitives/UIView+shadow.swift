@@ -12,7 +12,7 @@ public extension UIView {
   static func shadow(_ shadow: Shadow,
                      backgroundColor: UIColor,
                      cornerRadius: CGFloat = 0) -> UIView {
-    return UIView()
+    UIView()
       .backgroundColor(backgroundColor)
       .cornerRadius(cornerRadius)
       .withShadow(shadow)

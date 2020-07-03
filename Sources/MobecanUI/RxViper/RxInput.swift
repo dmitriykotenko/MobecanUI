@@ -16,11 +16,12 @@ public class RxInput<Element>: ObservableType {
   }
   
   public var wrappedValue: AnyObserver<Element> {
-    return behaviorSubject?.asObserver() ?? publishSubject.asObserver()
+    behaviorSubject?.asObserver() ?? publishSubject.asObserver()
   }
   
   public func subscribe<Observer>(_ observer: Observer) -> Disposable
     where Observer: ObserverType, Element == Observer.Element {
-      return behaviorSubject?.subscribe(observer) ?? publishSubject.subscribe(observer)
+      
+      behaviorSubject?.subscribe(observer) ?? publishSubject.subscribe(observer)
   }
 }

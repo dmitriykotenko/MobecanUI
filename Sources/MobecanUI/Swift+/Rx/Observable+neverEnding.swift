@@ -7,6 +7,6 @@ import RxSwift
 public extension Observable {
   
   func neverEnding() -> Observable<Element> {
-    return Observable.concat(self, .never())
+    Observable.concat(self, .never())
   }
 }

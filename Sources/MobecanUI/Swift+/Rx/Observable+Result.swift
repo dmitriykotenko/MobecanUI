@@ -7,11 +7,11 @@ import RxSwift
 public extension Observable {
   
   func filterSuccess<Value, SomeError>() -> Observable<Value> where Element == Result<Value, SomeError> {
-    return successOrNil().filterNil()
+    successOrNil().filterNil()
   }
   
   func successOrNil<Value, SomeError>() -> Observable<Value?> where Element == Result<Value, SomeError> {
-    return map {
+    map {
       switch $0 {
       case .success(let value):
         return value
@@ -22,11 +22,11 @@ public extension Observable {
   }
   
   func filterFailure<Value, SomeError>() -> Observable<SomeError> where Element == Result<Value, SomeError> {
-    return failureOrNil().filterNil()
+    failureOrNil().filterNil()
   }
   
   func failureOrNil<Value, SomeError>() -> Observable<SomeError?> where Element == Result<Value, SomeError> {
-    return map {
+    map {
       switch $0 {
       case .success:
         return nil
@@ -38,23 +38,22 @@ public extension Observable {
   
   func filterSuccessAndNil<Value, SomeError: Error>() -> Observable<Value?>
     where Element == Result<Value, SomeError>? {
-      
-      return
-        filter {
-          switch $0 {
-          case .success, nil:
-            return true
-          case .failure:
-            return false
-          }
+
+      filter {
+        switch $0 {
+        case .success, nil:
+          return true
+        case .failure:
+          return false
         }
-        .map {
-          switch $0 {
-          case .success(let value):
-            return value
-          case .failure, nil:
-            return nil
-          }
+      }
+      .map {
+        switch $0 {
+        case .success(let value):
+          return value
+        case .failure, nil:
+          return nil
+        }
       }
   }
 }

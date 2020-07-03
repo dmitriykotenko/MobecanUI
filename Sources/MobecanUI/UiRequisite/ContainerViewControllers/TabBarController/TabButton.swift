@@ -118,7 +118,7 @@ private extension TabButton {
   }
   
   private var currentImageSize: CGSize? {
-    return imageView?.image?.size
+    imageView?.image?.size
   }
   
   private func adjustImagePosition(_ spacing: CGFloat) {
@@ -133,7 +133,7 @@ private extension TabButton {
   }
   
   private var currentTitleSize: CGSize? {
-    return titleLabel.flatMap { label in
+    titleLabel.flatMap { label in
       label.text.flatMap { text in
         label.font.map { font in
           NSString(string: text).size(withAttributes: [.font: font])

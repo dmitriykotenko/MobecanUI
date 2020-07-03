@@ -13,14 +13,14 @@ public struct IsSelected<Value> {
   }
   
   public static func notSelected(_ value: Value) -> IsSelected<Value> {
-    return .init(
+    .init(
       value: value,
       isSelected: false
     )
   }
   
   public static func selected(_ value: Value) -> IsSelected<Value> {
-    return .init(
+    .init(
       value: value,
       isSelected: true
     )

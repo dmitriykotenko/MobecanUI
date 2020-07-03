@@ -13,6 +13,6 @@ public struct Saver<Value, SomeError: Error> {
   }
   
   public static func immediateSuccess() -> Saver<Value, SomeError> {
-    return Saver { .just(.success($0)) }
+    Saver { .just(.success($0)) }
   }
 }

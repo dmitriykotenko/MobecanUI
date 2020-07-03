@@ -38,10 +38,10 @@ public extension Reactive where Base: UIView {
   }
   
   func exclusiveHorizontalPan(started startPosition: PanStartPosition? = nil) -> PanControlEvent {
-    return exclusivePan(axis: .horizontal, started: startPosition)
+    exclusivePan(axis: .horizontal, started: startPosition)
   }
   
   func exclusiveVerticalPan(started startPosition: PanStartPosition? = nil) -> PanControlEvent {
-    return exclusivePan(axis: .vertical, started: startPosition)
+    exclusivePan(axis: .vertical, started: startPosition)
   }
 }

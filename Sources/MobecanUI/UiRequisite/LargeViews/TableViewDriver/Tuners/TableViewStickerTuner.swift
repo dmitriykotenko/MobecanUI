@@ -47,22 +47,22 @@ where Sticker.Value == Header {
   // If there should be no sections header, returns nil.
   open func sticker(header: Header,
                     relativePosition: SectionRelativePosition) -> Sticker? {
-    
-    return displayHeader.flatMap { displayHeader in
+
+    displayHeader.flatMap { displayHeader in
       let sticker = tableView.dequeue(Sticker.self)
-      
+
       displayHeader(header, sticker, relativePosition)
-      
+
       return sticker
     }
   }
   
   func events(sticker: Sticker) -> Observable<Event>? {
-    return stickerEvents?(sticker)
+    stickerEvents?(sticker)
   }
   
   open func heightForHeader(_ header: Header?) -> CGFloat {
-    return header
+    header
       .flatMap { sampleSticker.heightFor(value: $0, width: tableView.frame.width) }
       ?? 0
   }

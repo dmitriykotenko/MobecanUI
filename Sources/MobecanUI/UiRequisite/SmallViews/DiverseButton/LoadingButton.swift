@@ -8,9 +8,7 @@ import UIKit
 public class LoadingButton: DiverseButton {
   
   public var isLoading: Bool {
-    get {
-      return activityIndicator.isAnimating
-    }
+    get { activityIndicator.isAnimating }
     
     set {
       newValue ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
@@ -53,7 +51,7 @@ public class LoadingButton: DiverseButton {
 public extension Reactive where Base: LoadingButton {
   
   var isLoading: Binder<Bool> {
-    return Binder(base) { view, isLoading in
+    Binder(base) { view, isLoading in
       view.isLoading = isLoading
     }
   }

@@ -9,7 +9,7 @@ public extension Single {
   static func retry(until condition: @escaping (Element) -> Bool,
                     retryInterval: Duration,
                     operation: @escaping () -> Single<Element>) -> Single<Element> {
-    return operation()
+    operation()
       .flatMap {
         condition($0) ?
           Single.just($0) :
@@ -27,7 +27,7 @@ public extension Single {
                                                          operation: @escaping () -> Single<Element>) -> Single<Element>
     where Element == Result<Value, SomeError> {
 
-      return retry(
+      retry(
         until: {
           switch $0 {
           case .success:
@@ -45,8 +45,8 @@ public extension Single {
                            retryInterval: Duration,
                            operation: @escaping () -> Single<Element>) -> Single<Element>
     where Element == Result<Value, SomeError> {
-      
-      return retry(
+
+      retry(
         until: {
           switch $0 {
           case .success, .failure(error):

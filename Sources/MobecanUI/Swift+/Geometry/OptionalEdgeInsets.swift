@@ -28,27 +28,27 @@ public struct OptionalEdgeInsets {
   }
 
   public static func top(_ inset: CGFloat) -> OptionalEdgeInsets {
-    return .init(top: inset)
+    .init(top: inset)
   }
 
   public static func bottom(_ inset: CGFloat) -> OptionalEdgeInsets {
-    return .init(bottom: inset)
+    .init(bottom: inset)
   }
 
   public static func left(_ inset: CGFloat) -> OptionalEdgeInsets {
-    return .init(left: inset)
+    .init(left: inset)
   }
 
   public static func right(_ inset: CGFloat) -> OptionalEdgeInsets {
-    return .init(top: inset)
+    .init(right: inset)
   }
 
   public static func vertical(_ inset: CGFloat) -> OptionalEdgeInsets {
-    return .init(top: inset, bottom: inset)
+    .init(top: inset, bottom: inset)
   }
 
   public static func horizontal(_ inset: CGFloat) -> OptionalEdgeInsets {
-    return .init(left: inset, right: inset)
+    .init(left: inset, right: inset)
   }
 }
 
@@ -56,7 +56,7 @@ public struct OptionalEdgeInsets {
 public extension UIEdgeInsets {
   
   func withOptional(_ optionalInsets: OptionalEdgeInsets) -> UIEdgeInsets {
-    return UIEdgeInsets(
+    UIEdgeInsets(
       top: optionalInsets.top ?? top,
       left: optionalInsets.left ?? left,
       bottom: optionalInsets.bottom ?? bottom,

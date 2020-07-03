@@ -179,11 +179,10 @@ open class NavigationController: UIViewController {
     let animated: Bool
     
     var animation: NavigationAnimator.Animation {
-      return
-        !animated ? .none :
+      !animated ? .none :
         old.isEmpty ? .none :
         new.starts(with: old) ? .push :
-        old.starts(with: new) ? .pop:
+        old.starts(with: new) ? .pop :
         .push
     }
   }
@@ -195,7 +194,7 @@ public extension NavigationController {
   @discardableResult
   func setPresenter(_ presenter: OldNavigationPresenterProtocol) -> Single<Void> {
     // .emit() and .drive() methods must be called in main thread
-    return performInMainThread {
+    performInMainThread {
       self.bindTo(presenter)
     }
   }

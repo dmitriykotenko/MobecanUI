@@ -12,7 +12,7 @@ public class RxSingleOutput<Element>: ObserverType {
   public init() {}
   
   public var wrappedValue: Single<Element> {
-    return subject.asSingle()
+    subject.asSingle()
   }
   
   public func onSuccess(_ element: Element) {

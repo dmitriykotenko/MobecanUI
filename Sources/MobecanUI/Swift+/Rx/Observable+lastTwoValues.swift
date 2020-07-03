@@ -7,11 +7,11 @@ import RxOptional
 public extension ObservableType {
   
   var previous: Observable<Element> {
-    return withPrevious().map { previous, _ in previous }
+    withPrevious().map { previous, _ in previous }
   }
   
   func withPrevious(startWith first: Element) -> Observable<(Element, Element)> {
-    return scan((first, first)) { ($0.1, $1) }
+    scan((first, first)) { ($0.1, $1) }
   }
 
   func withPrevious() -> Observable<(Element, Element)> {

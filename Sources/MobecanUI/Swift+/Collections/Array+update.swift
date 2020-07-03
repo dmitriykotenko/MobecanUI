@@ -5,7 +5,7 @@ public extension Array {
   
   func update<Property: Equatable>(_ element: Element,
                                    compareBy property: (Element) -> Property) -> [Element] {
-    return map {
+    map {
       property($0) == property(element) ? element : $0
     }
   }

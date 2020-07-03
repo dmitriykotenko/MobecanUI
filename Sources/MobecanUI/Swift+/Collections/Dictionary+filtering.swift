@@ -5,13 +5,13 @@
 public extension Dictionary {
   
   func filterKeys(_ predicate: @escaping (Key) -> Bool) -> [Key: Value] {
-    return Dictionary(
+    Dictionary(
       uniqueKeysWithValues: filter { key, value in predicate(key) == true }
     )
   }
   
   func filterValues(_ predicate: @escaping (Value) -> Bool) -> [Key: Value] {
-    return Dictionary(
+    Dictionary(
       uniqueKeysWithValues: filter { key, value in predicate(value) == true }
     )
   }

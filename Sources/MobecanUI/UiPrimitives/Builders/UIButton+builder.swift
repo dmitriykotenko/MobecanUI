@@ -92,11 +92,11 @@ public extension UIButton {
   }
 
   func singlelined() -> Self {
-    return numberOfLines(1).lineBreakMode(.byTruncatingTail)
+    numberOfLines(1).lineBreakMode(.byTruncatingTail)
   }
 
   func multilined() -> Self {
-    return numberOfLines(0).lineBreakMode(.byWordWrapping)
+    numberOfLines(0).lineBreakMode(.byWordWrapping)
   }
 
   func imageTitlePadding(_ imageTitleSpacing: CGFloat,

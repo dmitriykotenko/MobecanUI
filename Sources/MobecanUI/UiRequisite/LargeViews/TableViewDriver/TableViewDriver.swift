@@ -119,7 +119,7 @@ where
   // MARK: - Table View Data Source and Delegate
   
   public func numberOfSections(in tableView: UITableView) -> Int {
-    return sectionsSnapshot.count
+    sectionsSnapshot.count
   }
   
   public func tableView(_ tableView: UITableView,
@@ -140,28 +140,28 @@ where
   
   public func tableView(_ tableView: UITableView,
                         heightForHeaderInSection sectionIndex: Int) -> CGFloat {
-    return stickerTuner.heightForHeader(
+    stickerTuner.heightForHeader(
       section(sectionIndex).header
     )
   }
   
   public func tableView(_ tableView: UITableView,
                         viewForFooterInSection section: Int) -> UIView? {
-    return footerView()
+    footerView()
   }
   
   private func footerView() -> UIView? {
-    return spacing.map { UIView().height($0) }
+    spacing.map { UIView().height($0) }
   }
   
   public func tableView(_ tableView: UITableView,
                         heightForFooterInSection section: Int) -> CGFloat {
-    return spacing ?? 0
+    spacing ?? 0
   }
   
   public func tableView(_ tableView: UITableView,
                         numberOfRowsInSection sectionIndex: Int) -> Int {
-    return section(sectionIndex).elements.count
+    section(sectionIndex).elements.count
   }
   
   public func tableView(_ tableView: UITableView,
@@ -177,11 +177,11 @@ where
   }
   
   private func element(_ indexPath: IndexPath) -> Element {
-    return section(indexPath.section).elements[indexPath.row]
+    section(indexPath.section).elements[indexPath.row]
   }
   
   private func section(_ sectionIndex: Int) -> Section {
-    return  sectionsSnapshot[sectionIndex]
+    sectionsSnapshot[sectionIndex]
   }
   
   private var sectionsSnapshot: [Section] = []

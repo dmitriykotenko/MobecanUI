@@ -19,6 +19,6 @@ public extension UITableView {
   }
   
   private func cellIdentifier<Cell: UITableViewCell>(_ type: Cell.Type) -> String {
-    return String(describing: Cell.self)
+    String(describing: Cell.self)
   }
 }

@@ -26,9 +26,9 @@ public extension UIView {
     return self
   }
   
-  func size(_ size: CGSize, priority: ConstraintPriority = .required) -> Self {
-    return
-      width(size.width, priority: priority)
+  func size(_ size: CGSize,
+            priority: ConstraintPriority = .required) -> Self {
+    width(size.width, priority: priority)
       .height(size.height, priority: priority)
   }
 
@@ -46,8 +46,7 @@ public extension UIView {
   
   func minimumSize(_ size: CGSize,
                    priority: ConstraintPriority = .required) -> Self {
-    return
-      minimumWidth(size.width, priority: priority)
+    minimumWidth(size.width, priority: priority)
       .minimumHeight(size.height, priority: priority)
   }
 
@@ -92,7 +91,7 @@ public extension UIView {
   }
   
   func border(_ border: Border) -> Self {
-    return borderColor(border.color).borderWidth(border.width)
+    borderColor(border.color).borderWidth(border.width)
   }
   
   func fitToContent(axis: [NSLayoutConstraint.Axis]) -> Self {

@@ -10,8 +10,8 @@ public extension ObservableType {
   func throttle(_ dueTime: Duration,
                 latest: Bool = true,
                 scheduler: SchedulerType) -> Observable<Element> {
-      
-    return throttle(dueTime.toDispatchTimeInterval, latest: latest, scheduler: scheduler)
+
+    throttle(dueTime.toDispatchTimeInterval, latest: latest, scheduler: scheduler)
   }
 }
 
@@ -19,6 +19,6 @@ public extension ObservableType {
 public extension SharedSequenceConvertibleType {
   
   func throttle(_ dueTime: Duration) -> SharedSequence<SharingStrategy, Element> {
-    return throttle(dueTime.toRxTimeInterval)
+    throttle(dueTime.toRxTimeInterval)
   }
 }

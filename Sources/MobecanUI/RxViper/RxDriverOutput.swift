@@ -14,7 +14,7 @@ public class RxDriverOutput<Element>: ObserverType {
   }
   
   public var wrappedValue: Driver<Element> {
-    return relay.asDriver()
+    relay.asDriver()
   }
   
   public func accept(_ event: Element) {

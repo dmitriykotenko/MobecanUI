@@ -9,7 +9,7 @@ import UIKit
 public extension Reactive where Base: UIDatePicker {
 
   var timeOfDay: ControlProperty<HoursMinutesSeconds> {
-    return ControlProperty(
+    ControlProperty(
       values: date
         .map { [weak base] _ in base?.timeOfDay }
         .filterNil(),

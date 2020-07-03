@@ -8,7 +8,8 @@ public extension Single {
   func flatMapSuccess<A, B, SomeError: Error & Equatable>(transform: @escaping (A) -> Single<Result<B, SomeError>>)
     -> Single<Result<B, SomeError>>
     where Element == Result<A, SomeError>, Trait == SingleTrait {
-      return flatMap {
+      
+      flatMap {
         switch $0 {
         case .success(let value):
           return transform(value)
@@ -19,9 +20,10 @@ public extension Single {
   }
   
   func flatMapFailure<Value, SomeError: Error & Equatable>(_ error: SomeError,
-                             failureHandler: @escaping () -> Self) -> Self
+                                                           failureHandler: @escaping () -> Self) -> Self
     where Element == Result<Value, SomeError>, Trait == SingleTrait {
-      return flatMap {
+      
+      flatMap {
         switch $0 {
         case .failure(let someError) where someError == error:
           return failureHandler()
@@ -33,7 +35,8 @@ public extension Single {
   
   func flatMapFailure<Value, SomeError: Error>(failureHandler: @escaping (SomeError) -> Self) -> Self
     where Element == Result<Value, SomeError>, Trait == SingleTrait {
-      return flatMap {
+      
+      flatMap {
         switch $0 {
         case .failure(let error):
           return failureHandler(error)

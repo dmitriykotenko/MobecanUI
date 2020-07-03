@@ -11,8 +11,7 @@ public extension UIView {
                    cornerRadius: CGFloat,
                    _ subview: UIView,
                    insets: UIEdgeInsets = .zero) -> UIView {
-    
-    return card(
+    card(
       roundedCorners: roundedCorners,
       cornerRadius: cornerRadius,
       [subview],

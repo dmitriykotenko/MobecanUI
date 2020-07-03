@@ -107,6 +107,6 @@ public class NavigationInteractor: NavigationInteractorProtocol {
 private extension Array where Element == Module {
   
   func prefixUpTo(moduleType: Module.Type) -> [Element] {
-    return prefixUpTo { module in type(of: module) == moduleType }
+    prefixUpTo { module in type(of: module) == moduleType }
   }
 }

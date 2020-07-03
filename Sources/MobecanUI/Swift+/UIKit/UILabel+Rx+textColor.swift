@@ -8,7 +8,7 @@ import UIKit
 public extension Reactive where Base: UILabel {
 
   var textColor: Binder<UIColor?> {
-    return Binder(base) { label, textColor in
+    Binder(base) { label, textColor in
       label.textColor = textColor
     }
   }

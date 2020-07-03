@@ -9,7 +9,7 @@ public extension Observable where Element == Void {
   
   static func randomInterval(average: Duration,
                              scheduler: SchedulerType = MainScheduler.instance) -> Observable<Void> {
-    return randomInterval(
+    randomInterval(
       average: average,
       deviation: average * 0.5,
       scheduler: scheduler

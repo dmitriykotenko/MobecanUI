@@ -9,7 +9,7 @@ public extension ObservableType {
   
   func timeout(_ dueTime: Duration,
                scheduler: SchedulerType) -> Observable<Element> {
-    return timeout(
+    timeout(
       dueTime.toRxTimeInterval,
       scheduler: scheduler
     )

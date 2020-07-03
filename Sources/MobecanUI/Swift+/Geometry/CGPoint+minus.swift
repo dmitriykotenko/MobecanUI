@@ -6,7 +6,7 @@ import UIKit
 public extension CGPoint {
 
   static func - (this: CGPoint, that: CGPoint) -> CGPoint {
-    return CGPoint(
+    CGPoint(
       x: this.x - that.x,
       y: this.y - that.y
     )

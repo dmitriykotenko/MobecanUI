@@ -89,7 +89,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
  
   /// Override this method to fill labels and iconView according to given value.
   open func formatValue(_ value: Value?) -> Observable<IconAndTexts?> {
-    return .just(nil)
+    .just(nil)
   }
   
   open override var forFirstBaselineLayout: UIView { labels.firstBaselineLabel }

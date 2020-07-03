@@ -8,7 +8,7 @@ public struct Price: Equatable, Codable, CustomStringConvertible {
   public let amount: Decimal
   public let currency: Currency
   
-  public var isZero: Bool { return amount == 0 }
+  public var isZero: Bool { amount == 0 }
 
   public init(amount: Decimal,
               currency: Currency) {
@@ -17,14 +17,14 @@ public struct Price: Equatable, Codable, CustomStringConvertible {
   }
 
   public static func roubles(_ amount: Decimal) -> Price {
-    return Price(
+    Price(
       amount: amount,
       currency: .rouble
     )
   }
   
   public static func dollars(_ amount: Decimal) -> Price {
-    return Price(
+    Price(
       amount: amount,
       currency: .dollar
     )

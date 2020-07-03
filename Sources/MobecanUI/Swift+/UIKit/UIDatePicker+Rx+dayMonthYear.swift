@@ -9,7 +9,7 @@ import UIKit
 public extension Reactive where Base: UIDatePicker {
 
   var dateTime: ControlProperty<DateTime> {
-    return ControlProperty(
+    ControlProperty(
       values: date
         .map { [weak base] _ in base?.dateTime }
         .filterNil(),
@@ -19,7 +19,7 @@ public extension Reactive where Base: UIDatePicker {
   }
 
   var dayMonthYear: ControlProperty<DayMonthYear> {
-    return ControlProperty(
+    ControlProperty(
       values: date
         .map { [weak base] _ in base?.dayMonthYear }
         .filterNil(),

@@ -26,9 +26,7 @@ public struct EmailAddress: Codable, Equatable, CustomStringConvertible {
     }
   }
   
-  public var description: String {
-    return string
-  }
+  public var description: String { string }
   
   public static let sample = EmailAddress(unsanitizedString: "mowgli@jungle.in")
 }

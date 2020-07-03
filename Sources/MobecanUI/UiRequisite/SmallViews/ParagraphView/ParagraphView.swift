@@ -50,7 +50,5 @@ open class ParagraphView<Value>: UIView {
       .disposed(by: disposeBag)
   }
   
-  override public var forFirstBaselineLayout: UIView {
-    return titleLabel
-  }
+  override public var forFirstBaselineLayout: UIView { titleLabel }
 }

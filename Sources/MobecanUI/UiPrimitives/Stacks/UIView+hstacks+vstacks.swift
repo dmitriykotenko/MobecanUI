@@ -12,7 +12,7 @@ public extension UIView {
                                          spacing: CGFloat? = nil,
                                          _ subviews: Subviews,
                                          insets: UIEdgeInsets = .zero) -> UIView where Subviews.Element == UIView {
-    return .zstack([
+    .zstack([
       stackView(
         axis: .horizontal,
         alignment: alignment,
@@ -54,17 +54,16 @@ public extension UIView {
                                          spacing: CGFloat? = nil,
                                          _ subviews: Subviews,
                                          insets: UIEdgeInsets = .zero) -> UIView where Subviews.Element == UIView {
-    return
-      .zstack([
-        stackView(
-          axis: .vertical,
-          alignment: alignment,
-          distribution: distribution,
-          spacing: spacing,
-          subviews: subviews,
-          insets: insets
-        )
-      ])
+    .zstack([
+      stackView(
+        axis: .vertical,
+        alignment: alignment,
+        distribution: distribution,
+        spacing: spacing,
+        subviews: subviews,
+        insets: insets
+      )
+    ])
   }
   
   private static func stackView<Subviews: Sequence>(axis: NSLayoutConstraint.Axis,

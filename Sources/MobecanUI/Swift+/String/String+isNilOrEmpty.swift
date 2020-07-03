@@ -4,6 +4,6 @@
 public extension Optional where Wrapped == String {
 
   var isNilOrEmpty: Bool {
-    return self == nil || (self?.isEmpty == true)
+    self == nil || (self?.isEmpty == true)
   }
 }

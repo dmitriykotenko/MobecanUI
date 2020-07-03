@@ -13,6 +13,6 @@ public extension UITableView {
   }
   
   func dequeueCell<Element: ViewRepresentable>(for elementType: Element.Type) -> ElementCell<Element> {
-    return dequeue(ElementCell<Element>.self)
+    dequeue(ElementCell<Element>.self)
   }
 }

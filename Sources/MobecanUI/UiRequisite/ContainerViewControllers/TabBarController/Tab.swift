@@ -20,6 +20,6 @@ public struct Tab: Equatable {
   }
   
   public static func == (this: Tab, that: Tab) -> Bool {
-    return this.viewController == that.viewController
+    this.viewController == that.viewController
   }
 }

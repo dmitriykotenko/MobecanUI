@@ -18,7 +18,7 @@ public struct ButtonColorsState {
                             tint: UIColor? = nil,
                             background: UIColor? = nil,
                             shadow: UIColor? = nil) -> ButtonColorsState {
-    return ButtonColorsState(
+    ButtonColorsState(
       state: .normal,
       colors: .init(
         title: title,
@@ -33,7 +33,7 @@ public struct ButtonColorsState {
                                  tint: UIColor? = nil,
                                  background: UIColor? = nil,
                                  shadow: UIColor? = nil) -> ButtonColorsState {
-    return ButtonColorsState(
+    ButtonColorsState(
       state: .highlighted,
       colors: .init(
         title: title,
@@ -48,7 +48,7 @@ public struct ButtonColorsState {
                               tint: UIColor? = nil,
                               background: UIColor? = nil,
                               shadow: UIColor? = nil) -> ButtonColorsState {
-    return ButtonColorsState(
+    ButtonColorsState(
       state: .selected,
       colors: .init(
         title: title,
@@ -63,7 +63,7 @@ public struct ButtonColorsState {
                               tint: UIColor? = nil,
                               background: UIColor? = nil,
                               shadow: UIColor? = nil) -> ButtonColorsState {
-    return ButtonColorsState(
+    ButtonColorsState(
       state: .disabled,
       colors: .init(
         title: title,

@@ -8,6 +8,6 @@ import RxSwift
 public extension ObservableType {
   
   func firstNotNilValue<NestedElement>() -> Single<NestedElement> where Element == NestedElement? {
-    return filterNil().take(1).asSingle()
+    filterNil().take(1).asSingle()
   }
 }

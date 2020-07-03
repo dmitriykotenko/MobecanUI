@@ -88,7 +88,7 @@ where MainSubview.Value == Value {
 extension WrapperCell: MarkableView where MainSubview: MarkableView {
 
   public var textToMark: AnyObserver<String?> {
-    return mainSubview?.textToMark ?? .empty
+    mainSubview?.textToMark ?? .empty
   }
 }
 
@@ -96,7 +96,7 @@ extension WrapperCell: MarkableView where MainSubview: MarkableView {
 extension WrapperCell: TemporalView where MainSubview: TemporalView {
   
   public var clock: AnyObserver<Clock?> {
-    return mainSubview?.clock ?? .empty
+    mainSubview?.clock ?? .empty
   }
 }
 
@@ -105,6 +105,6 @@ extension WrapperCell: TemporalView where MainSubview: TemporalView {
 extension AnyObserver {
   
   static var empty: AnyObserver<Element> {
-    return AnyObserver { _ in }
+    AnyObserver { _ in }
   }
 }

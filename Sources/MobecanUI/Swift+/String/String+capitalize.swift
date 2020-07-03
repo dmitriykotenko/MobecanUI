@@ -4,6 +4,6 @@
 public extension String {
 
   var startWithCapitalLetter: String {
-    return prefix(1).capitalized + dropFirst()
+    prefix(1).capitalized + dropFirst()
   }
 }

@@ -12,7 +12,7 @@ public class RxSignalOutput<Element>: ObserverType {
   public init() {}
   
   public var wrappedValue: Signal<Element> {
-    return relay.asSignal()
+    relay.asSignal()
   }
   
   public func accept(_ event: Element) {

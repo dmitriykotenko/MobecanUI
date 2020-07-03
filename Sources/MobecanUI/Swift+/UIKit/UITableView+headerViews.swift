@@ -21,6 +21,6 @@ public extension UITableView {
   }
   
   private func headerViewIdentifier<HeaderView: UITableViewHeaderFooterView>(_ type: HeaderView.Type) -> String {
-    return String(describing: HeaderView.self)
+    String(describing: HeaderView.self)
   }
 }

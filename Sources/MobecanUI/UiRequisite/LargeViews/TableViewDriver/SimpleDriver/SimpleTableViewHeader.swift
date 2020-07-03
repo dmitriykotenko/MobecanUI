@@ -13,15 +13,15 @@ public enum SimpleTableViewHeader {
 public extension TableViewSection where Header == SimpleTableViewHeader? {
   
   static var loadingInProgress: TableViewSection<Header, Element> {
-    return TableViewSection(header: .loadingInProgress, elements: [])    
+    TableViewSection(header: .loadingInProgress, elements: [])
   }
   
   static var nothingFound: TableViewSection<Header, Element> {
-    return TableViewSection(header: .nothingFound, elements: [])
+    TableViewSection(header: .nothingFound, elements: [])
   }
 
   static func error(_ errorText: String?) -> TableViewSection<Header, Element> {
-    return TableViewSection(header: .error(errorText), elements: [])
+    TableViewSection(header: .error(errorText), elements: [])
   }
 }
 
@@ -29,10 +29,10 @@ public extension TableViewSection where Header == SimpleTableViewHeader? {
 public extension Array {
   
   func withTitle(_ title: String) -> TableViewSection<SimpleTableViewHeader?, Element> {
-    return TableViewSection(header: .string(title), elements: self)
+    TableViewSection(header: .string(title), elements: self)
   }
   
   func withoutTitle() -> TableViewSection<SimpleTableViewHeader?, Element> {
-    return TableViewSection(header: nil, elements: self)
+    TableViewSection(header: nil, elements: self)
   }
 }

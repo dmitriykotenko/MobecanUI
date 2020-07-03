@@ -17,7 +17,7 @@ public class RxOutput<Element>: ObserverType {
   }
   
   public var wrappedValue: Observable<Element> {
-    return behaviorRelay?.asObservable() ?? publishRelay.asObservable()
+    behaviorRelay?.asObservable() ?? publishRelay.asObservable()
   }
   
   public func accept(_ event: Element) {

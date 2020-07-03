@@ -3,7 +3,7 @@
 import RxSwift
 
 
-open class FunctionalNavigatonSegues<SomeModule: Module>: NavigationSegues {
+open class FunctionalNavigationSegues<SomeModule: Module>: NavigationSegues {
   
   private let listener: (SomeModule) -> Observable<NavigationEvent>
 
@@ -12,6 +12,6 @@ open class FunctionalNavigatonSegues<SomeModule: Module>: NavigationSegues {
   }
   
   public func segues(module: Module) -> Observable<NavigationEvent>? {
-    return (module as? SomeModule).map { listener($0) }
+    (module as? SomeModule).map { listener($0) }
   }
 }

@@ -8,7 +8,7 @@ public extension UIDatePicker {
   
   var dateTime: DateTime {
     get {
-      return DateTime(
+      DateTime(
         moment: date,
         timeZone: timeZone ?? calendar.timeZone
       )
@@ -20,9 +20,7 @@ public extension UIDatePicker {
   }
   
   var dayMonthYear: DayMonthYear {
-    get {
-      return dateTime.date
-    }
+    get { dateTime.date }
     
     set {
       dateTime = .from(
@@ -34,9 +32,7 @@ public extension UIDatePicker {
   }
   
   var timeOfDay: HoursMinutesSeconds {
-    get {
-      return dateTime.time
-    }
+    get { dateTime.time }
     
     set {
       dateTime = .from(

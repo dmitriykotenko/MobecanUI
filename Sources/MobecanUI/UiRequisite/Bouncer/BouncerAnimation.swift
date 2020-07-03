@@ -60,7 +60,7 @@ class BouncerAnimation {
   }
   
   private var progress: CGFloat {
-    return startTime
+    startTime
       .map { Date().timeIntervalSince($0) / duration.toTimeInterval }
       .map { CGFloat($0).clipped(inside: 0...1) }
       ?? 0
@@ -88,7 +88,7 @@ private protocol Curve {
 
 private struct LinearCurve: Curve {
   
-  func y(x: CGFloat) -> CGFloat { return x } // swiftlint:disable:this identifier_name
+  func y(x: CGFloat) -> CGFloat { x } // swiftlint:disable:this identifier_name
 }
 
 

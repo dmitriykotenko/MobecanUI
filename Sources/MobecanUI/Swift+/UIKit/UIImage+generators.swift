@@ -6,7 +6,7 @@ import UIKit
 public extension UIImage {
   
   static func from(view: UIView) -> UIImage {
-    return renderInCurrentContext(size: view.bounds.size) { context in
+    renderInCurrentContext(size: view.bounds.size) { context in
       view.layer.render(in: context)
     }
   }

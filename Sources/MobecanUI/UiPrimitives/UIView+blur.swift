@@ -6,7 +6,7 @@ import UIKit
 public extension UIView {
   
   static func blur(style: UIBlurEffect.Style) -> Self {
-    return .zstack([
+    .zstack([
       UIVisualEffectView(effect: UIBlurEffect(style: style))
     ])
   }

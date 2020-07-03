@@ -9,7 +9,7 @@ import UIKit
 public extension KingfisherWrapper where Base: UIImageView {
 
   func rxImage(placeholder: Kingfisher.Placeholder? = nil) -> Binder<Kingfisher.Resource?> {
-    return Binder(base) { imageView, resource in
+    Binder(base) { imageView, resource in
       imageView.kf.setImage(
         with: resource,
         placeholder: placeholder

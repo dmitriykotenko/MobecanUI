@@ -6,7 +6,7 @@ import UIKit
 public extension CGSize {
   
   func insetBy(_ insets: UIEdgeInsets) -> CGSize {
-    return CGSize(
+    CGSize(
       width: width - insets.left - insets.right,
       height: height - insets.top - insets.bottom
     )

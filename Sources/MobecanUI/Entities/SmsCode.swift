@@ -9,9 +9,7 @@ public struct SmsCode: Codable, Equatable, CustomStringConvertible {
     self.digits = digits
   }
   
-  public var description: String {
-    return digits
-  }
+  public var description: String { digits }
   
   public static var sample = SmsCode("")
 }

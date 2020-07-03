@@ -28,7 +28,7 @@ public struct TextStyle {
   public func with(fontStyle: FontStyle? = nil,
                    alignment: NSTextAlignment? = nil,
                    color: UIColor? = nil) -> TextStyle {
-    return with(
+    with(
       TextStyle(
         fontStyle: fontStyle,
         alignment: alignment,
@@ -38,7 +38,7 @@ public struct TextStyle {
   }
   
   public func with(_ textStyle: TextStyle) -> TextStyle {
-    return TextStyle(
+    TextStyle(
       fontStyle: textStyle.fontStyle ?? fontStyle,
       alignment: textStyle.alignment ?? alignment,
       color: textStyle.color ?? color

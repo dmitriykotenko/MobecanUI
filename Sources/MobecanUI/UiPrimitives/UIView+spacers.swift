@@ -7,7 +7,7 @@ import UIKit
 public extension UIView {
   
   static func zeroHeightView(layoutPriority: ConstraintPriority = .required) -> UIView {
-    return UIView().height(0, priority: layoutPriority)
+    UIView().height(0, priority: layoutPriority)
   }
 
   static func spacer(width: CGFloat? = nil,
@@ -37,7 +37,7 @@ public extension UIView {
 
   static func rxHorizontalSpacer(_ targetView: UIView,
                                  insets: UIEdgeInsets = .zero) -> UIView {
-    return ReactiveSpacerView(
+    ReactiveSpacerView(
       targetView: targetView,
       axis: [.horizontal],
       insets: insets
@@ -46,7 +46,7 @@ public extension UIView {
   
   static func rxVerticalSpacer(_ targetView: UIView,
                                insets: UIEdgeInsets = .zero) -> UIView {
-    return ReactiveSpacerView(
+    ReactiveSpacerView(
       targetView: targetView,
       axis: [.vertical],
       insets: insets
@@ -55,7 +55,7 @@ public extension UIView {
   
   static func rxSpacer(_ targetView: UIView,
                        insets: UIEdgeInsets = .zero) -> UIView {
-    return ReactiveSpacerView(
+    ReactiveSpacerView(
       targetView: targetView,
       axis: [.horizontal, .vertical],
       insets: insets

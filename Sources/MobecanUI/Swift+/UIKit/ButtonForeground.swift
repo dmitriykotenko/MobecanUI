@@ -15,14 +15,14 @@ public struct ButtonForeground {
   }
   
   public static func title(_ title: String?) -> ButtonForeground {
-    return ButtonForeground(
+    ButtonForeground(
       title: title,
       image: nil
     )
   }
   
   public static func image(_ image: UIImage?) -> ButtonForeground {
-    return ButtonForeground(
+    ButtonForeground(
       title: nil,
       image: image
     )
@@ -33,7 +33,7 @@ public struct ButtonForeground {
 public extension UIButton {
 
   func foreground(for state: UIControl.State) -> ButtonForeground {
-    return ButtonForeground(
+    ButtonForeground(
       title: title(for: state),
       image: image(for: state)
     )

@@ -7,7 +7,5 @@ import SwiftDateTime
 
 public extension Duration {
   
-  var toRxTimeInterval: RxTimeInterval {
-    return toDispatchTimeInterval
-  }
+  var toRxTimeInterval: RxTimeInterval { toDispatchTimeInterval }
 }
