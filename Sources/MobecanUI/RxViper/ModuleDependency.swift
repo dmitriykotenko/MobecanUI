@@ -6,54 +6,54 @@ import UIKit
 
 public enum ModuleDependency {
   
-  struct Output<OutputValue> {
+  public struct Output<OutputValue>: Lensable {
     
-    var module: Module
-    var output: Observable<OutputValue>
+    public var module: Module
+    public var output: Observable<OutputValue>
     
-    init<SomeModule: Module>(_ module: SomeModule,
-                             output: KeyPath<SomeModule, Observable<OutputValue>>) {
+    public init<SomeModule: Module>(_ module: SomeModule,
+                                    output: KeyPath<SomeModule, Observable<OutputValue>>) {
       self.module = module
       self.output = module[keyPath: output]
     }
   }
   
-  struct OneTime<OutputValue> {
+  public struct OneTime<OutputValue>: Lensable {
     
-    var module: Module
-    var output: Single<OutputValue>
+    public var module: Module
+    public var output: Single<OutputValue>
     
-    init<SomeModule: Module>(_ module: SomeModule,
-                             output: KeyPath<SomeModule, Single<OutputValue>>) {
+    public init<SomeModule: Module>(_ module: SomeModule,
+                                    output: KeyPath<SomeModule, Single<OutputValue>>) {
       self.module = module
       self.output = module[keyPath: output]
     }
   }
   
-  struct Pipe<InputValue, OutputValue> {
+  public struct Pipe<InputValue, OutputValue>: Lensable {
     
-    var module: Module
-    var input: AnyObserver<InputValue>
-    var output: Observable<OutputValue>
+    public var module: Module
+    public var input: AnyObserver<InputValue>
+    public var output: Observable<OutputValue>
     
-    init<SomeModule: Module>(_ module: SomeModule,
-                             input: KeyPath<SomeModule, AnyObserver<InputValue>>,
-                             output: KeyPath<SomeModule, Observable<OutputValue>>) {
+    public init<SomeModule: Module>(_ module: SomeModule,
+                                    input: KeyPath<SomeModule, AnyObserver<InputValue>>,
+                                    output: KeyPath<SomeModule, Observable<OutputValue>>) {
       self.module = module
       self.input = module[keyPath: input]
       self.output = module[keyPath: output]
     }
   }
   
-  struct MiniPipe<InputValue, OutputValue> {
+  public struct MiniPipe<InputValue, OutputValue>: Lensable {
     
-    var module: MiniModule
-    var input: AnyObserver<InputValue>
-    var output: Observable<OutputValue>
+    public var module: MiniModule
+    public var input: AnyObserver<InputValue>
+    public var output: Observable<OutputValue>
     
-    init<SomeModule: MiniModule>(_ module: SomeModule,
-                                  input: KeyPath<SomeModule, AnyObserver<InputValue>>,
-                                  output: KeyPath<SomeModule, Observable<OutputValue>>) {
+    public init<SomeModule: MiniModule>(_ module: SomeModule,
+                                        input: KeyPath<SomeModule, AnyObserver<InputValue>>,
+                                        output: KeyPath<SomeModule, Observable<OutputValue>>) {
       self.module = module
       self.input = module[keyPath: input]
       self.output = module[keyPath: output]
@@ -62,7 +62,7 @@ public enum ModuleDependency {
 }
 
 
-extension Module {
+public extension Module {
   
   func and<OutputValue>(output: KeyPath<Self, Observable<OutputValue>>) -> ModuleDependency.Output<OutputValue> {
     .init(self, output: output)
@@ -79,7 +79,7 @@ extension Module {
 }
 
 
-extension MiniModule {
+public extension MiniModule {
   
   func and<Input, Output>(input: KeyPath<Self, AnyObserver<Input>>,
                           output: KeyPath<Self, Observable<Output>>) -> ModuleDependency.MiniPipe<Input, Output> {

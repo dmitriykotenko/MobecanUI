@@ -13,8 +13,13 @@ class TinyModule: MiniModule {
   
   let initialValue = AnyObserver<Int> { _ in }
   let editingResult = Observable<String>.never()
-  
+
   public let uiView = UIView()
+
+  var demonstrator: Demonstrator {
+    get { fatalError() }
+    set { fatalError() }
+  }
 }
 
 
@@ -26,6 +31,11 @@ class GiantModule: Module {
   let editingResult = Observable<String>.never()
   
   public let viewController = UIViewController()
+
+  var demonstrator: Demonstrator {
+    get { fatalError() }
+    set { fatalError() }
+  }
 }
 
 

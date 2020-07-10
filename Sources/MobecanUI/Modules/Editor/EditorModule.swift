@@ -6,6 +6,12 @@ import UIKit
 
 open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
 
+  public struct Parts {
+    public let interactor: EditorInteractor<InputValue, OutputValue, SomeError>
+    public let presenter: EditorPresenter<InputValue, OutputValue, SomeError>
+    public let view: EditorViewController<InputValue, OutputValue, SomeError>
+  }
+
   open var editingResult: Single<Result<OutputValue, SomeError>> { interactor.valueSaved.take(1).asSingle() }
 
   open var finished: Observable<Void> { interactor.valueSaved.filterSuccess().mapToVoid() }
@@ -15,13 +21,21 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   private let interactor: EditorInteractor<InputValue, OutputValue, SomeError>
   private let presenter: EditorPresenter<InputValue, OutputValue, SomeError>
   private let view: EditorViewController<InputValue, OutputValue, SomeError>
+  
+  public var demonstrator: Demonstrator?
 
-  public init(interactor: EditorInteractor<InputValue, OutputValue, SomeError>,
-              presenter: EditorPresenter<InputValue, OutputValue, SomeError>,
-              view: EditorViewController<InputValue, OutputValue, SomeError>) {
-    self.interactor = interactor
-    self.presenter = presenter
-    self.view = view
+  public convenience init(parts: Parts) {
+    self.init(parts: parts, demonstrator: nil)
+  }
+
+  public init(parts: Parts,
+              demonstrator: Demonstrator?) {
+    self.interactor = parts.interactor
+    self.presenter = parts.presenter
+    self.view = parts.view
+
+    self.demonstrator = demonstrator ??
+      UiKitDemonstrator(parentViewController: parts.view)
 
     presenter.setInteractor(interactor)
     view.setPresenter(presenter)
