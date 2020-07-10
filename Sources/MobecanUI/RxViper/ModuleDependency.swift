@@ -45,13 +45,13 @@ public enum ModuleDependency {
     }
   }
   
-  struct SmallPipe<InputValue, OutputValue> {
+  struct MiniPipe<InputValue, OutputValue> {
     
-    var module: SmallModule
+    var module: MiniModule
     var input: AnyObserver<InputValue>
     var output: Observable<OutputValue>
     
-    init<SomeModule: SmallModule>(_ module: SomeModule,
+    init<SomeModule: MiniModule>(_ module: SomeModule,
                                   input: KeyPath<SomeModule, AnyObserver<InputValue>>,
                                   output: KeyPath<SomeModule, Observable<OutputValue>>) {
       self.module = module
@@ -79,10 +79,10 @@ extension Module {
 }
 
 
-extension SmallModule {
+extension MiniModule {
   
   func and<Input, Output>(input: KeyPath<Self, AnyObserver<Input>>,
-                          output: KeyPath<Self, Observable<Output>>) -> ModuleDependency.SmallPipe<Input, Output> {
+                          output: KeyPath<Self, Observable<Output>>) -> ModuleDependency.MiniPipe<Input, Output> {
     .init(self, input: input, output: output)
   }
 }

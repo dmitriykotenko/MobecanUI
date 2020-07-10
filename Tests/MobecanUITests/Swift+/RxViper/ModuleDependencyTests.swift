@@ -9,7 +9,7 @@ import RxTest
 final class ModuleDependencyTests: XCTestCase {}
 
 
-class TinyModule: SmallModule {
+class TinyModule: MiniModule {
   
   let initialValue = AnyObserver<Int> { _ in }
   let editingResult = Observable<String>.never()
@@ -61,12 +61,12 @@ class AndSingleOutputTester {
 }
 
 
-class SmallModuleAndPipeTester {
+class MiniModuleAndPipeTester {
   
   init() {
     let tinyModule = TinyModule()
     
-    _ = ModuleDependency.SmallPipe(tinyModule, input: \.initialValue, output: \.editingResult)
+    _ = ModuleDependency.MiniPipe(tinyModule, input: \.initialValue, output: \.editingResult)
     _ = tinyModule.and(input: \.initialValue, output: \.editingResult)
   }
 }
