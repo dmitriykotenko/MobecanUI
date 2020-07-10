@@ -38,13 +38,14 @@ public extension UIView {
     
     let iconBottomOffset = (labelHeight - iconHeight) / 2
     
-    let iconContainer = UIView.zstack([icon], insets: .bottom(iconBottomOffset))
-    
     return .hstack(
       alignment: .firstBaseline,
       distribution: distribution,
       spacing: spacing,
-      [iconContainer, label],
+      [
+        icon.withInsets(.bottom(iconBottomOffset)),
+        label
+      ],
       insets: insets
     )
   }

@@ -34,14 +34,15 @@ public class EditableFieldVerticalLayout: EditableFieldLayout {
   }
   
   open func mainSubview(_ subviews: EditableFieldSubviews) -> UIView {
-    let editorContainer: UIView = .zstack([subviews.valueEditor], insets: valueEditorInsets)
-    
-    return .vstack(
+    .vstack(
       alignment: .fill,
       spacing: verticalSpacing,
       [
         subviews.titleLabel.fitToContent(axis: [.vertical]),
-        .zstack([subviews.background, editorContainer]),
+        .zstack([
+          subviews.background,
+          subviews.valueEditor.withInsets(valueEditorInsets),
+        ]),
         subviews.hintLabel.fitToContent(axis: [.vertical]),
         subviews.errorLabel.fitToContent(axis: [.vertical])
       ]
