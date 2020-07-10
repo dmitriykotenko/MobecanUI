@@ -16,10 +16,7 @@ class TinyModule: MiniModule {
 
   public let uiView = UIView()
 
-  var demonstrator: Demonstrator {
-    get { fatalError() }
-    set { fatalError() }
-  }
+  var demonstrator: Demonstrator?
 }
 
 
@@ -32,10 +29,7 @@ class GiantModule: Module {
   
   public let viewController = UIViewController()
 
-  var demonstrator: Demonstrator {
-    get { fatalError() }
-    set { fatalError() }
-  }
+  var demonstrator: Demonstrator?
 }
 
 
