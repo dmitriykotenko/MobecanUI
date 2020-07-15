@@ -6,7 +6,7 @@ import UIKit
 
 public class UiKitDemonstrator: Demonstrator {
   
-  @RxOutput var demonstrationFinished: Observable<Module>
+  @RxOutput public var demonstrationFinished: Observable<Module>
   
   private let parentViewController: UIViewController
   private let wrapper: (UIViewController) -> UIViewController
@@ -16,9 +16,9 @@ public class UiKitDemonstrator: Demonstrator {
   
   private let disposeBag = DisposeBag()
 
-  init(parentViewController: UIViewController,
-       wrapper: @escaping (UIViewController) -> UIViewController = { $0 },
-       animating: Bool = true) {
+  public init(parentViewController: UIViewController,
+              wrapper: @escaping (UIViewController) -> UIViewController = { $0 },
+              animating: Bool = true) {
     self.parentViewController = parentViewController
     self.wrapper = wrapper
     self.animating = animating
