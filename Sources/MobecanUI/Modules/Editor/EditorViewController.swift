@@ -6,7 +6,7 @@ import UIKit
 
 
 open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIViewController {
-  
+
   public var buttonTitle: AnyObserver<String?> { saveButtonContainer.title }
   
   @RxUiInput(false) public var isSaving: AnyObserver<Bool>
@@ -15,46 +15,36 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   private let valueGetter: Observable<Result<OutputValue, SomeError>>
   private let valueSetter: AnyObserver<InputValue?>
   
-  private let editorView: UIView
+  private let subviews: EditorViewControllerSubviews
+  private let layout: EditorViewControllerLayout
+
   private let saveButtonContainer: LoadingButtonContainer
-  private let spacing: CGFloat
-  
-  private let initScrollView: (UIView) -> UIScrollView
   
   private let disposeBag = DisposeBag()
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
-  public init(editorView: UIView,
-              saveButtonContainer: LoadingButtonContainer,
-              spacing: CGFloat,
-              initScrollView: @escaping (UIView) -> UIScrollView,
+  public init(subviews: EditorViewControllerSubviews,
+              layout: EditorViewControllerLayout,
               valueGetter: Observable<Result<OutputValue, SomeError>>,
               valueSetter: AnyObserver<InputValue?>) {
     
-    self.editorView = editorView
-    self.saveButtonContainer = saveButtonContainer
-    self.spacing = spacing
-    
-    self.initScrollView = initScrollView
+    self.subviews = subviews
+    self.layout = layout
+
+    self.saveButtonContainer = subviews.saveButtonContainer
     
     self.valueGetter = valueGetter
     self.valueSetter = valueSetter
     
     super.init(nibName: nil, bundle: nil)
-    
-    valueGetter
-      .map { if case .success = $0 { return true } else { return false } }
-      .bind(to: saveButtonContainer.isEnabled)
-      .disposed(by: disposeBag)
-    
-    _isSaving
-      .bind(to: saveButtonContainer.isLoading)
-      .disposed(by: disposeBag)
-    
-    _isSaving
-      .bind(to: view.rx.isUserInteractionDisabled)
-      .disposed(by: disposeBag)
+
+    [
+      valueGetter.map { $0.isSuccess }.bind(to: saveButtonContainer.isEnabled),
+      _isSaving.bind(to: saveButtonContainer.isLoading),
+      _isSaving.bind(to: view.rx.isUserInteractionDisabled)
+    ]
+    .disposed(by: disposeBag)
   }
   
   override public func viewDidLoad() {
@@ -64,16 +54,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   }
   
   private func buildInterface() {
-    let scrollableView = AutoshrinkingScrollableView(
-      contentView:
-      .vstack(spacing: spacing, [
-        editorView,
-        saveButtonContainer
-      ]),
-      scrollView: initScrollView
-    )
-    
-    view.putSubview(scrollableView)
+    layout.setup(parentView: view, subviews: subviews)
   }
   
   public func setPresenter<Presenter: EditorPresenterProtocol>(_ presenter: Presenter)
@@ -94,4 +75,19 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
       ]
       .disposed(by: disposeBag)
   }
+}
+
+
+extension Result {
+  
+  var isSuccess: Bool {
+    switch self {
+    case .success:
+      return true
+    case .failure:
+      return false
+    }
+  }
+  
+  var isFailure: Bool { !isSuccess }
 }
