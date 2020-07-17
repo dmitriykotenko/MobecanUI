@@ -10,6 +10,14 @@ open class ListModule<Query, Element, ElementEvent, SomeError: Error>: Module {
     public let interactor: ListInteractor<Query, Element, ElementEvent, SomeError>
     public let presenter: ListPresenter<Query, Element, ElementEvent, SomeError>
     public let view: ListViewController<Query, Element, ElementEvent>
+        
+    public init(interactor: ListInteractor<Query, Element, ElementEvent, SomeError>,
+                presenter: ListPresenter<Query, Element, ElementEvent, SomeError>,
+                view: ListViewController<Query, Element, ElementEvent>) {
+      self.interactor = interactor
+      self.presenter = presenter
+      self.view = view
+    }
   }
 
   open var elementEvent: Observable<ElementEvent> { interactor.unhandledElementEvents }
