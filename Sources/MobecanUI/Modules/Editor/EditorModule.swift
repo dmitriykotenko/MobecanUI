@@ -10,6 +10,14 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     public let interactor: EditorInteractor<InputValue, OutputValue, SomeError>
     public let presenter: EditorPresenter<InputValue, OutputValue, SomeError>
     public let view: EditorViewController<InputValue, OutputValue, SomeError>
+    
+    public init(interactor: EditorInteractor<InputValue, OutputValue, SomeError>,
+                presenter: EditorPresenter<InputValue, OutputValue, SomeError>,
+                view: EditorViewController<InputValue, OutputValue, SomeError>) {
+      self.interactor = interactor
+      self.presenter = presenter
+      self.view = view
+    }
   }
 
   open var editingResult: Single<Result<OutputValue, SomeError>> { interactor.valueSaved.take(1).asSingle() }

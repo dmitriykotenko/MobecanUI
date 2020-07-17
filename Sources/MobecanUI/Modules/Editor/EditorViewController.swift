@@ -47,7 +47,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     .disposed(by: disposeBag)
   }
   
-  override public func viewDidLoad() {
+  override open func viewDidLoad() {
     super.viewDidLoad()
     
     buildInterface()
@@ -57,7 +57,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     layout.setup(parentView: view, subviews: subviews)
   }
   
-  public func setPresenter<Presenter: EditorPresenterProtocol>(_ presenter: Presenter)
+  open func setPresenter<Presenter: EditorPresenterProtocol>(_ presenter: Presenter)
     where
     Presenter.InputValue == InputValue,
     Presenter.OutputValue == OutputValue,

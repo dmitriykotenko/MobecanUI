@@ -51,7 +51,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
     )
   }
 
-  public func setInteractor<Interactor: EditorInteractorProtocol>(_ interactor: Interactor)
+  open func setInteractor<Interactor: EditorInteractorProtocol>(_ interactor: Interactor)
     where
     Interactor.InputValue == InputValue,
     Interactor.OutputValue == OutputValue,
