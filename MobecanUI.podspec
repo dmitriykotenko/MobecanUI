@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
   spec.name             = 'MobecanUI'
-  spec.version          = '0.1.7'
+  spec.version          = '0.1.8'
   spec.summary          = 'Mobecan UI (and non-UI) helpers'
-  spec.homepage         = 'git@gitlab.mobecan.com:mobecan/ios-ui.git'
+  spec.homepage         = 'git@github.com:dmitriykotenko/mobecan-ui.git'
   spec.license          = { :type => 'MIT', :file => 'LICENSE' }
   spec.author           = { 'Dmitry Kotenko' => 'd.kotenko@gmail.com' }
-  spec.source           = { :git => 'git@gitlab.mobecan.com:mobecan/ios-ui.git',
+  spec.source           = { :git => 'git@github.com:dmitriykotenko/mobecan-ui.git',
                          :tag => spec.version.to_s }
   spec.source_files     = 'Sources/**/*.swift'
   spec.frameworks       = 'UIKit', 'Foundation'
