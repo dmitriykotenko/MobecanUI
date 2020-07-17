@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'MobecanUI'
-  spec.version          = '0.1.8'
+  spec.version          = '0.1.9'
   spec.summary          = 'Mobecan UI (and non-UI) helpers'
   spec.homepage         = 'git@github.com:dmitriykotenko/mobecan-ui.git'
   spec.license          = { :type => 'MIT', :file => 'LICENSE' }
@@ -13,7 +13,6 @@ Pod::Spec.new do |spec|
   spec.swift_version    = "5.0"
 
   spec.dependency 'RxSwift', '~> 5.0'
-  spec.dependency 'RxCocoa', '~> 5.0'
   spec.dependency 'RxOptional', '~> 4.1.0'
   spec.dependency 'RxGesture', '~> 3.0.2'
   spec.dependency 'RxKeyboard', '~> 1.0.0'
