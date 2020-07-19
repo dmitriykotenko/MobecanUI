@@ -6,7 +6,7 @@ import SnapKit
 import UIKit
 
 
-public class NavigationBar: ClickThroughView {
+open class NavigationBar: ClickThroughView {
   
   public struct Subviews {
     
