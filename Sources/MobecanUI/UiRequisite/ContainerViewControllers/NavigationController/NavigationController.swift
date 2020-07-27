@@ -29,9 +29,11 @@ open class NavigationController: UIViewController {
   private let contentView = ClickThroughView()
 
   @RxDriverOutput(nil) private var appearingViewController: Driver<UIViewController?>
-  
-  private lazy var titleListener =
-    appearingViewController.map { ViewControllerTitleListener(viewController: $0) }
+
+  private lazy var navigationBarContentListener =
+    NavigationBarContentListener(appearingViewController: appearingViewController)
+
+  private lazy var navigationBarFrameListener = FramesListener(views: [customNavigationBar])
 
   private let disposeBag = DisposeBag()
   
@@ -57,51 +59,43 @@ open class NavigationController: UIViewController {
   }
   
   private func addContentView() {
-    view.addSubview(contentView)
-    
-    contentView.snp.makeConstraints { $0.edges.equalToSuperview() }
+    view.putSubview(contentView)
   }
   
   private func addCustomNavigationBar() {
     view.addSubview(customNavigationBar)
     
     customNavigationBar.snp.makeConstraints {
-      $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+      $0.top.leading.trailing.equalTo(view)
     }
     
-    if customNavigationBar.affectsSafeArea {
-      additionalSafeAreaInsets = .top(navigationBarHeight)
-      
-      customNavigationBar.snp.makeConstraints {
-        $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
-      }
-    } else {
-      customNavigationBar.snp.makeConstraints {
-        $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-      }
-    }
-
-    titleListener
-      .flatMapLatest { $0.title }
-      .drive(customNavigationBar.title)
+    setupSafeArea()
+    setupNavigationBarContent()
+  }
+  
+  private func setupNavigationBarContent() {
+    navigationBarContentListener
+      .content
+      .drive(customNavigationBar.content)
       .disposed(by: disposeBag)
-
+    
     appearingViewController
       .map { $0?.view.backgroundColor }
       .drive(customNavigationBar.screenBackgroundColor)
       .disposed(by: disposeBag)
   }
   
-  private var navigationBarHeight: CGFloat {
-    customNavigationBar.title.onNext(" ")
-    
-    customNavigationBar.layoutIfNeeded()
-    
-    let height = customNavigationBar.frame.height
-    
-    customNavigationBar.title.onNext(nil)
-    
-    return height
+  private func setupSafeArea() {
+    if customNavigationBar.affectsSafeArea {
+      navigationBarFrameListener
+        .framesChanged
+        .observeOn(MainScheduler.instance)
+        .compactMap { [weak self] in self?.customNavigationBar.frame.height }
+        .subscribe(onNext: { [weak self] in self?.additionalSafeAreaInsets = .top($0) })
+        .disposed(by: disposeBag)
+    } else {
+      additionalSafeAreaInsets = .zero
+    }
   }
 
   public func push(_ viewController: UIViewController,

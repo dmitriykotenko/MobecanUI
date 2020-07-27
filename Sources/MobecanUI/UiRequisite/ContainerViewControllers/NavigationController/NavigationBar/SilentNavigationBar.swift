@@ -8,35 +8,33 @@ import UIKit
 
 
 public class SilentNavigationBar: NavigationBar {
-  
-  override public func setupLayout(height: CGFloat,
-                                   leftButton: UIButton,
-                                   rightButton: UIButton,
-                                   titleLabel: UILabel,
+
+  override public func setupLayout(subviews: NavigationBar.Subviews,
+                                   rightViewContainer: UIView,
+                                   height: CGFloat? = nil,
                                    spacing: CGFloat) {
     super.setupLayout(
+      subviews: subviews,
+      rightViewContainer: rightViewContainer,
       height: height,
-      leftButton: leftButton,
-      rightButton: rightButton,
-      titleLabel: titleLabel,
       spacing: spacing
     )
     
-    leftButton.snp.makeConstraints {
+    subviews.leftButton.snp.makeConstraints {
       $0.top.bottom.leading.equalToSuperview()
     }
     
-    rightButton.snp.makeConstraints {
+    rightViewContainer.snp.makeConstraints {
       $0.top.bottom.trailing.equalToSuperview()
     }
     
-    titleLabel.snp.makeConstraints {
+    subviews.titleView.snp.makeConstraints {
       $0.top.bottom.centerX.equalToSuperview()
-      $0.leading.greaterThanOrEqualTo(leftButton).inset(spacing)
-      $0.trailing.lessThanOrEqualTo(rightButton).inset(spacing)
+      $0.leading.greaterThanOrEqualTo(subviews.leftButton).inset(spacing)
+      $0.trailing.lessThanOrEqualTo(rightViewContainer).inset(spacing)
     }
 
-    _ = self.height(height)
+    height.map { _ = self.height($0) }
   }
   
   override public var affectsSafeArea: Bool { false }

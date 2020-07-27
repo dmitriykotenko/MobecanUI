@@ -11,36 +11,35 @@ open class NavigationBar: ClickThroughView {
   public struct Subviews {
     
     public let leftButton: UIButton
-    public let rightButton: UIButton
-    public let titleLabel: UILabel
+    public let titleView: LabelOrView
+    public let subtitleView: LabelOrView
+    public let backgroundView: BackgroundView
     
     public init(leftButton: UIButton,
-                rightButton: UIButton,
-                titleLabel: UILabel) {
+                titleView: LabelOrView,
+                subtitleView: LabelOrView,
+                backgroundView: BackgroundView) {
       self.leftButton = leftButton
-      self.rightButton = rightButton
-      self.titleLabel = titleLabel
+      self.titleView = titleView
+      self.subtitleView = subtitleView
+      self.backgroundView = backgroundView
     }
   }
   
-  @RxUiInput(nil) public var title: AnyObserver<String?>
   @RxUiInput(.none) public var backButtonStyle: AnyObserver<NavigationButtonStyle>
-  @RxUiInput(.none) public var rightButtonStyle: AnyObserver<NavigationButtonStyle>
+  @RxUiInput(.empty) public var content: AnyObserver<NavigationBarContent>
   @RxUiInput(nil) public var screenBackgroundColor: AnyObserver<UIColor?>
   
   public var leftButtonTap: Observable<Void> { leftButton.rx.tap.asObservable() }
-  public var rightButtonTap: Observable<Void> { rightButton.rx.tap.asObservable() }
   
   private let leftButton: UIButton
-  private let rightButton: UIButton
-  private let titleLabel: UILabel
-
-  private let leftButtonBackground = SausageView()
-  private let rightButtonBackground = SausageView()
-  private let titleLabelBackground = SausageView()
+  private let rightViewContainer = UIView().size(.zero, priority: .minimum)
+  
+  private let titleView: LabelOrView
+  private let subtitleView: LabelOrView
+  private let backgroundView: BackgroundView
 
   private let applyButtonStyle: (UIButton, NavigationButtonStyle) -> Void
-  private let backgroundBlurStyle: (UIColor?) -> UIBlurEffect.Style?
   
   private let disposeBag = DisposeBag()
   
@@ -49,99 +48,61 @@ open class NavigationBar: ClickThroughView {
   public init(subviews: Subviews,
               height: CGFloat,
               spacing: CGFloat,
-              applyButtonStyle: @escaping (UIButton, NavigationButtonStyle) -> Void,
-              backgroundBlurStyle: @escaping (UIColor?) -> UIBlurEffect.Style? = { _ in nil }) {
+              applyButtonStyle: @escaping (UIButton, NavigationButtonStyle) -> Void) {
     self.leftButton = subviews.leftButton
-    self.rightButton = subviews.rightButton
-    self.titleLabel = subviews.titleLabel
+    self.titleView = subviews.titleView
+    self.subtitleView = subviews.subtitleView
+    self.backgroundView = subviews.backgroundView
     
     self.applyButtonStyle = applyButtonStyle
-    self.backgroundBlurStyle = backgroundBlurStyle
     
     super.init(frame: .zero)
     
     insertSubviews()
     
     setupLayout(
-      height: height,
-      leftButton: leftButton,
-      rightButton: rightButton,
-      titleLabel: titleLabel,
+      subviews: subviews,
+      rightViewContainer: rightViewContainer,
       spacing: spacing
     )
     
     [
       _backButtonStyle.subscribe(onNext: { applyButtonStyle(subviews.leftButton, $0) }),
-      _backButtonStyle.map { $0 == .none }.bind(to: leftButtonBackground.rx.isHidden),
-      
-      _rightButtonStyle.subscribe(onNext: { applyButtonStyle(subviews.rightButton, $0) }),
-      _rightButtonStyle.map { $0 == .none }.bind(to: rightButtonBackground.rx.isHidden),
-
-      _title.bind(to: titleLabel.rx.text),
-      _title.map { $0.isNilOrEmpty }.bind(to: titleLabelBackground.rx.isHidden),
-      
-      _screenBackgroundColor.asObservable()
-        .nestedFlatMap { [weak self] in self?.backgroundBlurStyle($0) }
-        .subscribe(onNext: { [weak self] in self?.setBlurStyle($0) })
+      _content.subscribe(onNext: { [weak self] in self?.displayContent($0) }),
+      _screenBackgroundColor.subscribe(onNext: { [weak self] in self?.screenBackgroundColorUpdated($0) })
     ]
     .disposed(by: disposeBag)
   }
   
   open func insertSubviews() {
-    addSubview(leftButtonBackground)
-    addSubview(rightButtonBackground)
-    addSubview(titleLabelBackground)
+    addSubview(backgroundView)
     
     addSubview(leftButton)
-    addSubview(rightButton)
-    addSubview(titleLabel)
+    addSubview(titleView)
+    addSubview(subtitleView)
+    addSubview(rightViewContainer)
   }
-
-  open func setupLayout(height: CGFloat,
-                        leftButton: UIButton,
-                        rightButton: UIButton,
-                        titleLabel: UILabel,
+  
+  open func setupLayout(subviews: Subviews,
+                        rightViewContainer: UIView,
+                        height: CGFloat? = nil,
                         spacing: CGFloat) {
-    pin(leftButtonBackground, to: leftButton, inset: 8)
-    pin(rightButtonBackground, to: rightButton, inset: 8)
-    pin(titleLabelBackground, to: titleLabel, horizontalInset: -16, verticalInset: -8)
-  }
-  
-  private func pin(_ viewBackground: UIView, to view: UIView, inset: CGFloat) {
-    viewBackground.snp.makeConstraints {
-      $0.centerX.equalTo(view)
-      $0.top.bottom.equalTo(view).inset(inset)
-      $0.left.lessThanOrEqualTo(view).inset(inset)
-      $0.right.greaterThanOrEqualTo(view).inset(inset)
-      $0.width.greaterThanOrEqualTo(viewBackground.snp.height)
-    }
-  }
-  
-  private func pin(_ labelBackground: UIView,
-                   to label: UILabel,
-                   horizontalInset: CGFloat,
-                   verticalInset: CGFloat) {
-    labelBackground.snp.makeConstraints {
-      $0.leading.trailing.equalTo(label).inset(horizontalInset)
-      $0.centerY.equalTo(label)
-      $0.height.equalTo(label.font.lineHeight - 2 * verticalInset)
-    }
+    
+    subviews.backgroundView.snp.makeConstraints { $0.edges.equalToSuperview() }
   }
 
-  open func setBlurStyle(_ blurStyle: UIBlurEffect.Style?) {
-    blur(leftButtonBackground, with: blurStyle)
-    blur(rightButtonBackground, with: blurStyle)
-    blur(titleLabelBackground, with: blurStyle)
+  open func displayContent(_ content: NavigationBarContent) {
+    titleView.value.onNext(content.title)
+    subtitleView.value.onNext(content.subtitle)
+    
+    rightViewContainer.putSingleSubview(
+      .vstack(content.rightView.asArray)
+    )
+    
+    backgroundView.value.onNext(content.background)
   }
   
-  private func blur(_ view: UIView,
-                    with blurStyle: UIBlurEffect.Style?) {
-    view.subviews.forEach { $0.removeFromSuperview() }
-
-    blurStyle.map {
-      view.putSubview(.blur(style: $0))
-    }
-  }
+  open func screenBackgroundColorUpdated(_ screenBackgroundColor: UIColor?) {}
 
   open var affectsSafeArea: Bool { true }
 }

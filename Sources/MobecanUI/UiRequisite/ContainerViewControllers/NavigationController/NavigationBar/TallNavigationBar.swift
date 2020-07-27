@@ -9,35 +9,35 @@ public class TallNavigationBar: NavigationBar {
   public var buttonsHeight: CGFloat = 0
   public var verticalSpacing: CGFloat = 0
 
-  override public func setupLayout(height: CGFloat,
-                                   leftButton: UIButton,
-                                   rightButton: UIButton,
-                                   titleLabel: UILabel,
+  override public func setupLayout(subviews: NavigationBar.Subviews,
+                                   rightViewContainer: UIView,
+                                   height: CGFloat? = nil,
                                    spacing: CGFloat) {
     super.setupLayout(
+      subviews: subviews,
+      rightViewContainer: rightViewContainer,
       height: height,
-      leftButton: leftButton,
-      rightButton: rightButton,
-      titleLabel: titleLabel,
       spacing: spacing
     )
     
-    leftButton.snp.makeConstraints {
+    subviews.leftButton.snp.makeConstraints {
       $0.top.leading.equalToSuperview()
       $0.height.equalTo(buttonsHeight)
     }
     
-    rightButton.snp.makeConstraints {
+    rightViewContainer.snp.makeConstraints {
       $0.top.trailing.equalToSuperview()
       $0.height.equalTo(buttonsHeight)
     }
+
+    let titleInset = subviews.leftButton.contentEdgeInsets.left
     
-    titleLabel.snp.makeConstraints {
+    subviews.titleView.snp.makeConstraints {
       $0.bottom.equalToSuperview()
-      $0.leading.equalToSuperview().inset(leftButton.contentEdgeInsets.left)
-      $0.trailing.lessThanOrEqualToSuperview().inset(rightButton.contentEdgeInsets.right)
+      $0.leading.equalToSuperview().inset(titleInset)
+      $0.trailing.lessThanOrEqualToSuperview().inset(titleInset)
       
-      $0.top.equalTo(leftButton.snp.bottom).offset(verticalSpacing)
+      $0.top.equalTo(subviews.leftButton.snp.bottom).offset(verticalSpacing)
     }
   }
 }

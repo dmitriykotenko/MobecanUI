@@ -17,7 +17,7 @@ public extension NavigationController {
     case backOrCloseOrNone
     
     /// `Arrow` button always (even if there are no view controllers in stack).
-    case arrow
+    case back
     
     public func backButtonStyle(viewControllers: [UIViewController]) -> NavigationButtonStyle {
       switch self {
@@ -25,7 +25,7 @@ public extension NavigationController {
         return viewControllers.count <= 1 ? .none : .back
       case .backOrCloseOrNone:
         return viewControllers.isEmpty ? .none : viewControllers.count == 1 ? .close : .back
-      case .arrow:
+      case .back:
         return .back
       }
     }
