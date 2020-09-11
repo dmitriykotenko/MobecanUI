@@ -6,22 +6,22 @@ public struct DecoratedString {
   
   private let characters: [DecoratedCharacter]
   
-  init(characters: [DecoratedCharacter]) {
+  public init(characters: [DecoratedCharacter]) {
     self.characters = characters
   }
   
-  var value: String {
+  public var value: String {
     return String(characters.map { $0.character })
   }
   
-  var significantValue: String {
+  public var significantValue: String {
     let significantCharacters =
       characters.filter { $0.isSignificant }.map { $0.character }
     
     return String(significantCharacters)
   }
   
-  func isCharacterSignificant(at index: Int) -> Bool {
+  public func isCharacterSignificant(at index: Int) -> Bool {
     if index < characters.count {
       return characters[index].isSignificant
     } else {
@@ -29,7 +29,7 @@ public struct DecoratedString {
     }
   }
   
-  func significantRange(from range: NSRange) -> NSRange {
+  public func significantRange(from range: NSRange) -> NSRange {
     let significantStart = significantIndex(from: range.location)
     let significantEnd = significantIndex(from: range.location + range.length)
     
@@ -46,7 +46,7 @@ public struct DecoratedString {
     return significantIndex
   }
   
-  func index(from significantIndex: Int) -> Int {
+  public func index(from significantIndex: Int) -> Int {
     var numberOfSignificantCharacters = 0
     
     for characterIndex in characters.indices {
@@ -62,7 +62,7 @@ public struct DecoratedString {
     return characters.count
   }
   
-  func indexOfFirstSignificantCharacter(toTheLeftFrom index: Int) -> Int? {
+  public func indexOfFirstSignificantCharacter(toTheLeftFrom index: Int) -> Int? {
     let charactersToTheLeft = characters.prefix(upTo: index).enumerated().reversed()
     
     for (index, character) in charactersToTheLeft where character.isSignificant {
@@ -72,7 +72,7 @@ public struct DecoratedString {
     return nil
   }
   
-  func indexOfFirstSignificantCharacter(toTheRightFrom targetIndex: Int) -> Int? {
+  public func indexOfFirstSignificantCharacter(toTheRightFrom targetIndex: Int) -> Int? {
     let charactersToTheRight = characters.suffix(from: targetIndex)
     
     return charactersToTheRight.firstIndex { $0.isSignificant }
@@ -80,7 +80,7 @@ public struct DecoratedString {
 }
 
 
-extension DecoratedString {
+public extension DecoratedString {
   
   func significantUtf16range(from significantRange: NSRange) -> NSRange {
     let utf16start = utf16indexFromSignificantIndex(significantRange.location)
@@ -128,17 +128,17 @@ extension DecoratedString {
 // A character marked as significant or not significant.
 public struct DecoratedCharacter {
   
-  let character: Character
-  let isSignificant: Bool
+  public let character: Character
+  public let isSignificant: Bool
     
-  static func significant(_ character: Character) -> DecoratedCharacter {
+  public static func significant(_ character: Character) -> DecoratedCharacter {
     return DecoratedCharacter(
       character: character,
       isSignificant: true
     )
   }
   
-  static func insignificant(_ character: Character) -> DecoratedCharacter {
+  public static func insignificant(_ character: Character) -> DecoratedCharacter {
     return DecoratedCharacter(
       character: character,
       isSignificant: false
