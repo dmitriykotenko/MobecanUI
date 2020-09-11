@@ -15,6 +15,10 @@ public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareVie
   private let disposeBag = DisposeBag()
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
+
+  public override init(reuseIdentifier: String?) {
+    super.init(reuseIdentifier: reuseIdentifier)
+  }
   
   public func displayValue(_ value: SimpleTableViewHeader??) {
     initIfNeeded()
