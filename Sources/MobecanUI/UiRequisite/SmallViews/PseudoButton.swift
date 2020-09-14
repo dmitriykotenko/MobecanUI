@@ -27,7 +27,7 @@ open class PseudoButton<Value>: UIView, DataView {
 
     addSubviews(subview, insets: insets)
     setupTaps(tap: tap)
-    setupValueSetter(valueSetter)
+    setupValue(setter: valueSetter)
   }
 
   private func addSubviews(_ subview: UIView,
@@ -48,8 +48,9 @@ open class PseudoButton<Value>: UIView, DataView {
     self.tap = tap ?? rx.tapGesture().when(.recognized).mapToVoid()
   }
 
-  private func setupValueSetter(_ valueSetter: AnyObserver<Value?>) {
-    _value.bind(to: valueSetter).disposed(by: disposeBag)
+  private func setupValue(setter: AnyObserver<Value?>) {
+    _value.bind(to: setter).disposed(by: disposeBag)
+    _value.bind(to: _valueGetter).disposed(by: disposeBag)
   }
   
   public convenience init(button: UIButton,
