@@ -26,9 +26,9 @@ class PseudoButtonTests: XCTestCase {
 
   func testThatLabelTextIsProperlyUpdated() {
     let label = UILabel()
-    let pseudoButton = PseudoButton(label: label, format: { $0 })
+    let pseudoButton = PseudoButton<String>(label: label, format: { $0 ?? "defaultString" })
 
-    XCTAssertEqual(label.text, nil)
+    XCTAssertEqual(label.text, "defaultString")
 
     pseudoButton.value.onNext("Go!")
 
@@ -37,7 +37,7 @@ class PseudoButtonTests: XCTestCase {
 
   func testThatNestedButtonTitleIsProperlyUpdated() {
     let nestedButton = UIButton()
-    let pseudoButton = PseudoButton<ButtonForeground>(button: nestedButton, format: { $0 })
+    let pseudoButton = PseudoButton<ButtonForeground>(button: nestedButton, format: { $0 ?? .empty })
 
     XCTAssertEqual(nestedButton.title(for: .normal), nil)
 

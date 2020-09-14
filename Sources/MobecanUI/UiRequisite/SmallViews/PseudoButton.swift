@@ -54,8 +54,8 @@ open class PseudoButton<Value>: UIView, DataView {
   }
   
   public convenience init(button: UIButton,
-                          format: @escaping (Value) -> ButtonForeground) {
-    let subject = PublishSubject<Value?>()
+                          format: @escaping (Value?) -> ButtonForeground) {
+    let subject = BehaviorSubject<Value?>(value: nil)
     
     self.init(
       button,
@@ -64,16 +64,15 @@ open class PseudoButton<Value>: UIView, DataView {
     )
     
     subject
-      .nestedMap(transform: format)
-      .filterNil()
+      .map(format)
       .bind(to: button.rx.foreground())
       .disposed(by: disposeBag)
   }
   
   public convenience init(label: UILabel,
                           insets: UIEdgeInsets = .zero,
-                          format: @escaping (Value) -> String?) {
-    let subject = PublishSubject<Value?>()
+                          format: @escaping (Value?) -> String?) {
+    let subject = BehaviorSubject<Value?>(value: nil)
     
     self.init(
       label,
@@ -82,7 +81,7 @@ open class PseudoButton<Value>: UIView, DataView {
     )
     
     subject
-      .nestedFlatMap(transform: format)
+      .map(format)
       .bind(to: label.rx.text)
       .disposed(by: disposeBag)
   }

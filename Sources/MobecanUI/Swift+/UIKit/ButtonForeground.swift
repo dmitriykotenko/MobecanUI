@@ -13,7 +13,11 @@ public struct ButtonForeground {
     self.title = title
     self.image = image
   }
-  
+
+  public static var empty: ButtonForeground {
+    .init(title: nil, image: nil)
+  }
+
   public static func title(_ title: String?) -> ButtonForeground {
     ButtonForeground(
       title: title,
