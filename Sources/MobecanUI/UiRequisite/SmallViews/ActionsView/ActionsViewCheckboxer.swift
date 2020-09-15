@@ -18,8 +18,8 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
   private let initCheckmarkView: () -> CheckmarkView
   private let checkmarkPlacement: ActionsViewStructs.CheckmarkPlacement
   
-  init(initCheckmarkView: @escaping () -> CheckmarkView,
-       checkmarkPlacement: ActionsViewStructs.CheckmarkPlacement) {
+  public init(initCheckmarkView: @escaping () -> CheckmarkView,
+              checkmarkPlacement: ActionsViewStructs.CheckmarkPlacement) {
     self.initCheckmarkView = initCheckmarkView
     self.checkmarkPlacement = checkmarkPlacement
   }
@@ -62,6 +62,7 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
       events: events
     )
   }
+  
   private func container(contentView: ContentView,
                          containerView: UIView,
                          checkmarkView: CheckmarkView) -> UIView {

@@ -14,7 +14,7 @@ ActionsViewIngredientMixer {
   
   private let initLabel: () -> UILabel
   
-  init(initLabel: @escaping () -> UILabel) {
+  public init(initLabel: @escaping () -> UILabel) {
     self.initLabel = initLabel
   }
   

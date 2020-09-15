@@ -20,8 +20,8 @@ open class ActionsViewSwiper<ContentView: DataView & EventfulView>: ActionsViewI
   
   private let animationDuration: Duration
 
-  init(possibleButtonsAndActions: [SideAction: UIButton],
-       animationDuration: Duration) {
+  public init(possibleButtonsAndActions: [SideAction: UIButton],
+              animationDuration: Duration) {
     self.possibleButtonsAndActions = possibleButtonsAndActions
     
     self.buttonWidths = possibleButtonsAndActions.mapValues {
