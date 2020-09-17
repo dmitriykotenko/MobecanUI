@@ -35,6 +35,7 @@ public class CheckmarkView: UIView {
       .subscribe(onNext: { [weak self] in
         self?.selectedView.isHidden = !$0
         self?.notSelectedView.isHidden = $0
+        self?._isSelected.onNext($0)
       })
       .disposed(by: disposeBag)
     
