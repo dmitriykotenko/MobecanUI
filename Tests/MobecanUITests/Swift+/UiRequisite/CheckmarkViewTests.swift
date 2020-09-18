@@ -90,5 +90,6 @@ final class CheckmarkViewTests: XCTestCase {
   static var allTests = [
     ("Test initially selected checkmark", testInitiallySelectedCheckmark),
     ("Test initially not selected checkmark", testInitiallyNotSelectedCheckmark),
+    ("Test .isSelected property", testIsSelectedProperty)
   ]
 }

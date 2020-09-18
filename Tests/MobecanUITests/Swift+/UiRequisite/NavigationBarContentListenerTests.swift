@@ -120,7 +120,11 @@ final class NavigationBarContentListenerTests: XCTestCase {
   }
 
   static var allTests = [
-    ("Test initial content", testThatInitiallyContentIsEmpty)
+    ("Test that initially content is empty", testThatInitiallyContentIsEmpty),
+    ("Test that system title is processed correctly", testThatSystemTitleIsProcessedCorrectly),
+    ("Test that custom title is processed correctly", testThatCustomTitleIsProcessedCorrectly),
+    ("Test that mixed title is processed correctly", testThatMixedTitleProcessedCorrectly),
+    ("Test that dynamically changed custom title is processed correctly", testThatDynamicCustomTitleProcessedCorrectly),
   ]
 }
 

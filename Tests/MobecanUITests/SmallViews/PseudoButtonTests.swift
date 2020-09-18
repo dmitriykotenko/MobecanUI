@@ -73,4 +73,11 @@ class PseudoButtonTests: XCTestCase {
       expectedOutputValues
     )
   }
+
+  static var allTests = [
+    ("Test that initially value is nil", testThatInitiallyValueIsNil),
+    ("Test that .valueGetter is properly updated", testThatValueGetterIsProperlyUpdated),
+    ("Test that label's text is properly updated", testThatLabelTextIsProperlyUpdated),
+    ("Test that nested button's title is properly updated", testThatNestedButtonTitleIsProperlyUpdated),
+  ]
 }
