@@ -69,8 +69,14 @@ public class UiKitDemonstrator: Demonstrator {
   private func stopDemonstration(of module: Module,
                                  animating: Bool = false) -> Single<Void> {
     let subject = AsyncSubject<Void>()
-    
-    parentViewController.dismiss(
+
+    // Do not perform dismission if there is nothing to dismiss.
+    // Otherwise, parentViewController can accidentally dismiss itself
+    // (see UIViewController.dismiss(animated:completion:) method reference).
+    let presentingViewController =
+      (parentViewController.presentedViewController == nil) ? nil : parentViewController
+
+    presentingViewController?.dismiss(
       animated: animating,
       completion: { [weak self] in
         self?.demonstratedModule = nil
