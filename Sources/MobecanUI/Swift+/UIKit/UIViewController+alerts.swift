@@ -53,6 +53,14 @@ public extension UIViewController {
     public let style: UIAlertAction.Style
     public let title: String
     public let handler: ((UIAlertAction) -> Void)?
+
+    public init(style: UIAlertAction.Style,
+                title: String,
+                handler: ((UIAlertAction) -> Void)? = nil) {
+      self.style = style
+      self.title = title
+      self.handler = handler
+    }
     
     public static func `default`(title: String,
                                  handler: ((UIAlertAction) -> Void)? = nil) -> AlertAction {
