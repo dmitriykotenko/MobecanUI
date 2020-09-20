@@ -38,8 +38,8 @@ public class SwitchView: UIView {
     putSubview(
       .hstack(
         alignment: .center,
-        spacing: spacing,
-        [label, uiSwitch]
+        spacing: spacing / 2.0,
+        [label, .stretchableSpacer(), uiSwitch]
       )
     )
   }
