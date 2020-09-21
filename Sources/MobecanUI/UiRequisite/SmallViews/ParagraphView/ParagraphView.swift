@@ -26,6 +26,8 @@ open class ParagraphView<Value>: UIView {
     self.titleLabel = titleLabel
   
     super.init(frame: .zero)
+
+    disableTemporaryConstraints()
     
     putSubview(
       .vstack(spacing: spacing, [titleLabel, content.bodyView])
