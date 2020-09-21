@@ -70,22 +70,27 @@ public class UiKitDemonstrator: Demonstrator {
                                  animating: Bool = false) -> Single<Void> {
     let subject = AsyncSubject<Void>()
 
+    switch parentViewController.presentedViewController {
     // Do not perform dismission if there is nothing to dismiss.
     // Otherwise, parentViewController can accidentally dismiss itself
     // (see UIViewController.dismiss(animated:completion:) method reference).
-    let presentingViewController =
-      (parentViewController.presentedViewController == nil) ? nil : parentViewController
+    case nil:
+      demonstratedModule = nil
+      _demonstrationFinished.onNext(module)
+      subject.onNext(())
+      subject.onCompleted()
+    default:
+      parentViewController.dismiss(
+        animated: animating,
+        completion: { [weak self] in
+          self?.demonstratedModule = nil
+          self?._demonstrationFinished.onNext(module)
+          subject.onNext(())
+          subject.onCompleted()
+        }
+      )
+    }
 
-    presentingViewController?.dismiss(
-      animated: animating,
-      completion: { [weak self] in
-        self?.demonstratedModule = nil
-        self?._demonstrationFinished.onNext(module)
-        subject.onNext(())
-        subject.onCompleted()
-      }
-    )
-    
     return subject.asSingle()
   }
 }
