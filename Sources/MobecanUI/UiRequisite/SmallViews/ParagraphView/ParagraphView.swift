@@ -22,6 +22,7 @@ open class ParagraphView<Value>: UIView {
   public init(titleLabel: UILabel,
               content: ParagraphViewContent<Value>,
               spacing: CGFloat,
+              insets: UIEdgeInsets = .zero,
               hidesWhenBodyIsNil: Bool = false) {
     self.titleLabel = titleLabel
   
@@ -30,7 +31,8 @@ open class ParagraphView<Value>: UIView {
     disableTemporaryConstraints()
     
     putSubview(
-      .vstack(spacing: spacing, [titleLabel, content.bodyView])
+      .vstack(spacing: spacing, [titleLabel, content.bodyView]),
+      insets: insets
     )
     
     self.hidesWhenBodyIsNil.onNext(hidesWhenBodyIsNil)
