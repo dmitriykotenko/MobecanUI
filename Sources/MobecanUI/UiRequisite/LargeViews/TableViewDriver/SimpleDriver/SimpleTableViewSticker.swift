@@ -6,8 +6,22 @@ import UIKit
 
 public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareView {
 
-  public var textFromHeader: (SimpleTableViewHeader) -> String = { "\($0)" }
-  public var labelInsets: UIEdgeInsets = .zero
+  // FIXME: временные исправления для показа «Роструда» Роструду
+  public var textFromHeader: (SimpleTableViewHeader) -> String = {
+    switch $0 {
+    case .loadingInProgress:
+      return "Идёт загрузка..."
+    case .nothingFound:
+      return "Ничего не найдено"
+    case .error:
+      return "Ошибка при загрузке данных"
+    case .string(let string)
+      return string
+    }
+  }
+
+  // FIXME: временные исправления для показа «Роструда» Роструду
+  public var labelInsets: UIEdgeInsets = .horizontal(16)
 
   public var initLabel: () -> UILabel = { UILabel() }
   private var label: UILabel?
