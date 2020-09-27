@@ -15,8 +15,8 @@ public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareVie
       return "Ничего не найдено"
     case .error:
       return "Ошибка при загрузке данных"
-    case .string(let string)
-      return string
+    case .string(let string):
+      return string ?? ""
     }
   }
 
