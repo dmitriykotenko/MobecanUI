@@ -14,4 +14,13 @@ public extension UIImageView {
     self.image = image
     return self
   }
+
+  func mobecanImage(_ image: Image?,
+                    hideIfNil: Bool = false) -> Self {
+    setMobecanImage(
+      image,
+      hideIfNil: hideIfNil
+    )
+    return self
+  }
 }
