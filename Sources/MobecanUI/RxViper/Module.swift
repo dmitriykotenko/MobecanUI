@@ -14,7 +14,7 @@ public protocol Module {
 }
 
 
-extension Module {
+public extension Module {
 
   var finishedAsSingle: Single<Void> { finished.take(1).asSingle() }
 }
