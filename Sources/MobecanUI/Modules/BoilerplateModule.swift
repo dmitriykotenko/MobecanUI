@@ -4,12 +4,12 @@ import RxSwift
 import UIKit
 
 
-public class BoilerplateModule: Module {
+open class BoilerplateModule: Module {
   
-  public let finished = Observable<Void>.never()  
-  public let viewController: UIViewController
+  open private(set) var finished = Observable<Void>.never()
+  open private(set) var viewController: UIViewController
 
-  public var demonstrator: Demonstrator?
+  open var demonstrator: Demonstrator?
   
   public convenience init(_ view: UIView) {
     self.init(view, demonstrator: nil)

@@ -4,7 +4,7 @@ import UIKit
 
 
 // Displays given view as root view and do nothing else.
-public class BoilerplateViewController: UIViewController {
+open class BoilerplateViewController: UIViewController {
   
   private let contentView: UIView
   
@@ -16,7 +16,7 @@ public class BoilerplateViewController: UIViewController {
     super.init(nibName: nil, bundle: nil)    
   }
     
-  override public func loadView() {
+  override open func loadView() {
     view = contentView
   }
 }
