@@ -3,5 +3,6 @@
 
 public extension Optional {
   
-  var asArray: [Wrapped] { map { [$0] } ?? [] }
+  var asSequence: [Wrapped] { map { [$0] } ?? [] }
 }
+  

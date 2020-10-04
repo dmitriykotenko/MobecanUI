@@ -13,8 +13,8 @@ public extension Array {
               separator: () -> Element? = { nil },
               end: Element? = nil) -> [Element] {
     
-    let allButLast = dropLast().flatMap { [$0] + separator().asArray }
+    let allButLast = dropLast().flatMap { [$0] + separator().asSequence }
     
-    return start.asArray + allButLast + last.asArray + end.asArray
+    return start.asSequence + allButLast + last.asSequence + end.asSequence
   }
 }

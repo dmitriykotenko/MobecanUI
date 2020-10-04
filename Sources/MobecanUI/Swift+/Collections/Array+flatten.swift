@@ -19,11 +19,11 @@ public extension Array {
     where Element == [NestedElement] {
       
       let nonEmpty = filter { $0.isNotEmpty }
-      let allButLast = nonEmpty.dropLast().flatMap { $0 + separator().asArray }
+      let allButLast = nonEmpty.dropLast().flatMap { $0 + separator().asSequence }
       
-      return start.asArray +
+      return start.asSequence +
         allButLast +
-        nonEmpty.last.asArray.flatten() +
-        end.asArray
+        nonEmpty.last.asSequence.flatten() +
+        end.asSequence
   }
 }

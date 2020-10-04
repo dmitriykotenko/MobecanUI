@@ -96,7 +96,7 @@ open class NavigationBar: ClickThroughView {
     subtitleView.value.onNext(content.subtitle)
     
     rightViewContainer.putSingleSubview(
-      .vstack(content.rightView.asArray)
+      .vstack(content.rightView.asSequence)
     )
     
     backgroundView.value.onNext(content.background)
