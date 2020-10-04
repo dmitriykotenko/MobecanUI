@@ -3,10 +3,10 @@
 import Foundation
 
 
-public struct Hyperlink {
+public struct Hyperlink: Equatable, Hashable, Lensable {
   
-  public let text: NSAttributedString
-  public let url: URL
+  public var text: NSAttributedString
+  public var url: URL
 
   public init(text: NSAttributedString,
               url: URL) {

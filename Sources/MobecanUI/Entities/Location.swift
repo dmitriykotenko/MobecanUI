@@ -1,10 +1,10 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct Location: Equatable, Codable {
+public struct Location: Equatable, Hashable, Codable, Lensable {
 
-  public let latitude: Double
-  public let longitude: Double
+  public var latitude: Double
+  public var longitude: Double
 
   public init(latitude: Double, longitude: Double) {
     self.latitude = latitude

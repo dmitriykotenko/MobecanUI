@@ -3,10 +3,10 @@
 import Foundation
 
 
-public struct Price: Equatable, Codable, CustomStringConvertible {
+public struct Price: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
 
-  public let amount: Decimal
-  public let currency: Currency
+  public var amount: Decimal
+  public var currency: Currency
   
   public var isZero: Bool { amount == 0 }
 

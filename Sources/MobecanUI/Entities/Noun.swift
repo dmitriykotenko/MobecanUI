@@ -1,12 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct Noun {
+public struct Noun: Equatable, Hashable, Codable, Lensable {
   
-  public let initialForm: String
-  public let zero: String
-  public let few: String
-  public let many: String
+  public var initialForm: String
+  public var zero: String
+  public var few: String
+  public var many: String
   
   public init(initialForm: String,
               zero: String,

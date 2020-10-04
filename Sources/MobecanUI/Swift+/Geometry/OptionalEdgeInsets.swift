@@ -3,7 +3,7 @@
 import UIKit
 
 
-public struct OptionalEdgeInsets {
+public struct OptionalEdgeInsets: Equatable, Hashable, Codable, Lensable {
   
   public let top: CGFloat?
   public let left: CGFloat?

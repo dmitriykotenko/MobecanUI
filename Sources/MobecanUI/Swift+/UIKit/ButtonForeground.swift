@@ -3,7 +3,7 @@
 import UIKit
 
 
-public struct ButtonForeground {
+public struct ButtonForeground: Equatable, Hashable, Lensable  {
   
   public let title: String?
   public let image: UIImage?

@@ -3,7 +3,7 @@
 import UIKit
 
 
-public struct Shadow: Lensable {
+public struct Shadow: Equatable, Lensable {
   
   public var color: UIColor
   public var opacity: Float

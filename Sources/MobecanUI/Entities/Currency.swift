@@ -3,7 +3,7 @@
 import Foundation
 
 
-public enum Currency: String, Equatable, Codable {
+public enum Currency: String, Equatable, Hashable, Codable {
   
   case rouble
   case dollar

@@ -1,10 +1,10 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct Queried<Query, Result>: CustomStringConvertible {
+public struct Queried<Query, Result>: Lensable, CustomStringConvertible {
 
-  public let query: Query
-  public let result: Result
+  public var query: Query
+  public var result: Result
 
   public init(query: Query,
               result: Result) {
@@ -26,4 +26,6 @@ public struct Queried<Query, Result>: CustomStringConvertible {
 }
 
 
-extension Queried: Equatable, Codable where Query: Equatable & Codable, Result: Equatable & Codable {}
+extension Queried: Equatable where Query: Equatable, Result: Equatable {}
+extension Queried: Hashable where Query: Hashable, Result: Hashable {}
+extension Queried: Codable where Query: Codable, Result: Codable {}

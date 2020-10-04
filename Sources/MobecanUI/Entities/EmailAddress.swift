@@ -1,7 +1,7 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct EmailAddress: Codable, Equatable, CustomStringConvertible {
+public struct EmailAddress: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
   
   public let string: String
   

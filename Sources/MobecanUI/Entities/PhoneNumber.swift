@@ -3,7 +3,7 @@
 import Foundation
 
 
-public struct PhoneNumber: Codable, Equatable, CustomStringConvertible {
+public struct PhoneNumber: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
   
   public let digits: String
   

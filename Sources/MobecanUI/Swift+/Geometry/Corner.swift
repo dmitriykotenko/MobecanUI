@@ -3,7 +3,7 @@
 import UIKit
 
 
-public enum Corner {
+public enum Corner: String, Equatable, Hashable, Codable {
   
   case topLeft, bottomLeft, topRight, bottomRight
   

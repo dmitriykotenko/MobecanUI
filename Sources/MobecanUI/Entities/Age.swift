@@ -1,9 +1,9 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct Age: Equatable, Codable, Comparable, CustomStringConvertible {
+public struct Age: Equatable, Hashable, Codable, Comparable, Lensable, CustomStringConvertible {
   
-  public let years: Int
+  public var years: Int
 
   public init(years: Int) {
     self.years = years

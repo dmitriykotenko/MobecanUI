@@ -1,7 +1,7 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct SmsCode: Codable, Equatable, CustomStringConvertible {
+public struct SmsCode: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
   
   public let digits: String
   

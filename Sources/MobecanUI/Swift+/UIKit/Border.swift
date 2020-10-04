@@ -3,7 +3,7 @@
 import UIKit
 
 
-public struct Border: Lensable {
+public struct Border: Equatable, Hashable, Lensable {
   
   public var color: UIColor
   public var width: CGFloat

@@ -1,7 +1,7 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct IsSelected<Value> {
+public struct IsSelected<Value>: Lensable {
   
   public var value: Value
   public var isSelected: Bool
@@ -26,3 +26,8 @@ public struct IsSelected<Value> {
     )
   }
 }
+
+
+extension IsSelected: Equatable where Value: Equatable {}
+extension IsSelected: Hashable where Value: Hashable {}
+extension IsSelected: Codable where Value: Codable {}
