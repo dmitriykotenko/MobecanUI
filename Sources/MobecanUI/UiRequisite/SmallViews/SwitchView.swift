@@ -39,7 +39,7 @@ public class SwitchView: UIView {
       .hstack(
         alignment: .center,
         spacing: spacing / 2.0,
-        [label, .stretchableSpacer(), uiSwitch]
+        [label, uiSwitch.fitToContent(axis: [.horizontal, .vertical])]
       )
     )
   }
