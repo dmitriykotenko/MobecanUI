@@ -10,4 +10,8 @@ public extension ObservableType where Element: Equatable {
   func whenIsEqual(to element: Element) -> Observable<Void> {
     filter { $0 == element }.mapToVoid()
   }
+
+  func whenNotEqual(to element: Element) -> Observable<Void> {
+    filter { $0 != element }.mapToVoid()
+  }
 }
