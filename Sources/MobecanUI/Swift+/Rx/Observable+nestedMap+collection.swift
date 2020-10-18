@@ -23,3 +23,13 @@ public extension SharedSequenceConvertibleType where Element: Collection {
     }
   }
 }
+
+
+public extension PrimitiveSequenceType where Trait == SingleTrait, Element: Collection {
+
+  func nestedMap<T>(transform: @escaping (Element.Element) -> T) -> Single<[T]> {
+    map { collection in
+      collection.map(transform)
+    }
+  }
+}

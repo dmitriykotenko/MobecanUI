@@ -35,3 +35,19 @@ public extension SharedSequenceConvertibleType where Element: OptionalType {
     }
   }
 }
+
+
+public extension PrimitiveSequenceType where Trait == SingleTrait, Element: OptionalType {
+
+  func nestedMap<T>(transform: @escaping (Element.Wrapped) -> T) -> Single<T?> {
+    map {
+      $0.value.map(transform)
+    }
+  }
+
+  func nestedFlatMap<T>(transform: @escaping (Element.Wrapped) -> T?) -> Single<T?> {
+    map {
+      $0.value.flatMap(transform)
+    }
+  }
+}

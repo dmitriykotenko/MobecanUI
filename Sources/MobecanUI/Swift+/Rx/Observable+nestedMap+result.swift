@@ -23,36 +23,30 @@ public extension Observable {
 }
 
 
-public extension Single {
+public extension PrimitiveSequenceType where Trait == SingleTrait {
   
   func nestedMap<Value, SomeError, AnotherValue>(transform: @escaping (Value) -> AnotherValue)
-    -> Single<Result<AnotherValue, SomeError>>
-    where Element == Result<Value, SomeError> {
+  -> Single<Result<AnotherValue, SomeError>>
+  where Element == Result<Value, SomeError> {
       
-      asObservable()
-        .map { $0.map(transform) }
-        .asSingle()
+    map { $0.map(transform) }
   }
   
   func nestedFlatMap<Value, SomeError, AnotherValue>(transform: @escaping (Value) -> Result<AnotherValue, SomeError>)
-    -> Single<Result<AnotherValue, SomeError>>
-    where Element == Result<Value, SomeError> {
+  -> Single<Result<AnotherValue, SomeError>>
+  where Element == Result<Value, SomeError> {
       
-      asObservable()
-        .map { $0.flatMap(transform) }
-        .asSingle()
+    map { $0.flatMap(transform) }
   }
 }
 
 
-public extension Maybe {
+public extension PrimitiveSequenceType where Trait == MaybeTrait {
   
   func maybeNestedMap<Value, SomeError, AnotherValue>(transform: @escaping (Value) -> AnotherValue)
-    -> Maybe<Result<AnotherValue, SomeError>>
-    where Element == Result<Value, SomeError> {
+  -> Maybe<Result<AnotherValue, SomeError>>
+  where Element == Result<Value, SomeError> {
       
-      asObservable()
-        .map { $0.map(transform) }
-        .asMaybe()
+    map { $0.map(transform) }
   }
 }
