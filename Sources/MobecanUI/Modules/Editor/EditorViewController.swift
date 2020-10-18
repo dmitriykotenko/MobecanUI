@@ -76,18 +76,3 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
       .disposed(by: disposeBag)
   }
 }
-
-
-extension Result {
-  
-  var isSuccess: Bool {
-    switch self {
-    case .success:
-      return true
-    case .failure:
-      return false
-    }
-  }
-  
-  var isFailure: Bool { !isSuccess }
-}
