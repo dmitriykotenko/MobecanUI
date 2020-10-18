@@ -12,6 +12,10 @@ public class RxUiInput<Element>: ObservableType {
   
   private let publishRelay: PublishRelay<Element> = PublishRelay()
   private var behaviorRelay: BehaviorRelay<Element>?
+
+  // Separate MainScheduler is needed,
+  // because sometimes MainScheduler.instance does not execute subscriber callbacks immediately.
+  private lazy var mainScheduler = MainScheduler()
   
   public init() {}
   
@@ -25,16 +29,17 @@ public class RxUiInput<Element>: ObservableType {
       case .next(let element):
         self?.behaviorRelay?.accept(element) ?? self?.publishRelay.accept(element)
       case let .error(error):
-        fatalError("Binding error to RxDriverOutput: \(error)")
+        fatalError("Binding error to RxUiInput: \(error)")
       case .completed:
-        break
+        fatalError("Binding .completed to RxUiInput")
       }
     }
   }
   
   public func subscribe<Observer>(_ observer: Observer) -> Disposable
-    where Observer: ObserverType, Element == Observer.Element {
-    behaviorRelay?.observeOn(MainScheduler.instance).subscribe(observer)
-      ?? publishRelay.observeOn(MainScheduler.instance).subscribe(observer)
+  where Observer: ObserverType, Element == Observer.Element {
+
+    behaviorRelay?.observeOn(mainScheduler).subscribe(observer)
+    ?? publishRelay.observeOn(mainScheduler).subscribe(observer)
   }
 }
