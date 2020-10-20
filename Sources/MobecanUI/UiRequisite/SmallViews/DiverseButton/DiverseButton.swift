@@ -23,10 +23,20 @@ open class DiverseButton: UIButton {
   open var alphasByState: [(state: UIControl.State, alpha: CGFloat)] = [] {
     didSet { updateColorsAndAlpha() }
   }
-  
+
   override open var isEnabled: Bool { didSet { updateColorsAndAlpha() } }
   override open var isHighlighted: Bool { didSet { updateColorsAndAlpha() } }
   override open var isSelected: Bool { didSet { updateColorsAndAlpha() } }
+
+  open var titleTransformer: (String?) -> (String?) = { $0 }
+
+  override open func setTitle(_ title: String?,
+                              for state: UIControl.State) {
+    super.setTitle(
+      title.flatMap(titleTransformer),
+      for: state
+    )
+  }
   
   private func updateColorsAndAlpha() {
     updateTitleColor()

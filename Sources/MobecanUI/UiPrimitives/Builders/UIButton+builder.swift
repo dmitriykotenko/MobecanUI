@@ -136,6 +136,11 @@ public extension DiverseButton {
     self.alphasByState = alphas
     return self
   }
+
+  func titleTransformer(_ titleTransformer: @escaping (String?) -> String?) -> Self {
+    self.titleTransformer = titleTransformer
+    return self
+  }
 }
 
 
