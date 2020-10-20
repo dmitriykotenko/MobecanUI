@@ -9,11 +9,11 @@ public typealias FontTraits = UIFontDescriptor.SymbolicTraits
 
 public struct FontStyle: Lensable {
   
-  public let familyName: String?
-  public let size: CGFloat?
-  public let weight: UIFont.Weight?
-  public let traits: FontTraits?
-  public let features: [FontFeature]?
+  public var familyName: String?
+  public var size: CGFloat?
+  public var weight: UIFont.Weight?
+  public var traits: FontTraits?
+  public var features: [FontFeature]?
   
   public init(familyName: String? = nil,
               size: CGFloat? = nil,
@@ -55,8 +55,10 @@ public struct FontStyle: Lensable {
   
   public func apply(to font: UIFont) -> UIFont {
     let fontDescriptor = font.fontDescriptor
-    
-    var newAttributes = fontDescriptor.fontAttributes
+
+    // If font descriptor has "NSCTFontUIUsageAttribute" attribute, family name will be not set correctly.
+    // See https://gist.github.com/krzyzanowskim/e986890689e4b2f980d96be07de365f8
+    var newAttributes = fontDescriptor.fontAttributes.filter { $0.key != .fontUiUsageAttribute }
     
     applyFamilyName(to: &newAttributes)
     applyWeight(to: &newAttributes)
