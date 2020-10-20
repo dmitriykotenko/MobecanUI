@@ -3,9 +3,9 @@
 import UIKit
 
 
-public class IconTextButton: DiverseButton {
+open class IconTextButton: DiverseButton {
   
-  override public var contentEdgeInsets: UIEdgeInsets {
+  override open var contentEdgeInsets: UIEdgeInsets {
     set {
       super.contentEdgeInsets = newValue.with(right: newValue.right + spacing)
     }

@@ -4,14 +4,14 @@ import UIKit
 
 
 /// Button with enlarged line spacing.
-public class MultilineTextButton: DiverseButton {
+open class MultilineTextButton: DiverseButton {
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init() { super.init(frame: .zero) }
   
-  override public func setTitle(_ title: String?,
-                                for state: UIControl.State) {
+  override open func setTitle(_ title: String?,
+                              for state: UIControl.State) {
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.lineSpacing = (titleLabel?.font.lineHeight ?? 0) * 0.5
 

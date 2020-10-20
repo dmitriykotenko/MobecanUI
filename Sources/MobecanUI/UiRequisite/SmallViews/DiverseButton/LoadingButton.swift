@@ -5,9 +5,9 @@ import RxSwift
 import UIKit
 
 
-public class LoadingButton: DiverseButton {
+open class LoadingButton: DiverseButton {
   
-  public var isLoading: Bool {
+  open var isLoading: Bool {
     get { activityIndicator.isAnimating }
     
     set {
@@ -36,7 +36,7 @@ public class LoadingButton: DiverseButton {
     activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
   }
   
-  override public var colorsByState: [ButtonColorsState] {
+  override open var colorsByState: [ButtonColorsState] {
     didSet {
       let colors = colorsByState.first { $0.state == .normal }?.colors
       

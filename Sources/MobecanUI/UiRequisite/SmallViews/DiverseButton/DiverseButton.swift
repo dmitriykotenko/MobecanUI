@@ -3,30 +3,30 @@
 import UIKit
 
 
-public class DiverseButton: UIButton {
+open class DiverseButton: UIButton {
   
   /// If non-zero, extends tap area outside button's frame (usually used for small buttons).
-  public var tapInsets: UIEdgeInsets = .zero
+  open var tapInsets: UIEdgeInsets = .zero
   
-  override public func point(inside point: CGPoint,
-                             with event: UIEvent?) -> Bool {
+  override open func point(inside point: CGPoint,
+                           with event: UIEvent?) -> Bool {
     
     let extendedBounds = bounds.inset(by: tapInsets)
     
     return extendedBounds.contains(point)
   }
   
-  public var colorsByState: [ButtonColorsState] = [] {
+  open var colorsByState: [ButtonColorsState] = [] {
     didSet { updateColorsAndAlpha() }
   }
   
-  public var alphasByState: [(state: UIControl.State, alpha: CGFloat)] = [] {
+  open var alphasByState: [(state: UIControl.State, alpha: CGFloat)] = [] {
     didSet { updateColorsAndAlpha() }
   }
   
-  override public var isEnabled: Bool { didSet { updateColorsAndAlpha() } }
-  override public var isHighlighted: Bool { didSet { updateColorsAndAlpha() } }
-  override public var isSelected: Bool { didSet { updateColorsAndAlpha() } }
+  override open var isEnabled: Bool { didSet { updateColorsAndAlpha() } }
+  override open var isHighlighted: Bool { didSet { updateColorsAndAlpha() } }
+  override open var isSelected: Bool { didSet { updateColorsAndAlpha() } }
   
   private func updateColorsAndAlpha() {
     updateTitleColor()
