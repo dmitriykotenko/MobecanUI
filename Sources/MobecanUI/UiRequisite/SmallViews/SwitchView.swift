@@ -7,8 +7,13 @@ import UIKit
 
 public class SwitchView: UIView {
   
-  public var initialIsOn: AnyObserver<Bool> { uiSwitch.rx.isOn.asObserver() }
-  public var isOn: Observable<Bool> { uiSwitch.rx.isOn.asObservable() }
+  @RxUiInput(false) public var initialIsOn: AnyObserver<Bool>
+  @RxDriverOutput(false) public var isOn: Driver<Bool>
+
+  // Emits current value of uiSwitch every time the user toggles uiSwitch.
+  var userDidChangeIsOn: Signal<Bool> {
+    uiSwitch.rx.isOn.asSignal(onErrorJustReturn: false)
+  }
 
   private let label: UILabel
   private let uiSwitch: UISwitch
@@ -28,6 +33,7 @@ public class SwitchView: UIView {
     
     setupHeight(height)
     addSubviews(spacing: spacing)
+    setupIsOn()
   }
   
   private func setupHeight(_ height: CGFloat) {
@@ -42,6 +48,17 @@ public class SwitchView: UIView {
         [label, uiSwitch.fitToContent(axis: [.horizontal, .vertical])]
       )
     )
+  }
+
+  private func setupIsOn() {
+    _initialIsOn
+      .bind(to: uiSwitch.rx.isOn)
+      .disposed(by: disposeBag)
+
+    Observable
+      .merge(_initialIsOn.asObservable(), uiSwitch.rx.isOn.asObservable())
+      .bind(to: _isOn)
+      .disposed(by: disposeBag)
   }
   
   public func title(_ title: String?) -> Self {
