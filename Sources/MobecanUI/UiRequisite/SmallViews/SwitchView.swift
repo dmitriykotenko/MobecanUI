@@ -8,7 +8,7 @@ import UIKit
 public class SwitchView: UIView {
   
   @RxUiInput(false) public var initialIsOn: AnyObserver<Bool>
-  @RxDriverOutput(false) public var isOn: Driver<Bool>
+  @RxOutput(false) public var isOn: Observable<Bool>
 
   // Emits current value of uiSwitch every time the user toggles uiSwitch.
   var userDidChangeIsOn: Signal<Bool> {

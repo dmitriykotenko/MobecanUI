@@ -22,7 +22,7 @@ class SwitchViewTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     initialIsOn.bind(to: switchView.initialIsOn).disposed(by: disposeBag)
-    switchView.isOn.drive(isOn).disposed(by: disposeBag)
+    switchView.isOn.bind(to: isOn).disposed(by: disposeBag)
 
     scheduler.start()
 
