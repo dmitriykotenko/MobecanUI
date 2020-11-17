@@ -5,19 +5,19 @@ import RxSwift
 import UIKit
 
 
-public class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UIControl {
+open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UIControl {
   
-  @RxUiInput(.empty) public var texts: AnyObserver<EditableFieldTexts>
-  @RxUiInput public var initialRawValue: AnyObserver<RawValue>
-  @RxUiInput(.on) public var doNotDisturbMode: AnyObserver<DoNotDisturbMode>
-  @RxUiInput(nil) public var externalError: AnyObserver<ValidationError?>
+  @RxUiInput(.empty) open var texts: AnyObserver<EditableFieldTexts>
+  @RxUiInput open var initialRawValue: AnyObserver<RawValue>
+  @RxUiInput(.on) open var doNotDisturbMode: AnyObserver<DoNotDisturbMode>
+  @RxUiInput(nil) open var externalError: AnyObserver<ValidationError?>
   
-  public var rxIsFocused: Driver<Bool> { valueEditor.focusableView.rx.isFirstResponder }
+  open var rxIsFocused: Driver<Bool> { valueEditor.focusableView.rx.isFirstResponder }
 
   // MARK: - Value
-  public private(set) var rawValue: ControlProperty<RawValue>
-  public private(set) lazy var validatedValue = rawValue.compactMap { [weak self] in self?.validator($0) }
-  public private(set) var selectNextField: Observable<Void>
+  open private(set) var rawValue: ControlProperty<RawValue>
+  open private(set) lazy var validatedValue = rawValue.compactMap { [weak self] in self?.validator($0) }
+  open private(set) var selectNextField: Observable<Void>
   
   // MARK: - Reactive counterpart of .isEnabled property
   private var rxIsEnabled = BehaviorRelay(value: true)
@@ -46,7 +46,7 @@ public class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UI
   private let backgroundView: EditableFieldBackground
   private let valueEditor: UIView
   
-  public var formatError: (ValidationError) -> String? = { "\($0.localizedDescription)" }
+  open var formatError: (ValidationError) -> String? = { "\($0.localizedDescription)" }
   private let validator: (RawValue) -> Result<ValidatedValue, ValidationError>
   private var firstResponderStatusListener: [NSObjectProtocol] = []
   
@@ -146,15 +146,15 @@ public class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UI
       .disposed(by: disposeBag)
   }
   
-  override public var isEnabled: Bool { didSet { rxIsEnabled.accept(isEnabled) } }
+  override open var isEnabled: Bool { didSet { rxIsEnabled.accept(isEnabled) } }
   
   @discardableResult
-  public func startEditing() -> Bool {
+  open func startEditing() -> Bool {
     valueEditor.focusableView.becomeFirstResponder()
   }
   
   @discardableResult
-  public func endEditing() -> Bool {
+  open func endEditing() -> Bool {
     valueEditor.focusableView.resignFirstResponder()
   }
 }
