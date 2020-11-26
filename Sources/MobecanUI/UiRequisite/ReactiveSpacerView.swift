@@ -34,10 +34,11 @@ public class ReactiveSpacerView: UIView {
 
     setupInitialSize()
     setupSizeUpdating()
-
   }
   
   private func setupInitialSize() {
+    disableTemporaryConstraints()
+
     snp.makeConstraints {
       widthConstraint = $0.width.equalTo(0).priority(.minimum).constraint
       heightConstraint = $0.height.equalTo(0).priority(.minimum).constraint

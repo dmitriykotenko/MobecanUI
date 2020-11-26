@@ -10,6 +10,8 @@ public extension UIView {
   static func zstack(_ subviews: [UIView],
                      insets: UIEdgeInsets = .zero) -> Self {
     let stack = Self()
+
+    stack.disableTemporaryConstraints()
     
     subviews.forEach { subview in
       stack.addSubview(subview)
@@ -22,7 +24,9 @@ public extension UIView {
   static func safeAreaZstack(_ subviews: [UIView],
                              insets: UIEdgeInsets = .zero) -> Self {
     let stack = Self()
-    
+
+    stack.disableTemporaryConstraints()
+
     subviews.forEach { subview in
       stack.addSubview(subview)
       subview.snp.makeConstraints { $0.edges.equalTo(stack.safeAreaLayoutGuide).inset(insets) }

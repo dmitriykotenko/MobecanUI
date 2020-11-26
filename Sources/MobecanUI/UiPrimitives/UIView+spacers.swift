@@ -7,7 +7,11 @@ import UIKit
 public extension UIView {
   
   static func zeroHeightView(layoutPriority: ConstraintPriority = .required) -> UIView {
-    UIView().height(0, priority: layoutPriority)
+    let zeroHeightView = UIView()
+
+    zeroHeightView.disableTemporaryConstraints()
+
+    return zeroHeightView.height(0, priority: layoutPriority)
   }
 
   static func spacer(width: CGFloat? = nil,
@@ -15,6 +19,8 @@ public extension UIView {
                      layoutPriority: ConstraintPriority = .required) -> UIView {
     let spacer = UIView()
     
+    spacer.disableTemporaryConstraints()
+
     width.map { _ = spacer.width($0, priority: layoutPriority) }
     height.map { _ = spacer.height($0, priority: layoutPriority) }
     
@@ -24,6 +30,8 @@ public extension UIView {
   static func stretchableSpacer(minimumWidth: CGFloat? = nil,
                                 minimumHeight: CGFloat? = nil) -> UIView {
     let spacer = UIView()
+
+    spacer.disableTemporaryConstraints()
 
     spacer.snp.makeConstraints {
       $0.width.height.equalTo(0).priority(.minimum)

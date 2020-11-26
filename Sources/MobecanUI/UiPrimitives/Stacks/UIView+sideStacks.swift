@@ -12,6 +12,8 @@ public extension UIView {
                   priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
+    superview.disableTemporaryConstraints()
+
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
@@ -26,6 +28,8 @@ public extension UIView {
                      inset: CGFloat = 0,
                      priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
+
+    superview.disableTemporaryConstraints()
 
     superview.addSubview(subview)
     
@@ -42,6 +46,8 @@ public extension UIView {
                       priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
 
+    superview.disableTemporaryConstraints()
+
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
@@ -56,6 +62,8 @@ public extension UIView {
                        inset: CGFloat = 0,
                        priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
+
+    superview.disableTemporaryConstraints()
 
     superview.addSubview(subview)
     
@@ -72,6 +80,8 @@ public extension UIView {
                                    priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
     
+    superview.disableTemporaryConstraints()
+
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
@@ -87,6 +97,8 @@ public extension UIView {
                                  priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
     
+    superview.disableTemporaryConstraints()
+
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
@@ -101,6 +113,8 @@ public extension UIView {
                        offset: CGSize = .zero,
                        priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
+
+    superview.disableTemporaryConstraints()
 
     superview.addSubview(subview)
 
@@ -118,6 +132,8 @@ public extension UIView {
                          priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
     
+    superview.disableTemporaryConstraints()
+
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
@@ -133,6 +149,8 @@ public extension UIView {
                           trailingInset: CGFloat = 0,
                           priority: ConstraintPriority = .required) -> Self {
     let superview = Self()
+
+    superview.disableTemporaryConstraints()
 
     superview.addSubview(subview)
     

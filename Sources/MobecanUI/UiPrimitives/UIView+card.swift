@@ -30,11 +30,17 @@ public extension UIView {
     
     // Do not insert vertical stack if card content must be empty.
     let card = subviews.isEmpty ?
-      UIView().minimumSize(minimumSize) :
+      viewWithoutTemporaryConstraints().minimumSize(minimumSize) :
       UIView.vstack(subviews, insets: insets)
     
     return card
       .cornerRadius(cornerRadius)
       .roundedCorners(roundedCorners)
+  }
+
+  private static func viewWithoutTemporaryConstraints() -> UIView {
+    let view = UIView()
+    view.disableTemporaryConstraints()
+    return view
   }
 }
