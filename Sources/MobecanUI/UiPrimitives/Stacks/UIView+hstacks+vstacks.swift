@@ -77,8 +77,6 @@ public extension UIView {
       
       let stack = UIStackView(arrangedSubviews: Array(subviews))
 
-      stack.disableTemporaryConstraints()
-
       stack.axis = axis
       stack.alignment = alignment
       distribution.map { stack.distribution = $0 }
