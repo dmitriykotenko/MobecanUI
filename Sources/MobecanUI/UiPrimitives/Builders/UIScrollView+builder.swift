@@ -10,6 +10,11 @@ public extension UIScrollView {
     return self
   }
   
+  func isPagingEnabled(_ isPagingEnabled: Bool) -> Self {
+    self.isPagingEnabled = isPagingEnabled
+    return self
+  }
+
   func alwaysBounceHorizontal(_ alwaysBounceHorizontal: Bool) -> Self {
     self.alwaysBounceHorizontal = alwaysBounceHorizontal
     return self

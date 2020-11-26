@@ -9,7 +9,12 @@ public extension UITextField {
     self.placeholder = placeholder
     return self
   }
-  
+
+  func attributedPlaceholder(_ attributedPlaceholder: NSAttributedString?) -> Self {
+    self.attributedPlaceholder = attributedPlaceholder
+    return self
+  }
+
   func clearButtonMode(_ clearButtonMode: UITextField.ViewMode) -> Self {
     self.clearButtonMode = clearButtonMode
     return self

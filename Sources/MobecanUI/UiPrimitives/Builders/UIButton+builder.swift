@@ -99,6 +99,11 @@ public extension UIButton {
     numberOfLines(0).lineBreakMode(.byWordWrapping)
   }
 
+  func images(_ imagesByState: [(UIControl.State, image: UIImage)]) -> Self {
+    imagesByState.forEach { setImage($1, for: $0) }
+    return self
+  }
+
   func imageTitlePadding(_ imageTitleSpacing: CGFloat,
                          forContentInsets contentInsets: UIEdgeInsets = .zero) -> Self {
     contentEdgeInsets = UIEdgeInsets(

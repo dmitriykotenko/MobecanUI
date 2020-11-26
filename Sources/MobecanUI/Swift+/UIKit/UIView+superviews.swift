@@ -20,4 +20,15 @@ public extension UIView {
       return [self] + (ancestors ?? [])
     }
   }
+
+  func nearestSuperview(where condition: @escaping (UIView) -> Bool) -> UIView? {
+    switch superview {
+    case nil:
+      return nil
+    case let view? where condition(view):
+      return view
+    default:
+      return superview?.nearestSuperview(where: condition)
+    }
+  }
 }
