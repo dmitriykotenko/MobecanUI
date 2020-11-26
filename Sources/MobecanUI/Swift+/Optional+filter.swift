@@ -3,7 +3,7 @@
 
 public extension Optional {
   
-  func filter(_ predicate: @escaping (Wrapped) -> Bool) -> Wrapped? {
+  func filter(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
     flatMap { predicate($0) ? $0 : nil }
   }
 }
