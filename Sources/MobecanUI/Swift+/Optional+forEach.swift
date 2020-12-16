@@ -3,7 +3,7 @@
 
 public extension Optional {
 
-  func forEach(_ operation: @escaping (Wrapped) -> Void) {
+  func forEach(_ operation: (Wrapped) -> Void) {
     _ = map(operation)
   }
 }

@@ -3,7 +3,7 @@
 
 extension Result {
 
-  func forEach(_ operation: @escaping (Success) -> Void) {
+  func forEach(_ operation: (Success) -> Void) {
     _ = map(operation)
   }
 }
