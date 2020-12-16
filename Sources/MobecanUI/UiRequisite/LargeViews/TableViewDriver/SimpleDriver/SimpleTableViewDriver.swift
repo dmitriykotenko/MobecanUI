@@ -13,13 +13,17 @@ open class SimpleTableViewDriver<Element, CellEvent>: TableViewDriver<
   SimpleTableViewSticker> {
 
   public init(tableView: UITableView,
+              stickerSettings: SimpleTableViewSticker.TextSettings = .defaultTextSettings,
               spacing: CGFloat,
               registerCells: @escaping (UITableView) -> Void,
               cellAndEvents: @escaping CellAndEvents,
               automaticReloading: Bool = true) {
     super.init(
       tableView: tableView,
-      displayHeader: { header, sticker, _ in sticker.displayValue(header) },
+      displayHeader: { header, sticker, _ in
+        sticker.textSettings = stickerSettings
+        sticker.displayValue(header)
+      },
       stickerEvents: { _ in .never() },
       spacing: spacing,
       registerCells: registerCells,

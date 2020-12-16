@@ -11,11 +11,13 @@ where Element: ViewRepresentable, Element.ContentView.ViewEvent == CellEvent {
   private typealias ElementCell = WrapperCell<Element, Element.ContentView>
 
   convenience init(tableView: UITableView,
+                   stickerSettings: SimpleTableViewSticker.TextSettings = .defaultTextSettings,
                    initElementView: @escaping () -> Element.ContentView = { Element.ContentView() },
                    spacing: CGFloat,
                    automaticReloading: Bool = true) {
     self.init(
       tableView: tableView,
+      stickerSettings: stickerSettings,
       spacing: spacing,
       registerCells: { tableView in
         tableView.register(ElementCell.self)
@@ -39,24 +41,28 @@ public extension SimpleTableViewDriver
 where Element: ViewRepresentable, Element.ContentView: TemporalView, Element.ContentView.ViewEvent == CellEvent {
   
   convenience init(tableView: UITableView,
+                   stickerSettings: SimpleTableViewSticker.TextSettings = .defaultTextSettings,
+                   initElementView: @escaping () -> Element.ContentView = { Element.ContentView() },
                    spacing: CGFloat,
                    clock: Clock,
                    automaticReloading: Bool = true) {
     self.init(
       tableView: tableView,
+      stickerSettings: stickerSettings,
       spacing: spacing,
       registerCells: { tableView in
         tableView.register(ElementCell.self)
-    },
+      },
       cellAndEvents: { tableView, element, relativePosition in
         let cell = tableView.dequeue(ElementCell.self)
-        
+        cell.initMainSubview = initElementView
+
         cell.displayValue(element)
         cell.relativePosition.onNext(relativePosition)
         cell.clock.onNext(clock)
         
         return (cell, cell.viewEvents)
-    },
+      },
       automaticReloading: automaticReloading
     )
   }
