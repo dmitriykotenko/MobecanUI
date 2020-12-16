@@ -1,12 +1,13 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import RxCocoa
 import RxSwift
 import UIKit
 
 
 public class UiKitDemonstrator: Demonstrator {
   
-  @RxOutput public var demonstrationFinished: Observable<Module>
+  @RxSignalOutput public var demonstrationFinished: Signal<Module>
   
   private let parentViewController: UIViewController
   private let wrapper: (UIViewController) -> UIViewController
@@ -49,6 +50,7 @@ public class UiKitDemonstrator: Demonstrator {
     demonstratedModule = module
     
     module.finished
+      .observeOn(MainScheduler.instance)
       .flatMap { [weak self] in
         self?.stopDemonstration(of: module, animating: animating) ?? .just(())
       }

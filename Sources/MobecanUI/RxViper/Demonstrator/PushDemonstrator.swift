@@ -6,8 +6,6 @@ import UIKit
 
 public class PushDemonstrator: Demonstrator {
   
-  @RxOutput var demonstrationFinished: Observable<Module>
-  
   private let parentViewController: NavigationController
   private let animating: Bool
   
@@ -38,11 +36,12 @@ public class PushDemonstrator: Demonstrator {
     demonstratedModule = module
     
     module.finished
+      .observeOn(MainScheduler.instance)
       .flatMap { [weak self] in
         self?.stopDemonstration(of: module, animating: animating) ?? .just(())
-    }
-    .subscribe()
-    .disposed(by: disposeBag)
+      }
+      .subscribe()
+      .disposed(by: disposeBag)
     
     let result = parentViewController.viewControllers
       .filter { $0.contains(module.viewController) }
