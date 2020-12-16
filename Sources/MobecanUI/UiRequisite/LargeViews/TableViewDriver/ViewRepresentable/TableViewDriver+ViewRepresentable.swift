@@ -12,6 +12,7 @@ where Element: ViewRepresentable, Element.ContentView.ViewEvent == CellEvent {
   convenience init(tableView: UITableView,
                    displayHeader: ((Header, Sticker, SectionRelativePosition) -> Void)? = nil,
                    stickerEvents: ((Sticker) -> Observable<StickerEvent>)? = nil,
+                   initElementView: @escaping () -> Element.ContentView = { Element.ContentView() },
                    spacing: CGFloat,
                    automaticReloading: Bool = true) {
     self.init(
@@ -24,6 +25,7 @@ where Element: ViewRepresentable, Element.ContentView.ViewEvent == CellEvent {
       },
       cellAndEvents: { tableView, element, relativePosition in
         let cell = tableView.dequeue(ElementCell.self)
+        cell.initMainSubview = initElementView
 
         cell.displayValue(element)
         cell.relativePosition.onNext(relativePosition)
