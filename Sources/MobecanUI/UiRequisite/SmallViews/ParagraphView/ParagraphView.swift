@@ -18,6 +18,30 @@ open class ParagraphView<Value>: UIView {
   private let disposeBag = DisposeBag()
     
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
+
+  /// The only reason this initializer is implemented is avoding of crashes
+  /// in some elaborate scenarios. You can override and use it in subclasses,
+  /// but you usually do not need to explicitly call it on ParagraphView itself.
+  ///
+  /// Scenarios are the following:
+  ///
+  /// 1. Parameterless init() is needed to avoid crash in the following code:
+  /// func dangerousInit<View: UIView>() -> View { View() }
+  /// let v: ParagraphView<Int> = dangerousInit()
+  ///
+  /// 2. More complex case. Suppose that you have a subclass of ParagraphView, SubclassedParagraphView.
+  /// You implement parameterless init() for this subclass, but you do not implement
+  /// parameterless init() for ParagraphView.
+  /// Then, the following code will also crash:
+  /// func dangerousInit<View: UIView>() -> View { View() }
+  /// let v: SubclassedParagraphView = dangerousInit()
+  ///
+  /// To avoid these kinds of crashes, we require that every subclass of ParagraphView
+  /// has explicitly declared parameterless init().
+  public required init() {
+    self.titleLabel = UILabel()
+    super.init(frame: .zero)
+  }
   
   public init(titleLabel: UILabel,
               content: ParagraphViewContent<Value>,

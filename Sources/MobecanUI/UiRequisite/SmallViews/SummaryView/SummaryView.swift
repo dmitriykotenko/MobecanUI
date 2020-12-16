@@ -36,6 +36,33 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   private let disposeBag = DisposeBag()
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
+
+  /// The only reason this initializer is implemented is avoding of crashes
+  /// in some elaborate scenarios. You can override and use it in subclasses,
+  /// but you usually do not need to explicitly call it on SummaryView itself.
+  ///
+  /// Scenarios are the following:
+  /// 
+  /// 1. Parameterless init() is needed to avoid crash in the following code:
+  /// func dangerousInit<View: UIView>() -> View { View() }
+  /// let v: SummaryView<Int, ThreeLinesLabelsGrid> = dangerousInit()
+  ///
+  /// 2. More complex case. Suppose that you have a subclass of SummaryView, SubclassedSummaryView.
+  /// You implement parameterless init() for this subclass, but you do not implement
+  /// parameterless init() for SummaryView.
+  /// Then, the following code will also crash:
+  /// func dangerousInit<View: UIView>() -> View { View() }
+  /// let v: SubclassedSummaryView = dangerousInit()
+  ///
+  /// To avoid these kinds of crashes, we require that every subclass of SummaryView
+  /// has explicitly declared parameterless init().
+  public required init() {
+    self.iconContainer = .init(imageView: .init(), containerView: .init())
+    self.labels = .empty
+    self.backgroundView = nil
+
+    super.init(frame: .zero)
+  }
   
   public init(iconContainer: ImageViewContainer,
               labels: Labels,
