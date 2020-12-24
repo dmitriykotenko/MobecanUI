@@ -54,7 +54,7 @@ open class PseudoButton<Value>: UIView, DataView {
   }
   
   public convenience init(button: UIButton,
-                          format: @escaping (Value?) -> ButtonForeground) {
+                          rxFormat: @escaping (Value?) -> Observable<ButtonForeground>) {
     let subject = BehaviorSubject<Value?>(value: nil)
     
     self.init(
@@ -64,25 +64,43 @@ open class PseudoButton<Value>: UIView, DataView {
     )
     
     subject
-      .map(format)
+      .flatMap(rxFormat)
       .bind(to: button.rx.foreground())
       .disposed(by: disposeBag)
   }
-  
+
+  public convenience init(button: UIButton,
+                          format: @escaping (Value?) -> ButtonForeground) {
+    self.init(
+      button: button,
+      rxFormat: { .just(format($0)) }
+    )
+  }
+
   public convenience init(label: UILabel,
                           insets: UIEdgeInsets = .zero,
-                          format: @escaping (Value?) -> String?) {
+                          rxFormat: @escaping (Value?) -> Observable<String?>) {
     let subject = BehaviorSubject<Value?>(value: nil)
-    
+
     self.init(
       label,
       insets: insets,
       valueSetter: subject.asObserver()
     )
-    
+
     subject
-      .map(format)
+      .flatMap(rxFormat)
       .bind(to: label.rx.text)
       .disposed(by: disposeBag)
+  }
+
+  public convenience init(label: UILabel,
+                          insets: UIEdgeInsets = .zero,
+                          format: @escaping (Value?) -> String?) {
+    self.init(
+      label: label,
+      insets: insets,
+      rxFormat: { .just(format($0)) }
+    )
   }
 }
