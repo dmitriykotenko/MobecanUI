@@ -42,26 +42,47 @@ open class ParagraphView<Value>: UIView {
     self.titleLabel = UILabel()
     super.init(frame: .zero)
   }
-  
+
   public init(titleLabel: UILabel,
               content: ParagraphViewContent<Value>,
               spacing: CGFloat,
-              insets: UIEdgeInsets = .zero,
+              titleInsets: UIEdgeInsets = .zero,
+              contentInsets: UIEdgeInsets = .zero,
               hidesWhenBodyIsNil: Bool = false) {
     self.titleLabel = titleLabel
-  
+
     super.init(frame: .zero)
 
     disableTemporaryConstraints()
-    
+
     putSubview(
-      .vstack(spacing: spacing, [titleLabel, content.bodyView]),
-      insets: insets
+      .vstack(
+        spacing: spacing,
+        [
+          titleLabel.withInsets(titleInsets),
+          content.bodyView.withInsets(contentInsets)
+        ]
+      )
     )
-    
+
     self.hidesWhenBodyIsNil.onNext(hidesWhenBodyIsNil)
-    
+
     displayValue(body: content.body)
+  }
+
+  public convenience init(titleLabel: UILabel,
+                          content: ParagraphViewContent<Value>,
+                          spacing: CGFloat,
+                          insets: UIEdgeInsets,
+                          hidesWhenBodyIsNil: Bool = false) {
+    self.init(
+      titleLabel: titleLabel,
+      content: content,
+      spacing: spacing,
+      titleInsets: insets.with(bottom: 0),
+      contentInsets: insets.with(top: 0),
+      hidesWhenBodyIsNil: hidesWhenBodyIsNil
+    )
   }
   
   private func displayValue(body: AnyObserver<Value?>) {
