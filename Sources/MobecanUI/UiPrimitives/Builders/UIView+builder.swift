@@ -95,14 +95,29 @@ public extension UIView {
   }
   
   func fitToContent(axis: [NSLayoutConstraint.Axis]) -> Self {
+    self
+      .contentHuggingPriority(.required, axis: axis)
+      .contentCompressionResistancePriority(.required, axis: axis)
+  }
+
+  func contentHuggingPriority(_ priority: UILayoutPriority,
+                              axis: [NSLayoutConstraint.Axis]) -> Self {
     axis.forEach {
-      setContentHuggingPriority(.required, for: $0)
-      setContentCompressionResistancePriority(.required, for: $0)
+      setContentHuggingPriority(priority, for: $0)
     }
-    
+
     return self
   }
-  
+
+  func contentCompressionResistancePriority(_ priority: UILayoutPriority,
+                                            axis: [NSLayoutConstraint.Axis]) -> Self {
+    axis.forEach {
+      setContentCompressionResistancePriority(priority, for: $0)
+    }
+
+    return self
+  }
+
   func layoutMargins(_ layoutMargins: UIEdgeInsets) -> Self {
     (self as? UIStackView).map { $0.isLayoutMarginsRelativeArrangement = true }
     
