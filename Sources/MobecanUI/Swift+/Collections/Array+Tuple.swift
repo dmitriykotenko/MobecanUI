@@ -12,4 +12,8 @@ public extension Array {
     
     map { ($0.0, transform($0.1)) }
   }
+
+  func swapped<A, B>() -> [(B, A)] where Element == (A, B) {
+    map { ($1, $0) }
+  }
 }
