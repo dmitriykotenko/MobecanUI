@@ -11,7 +11,7 @@ public extension Array {
 }
 
 
-extension Array where Element: Equatable {
+public extension Array where Element: Equatable {
   
   func prefix(upToElement element: Element) -> [Element] {
     prefixUpTo { $0 == element }
