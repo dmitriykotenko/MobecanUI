@@ -11,7 +11,7 @@ final class OrderedMultiDictionaryTests: XCTestCase {
   let positivePairs = [("a", 1), ("b", 2), ("c", 3), ("a", 4), ("c", 5)]
   let notPositivePairs = [("a", 1), ("b", 2), ("c", 3), ("a", -4), ("c", 5)]
 
-  func testInitializationFromLiteral() {
+  func testInitializationFromArrayLiteral() {
     let dictionary: OrderedMultiDictionary = [("a", 1), ("b", 2), ("c", 3), ("a", 4), ("c", 5)]
 
     XCTAssert(dictionary.keys == ["a", "b", "c", "a", "c"])
@@ -170,7 +170,7 @@ final class OrderedMultiDictionaryTests: XCTestCase {
   }
 
   static var allTests = [
-    ("Test initialization from literal", testInitializationFromLiteral),
+    ("Test initialization from array literal", testInitializationFromArrayLiteral),
     ("Test subscripts", testSubscripts),
     ("Test conversion to dictionary", testConversionToDictionary),
     ("Test value replacing", testValueReplacing),

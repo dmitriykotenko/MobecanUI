@@ -1,13 +1,17 @@
 //  Copyright © 2021 Mobecan. All rights reserved.
 
 
-public struct OrderedMultiDictionary<Key: Hashable, Value>: ExpressibleByArrayLiteral {
+public struct OrderedMultiDictionary<Key: Hashable, Value>: ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
 
   private typealias KeyAndValue = (key: Key, value: Value)
 
   private var pairs: [KeyAndValue]
 
   public init(arrayLiteral keysAndValues: (Key, Value)...) {
+    pairs = keysAndValues
+  }
+
+  public init(dictionaryLiteral keysAndValues: (Key, Value)...) {
     pairs = keysAndValues
   }
 
