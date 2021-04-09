@@ -99,12 +99,3 @@ extension WrapperCell: TemporalView where MainSubview: TemporalView {
     mainSubview?.clock ?? .empty
   }
 }
-
-
-
-extension AnyObserver {
-  
-  static var empty: AnyObserver<Element> {
-    AnyObserver { _ in }
-  }
-}

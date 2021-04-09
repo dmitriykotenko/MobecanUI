@@ -15,7 +15,7 @@ class IntParagraphView: ParagraphView<Int> {
       titleLabel: UILabel(),
       content: .init(
         bodyView: UIView(),
-        body: .onNext { _ in }
+        body: .empty
       ),
       spacing: 0
     )
