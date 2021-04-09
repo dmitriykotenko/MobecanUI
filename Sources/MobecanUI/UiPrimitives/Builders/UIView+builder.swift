@@ -13,7 +13,12 @@ public extension UIView {
     }
     return self
   }
-  
+
+  func translatesAutoresizingMaskIntoConstraints(_ translatesAutoresizingMaskIntoConstraints: Bool) -> Self {
+    self.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints
+    return self
+  }
+
   func width(_ width: CGFloat,
              priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.width.equalTo(width).priority(priority) }
