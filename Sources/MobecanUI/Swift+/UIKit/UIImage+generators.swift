@@ -4,7 +4,26 @@ import UIKit
 
 
 public extension UIImage {
-  
+
+  static func singlePixel(color: UIColor) -> UIImage {
+    singleColorImage(color, size: .init(width: 1, height: 1))
+  }
+
+  static func singleColorImage(_ color: UIColor,
+                               size: CGSize) -> UIImage {
+    let canvasRect = CGRect(
+      origin: .zero,
+      size: size
+    )
+
+    return
+      renderInCurrentContext(size: canvasRect.size, scale: 1) { context in
+        context.setFillColor(color.cgColor)
+        context.fill(canvasRect)
+        context.fillPath()
+    }
+  }
+
   static func from(view: UIView) -> UIImage {
     renderInCurrentContext(size: view.bounds.size) { context in
       view.layer.render(in: context)
@@ -38,9 +57,8 @@ public extension UIImage {
   }
   
   private static func renderInCurrentContext(size: CGSize,
+                                             scale: CGFloat = UIScreen.main.scale,
                                              _ render: (CGContext) -> Void) -> UIImage {
-    let scale = UIScreen.main.scale
-    
     UIGraphicsBeginImageContextWithOptions(size, false, scale)
     
     UIGraphicsGetCurrentContext().map(render)
