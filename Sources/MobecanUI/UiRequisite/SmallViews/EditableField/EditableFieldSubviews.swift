@@ -13,6 +13,16 @@ public struct EditableFieldSubviews {
   public let hintLabel: UILabel
   public let errorLabel: UILabel
 
+  var all: [UIView] {
+    [
+      valueEditor,
+      background,
+      titleLabel,
+      hintLabel,
+      errorLabel
+    ]
+  }
+
   public init(valueEditor: UIView,
               background: EditableFieldBackground,
               titleLabel: UILabel,

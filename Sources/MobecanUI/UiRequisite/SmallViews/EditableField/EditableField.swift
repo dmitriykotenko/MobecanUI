@@ -5,12 +5,13 @@ import RxSwift
 import UIKit
 
 
-open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UIControl {
+open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UIControl, MandatorinessListener {
   
   @RxUiInput(.empty) open var texts: AnyObserver<EditableFieldTexts>
   @RxUiInput open var initialRawValue: AnyObserver<RawValue>
   @RxUiInput(.on) open var doNotDisturbMode: AnyObserver<DoNotDisturbMode>
   @RxUiInput(nil) open var externalError: AnyObserver<ValidationError?>
+  @RxUiInput(false) open var isMandatory: AnyObserver<Bool>
   
   open var rxIsFocused: Driver<Bool> { valueEditor.focusableView.rx.isFirstResponder }
 
@@ -79,6 +80,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UICo
     setupTitle()
     setupPlaceholder()
     setupHintAndError()
+    setupMandatoriness(subviews: subviews)
     setupBackground()
     
     setupInitialValue()
@@ -125,6 +127,16 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UICo
       hintText.map { $0.isNilOrEmpty }.bind(to: hintLabel.rx.isHidden)
     ]
     .disposed(by: disposeBag)
+  }
+
+  private func setupMandatoriness(subviews: EditableFieldSubviews) {
+    let listeners = subviews.all
+      .compactMap { $0 as? MandatorinessListener }
+      .map { $0.isMandatory }
+
+    listeners.forEach {
+      _isMandatory.bind(to: $0).disposed(by: disposeBag)
+    }
   }
   
   private func setupBackground() {
