@@ -44,3 +44,12 @@ public extension UILabel {
     return self
   }
 }
+
+
+public extension DiverseLabel {
+
+  func textTransformer(_ transformer: StringTransformer?) -> Self {
+    self.textTransformer = transformer
+    return self
+  }
+}
