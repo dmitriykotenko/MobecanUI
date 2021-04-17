@@ -73,4 +73,19 @@ public struct ButtonColorsState {
       )
     )
   }
+
+  public static func pseudoDisabled(title: UIColor? = nil,
+                                    tint: UIColor? = nil,
+                                    background: UIColor? = nil,
+                                    shadow: UIColor? = nil) -> ButtonColorsState {
+    ButtonColorsState(
+      state: .pseudoDisabled,
+      colors: .init(
+        title: title,
+        tint: tint,
+        background: background,
+        shadow: shadow
+      )
+    )
+  }
 }
