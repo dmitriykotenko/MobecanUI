@@ -1,11 +1,14 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+
 public extension String {
   
-  static var thinSpace: String { " " }
-  static var nonBreakingSpace: String { " " }
-  static var thinNonBreakingSpace: String { " " }
+  static let thinSpace = " "
+  static let nonBreakingSpace = " "
+  static let thinNonBreakingSpace = " "
+
+  static let newLine = "\n"
   
-  static var minus: String { "−" }
-  static var rouble: String { "₽" }
+  static let minus = "−"
+  static let rouble = "₽"
 }
