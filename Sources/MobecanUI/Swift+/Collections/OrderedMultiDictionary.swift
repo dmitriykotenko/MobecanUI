@@ -1,7 +1,7 @@
 //  Copyright © 2021 Mobecan. All rights reserved.
 
 
-public struct OrderedMultiDictionary<Key: Hashable, Value>: ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
+public struct OrderedMultiDictionary<Key: Equatable, Value>: ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {
 
   private typealias KeyAndValue = (key: Key, value: Value)
 
@@ -19,28 +19,14 @@ public struct OrderedMultiDictionary<Key: Hashable, Value>: ExpressibleByArrayLi
     pairs = keysAndValues
   }
 
-  public init(_ dictionary: [Key: Value]) {
-    pairs = dictionary.map { $0 }
-  }
-
   public var keysAndValues: [(Key, Value)] { pairs }
 
   public var keys: [Key] { pairs.map {$0.key } }
 
   public var values: [Value] { pairs.map {$0.value } }
 
-  public var unorderedKeys: Set<Key> {
-    Set(pairs.map { $0.key })
-  }
-
   public mutating func append(value: Value, key: Key) {
     pairs.append((key, value))
-  }
-
-  public var asDictionary: [Key: [Value]] {
-    Dictionary(
-      uniqueKeysWithValues: unorderedKeys.map { ($0, self[all: $0]) }
-    )
   }
 }
 
@@ -104,19 +90,19 @@ public extension OrderedMultiDictionary {
 // MARK: - Mapping
 public extension OrderedMultiDictionary {
 
-  func compactMap<AnotherKey: Hashable, AnotherValue>(
+  func compactMap<AnotherKey: Equatable, AnotherValue>(
     _ transform: (Key, Value) -> (AnotherKey, AnotherValue)?
   ) -> OrderedMultiDictionary<AnotherKey, AnotherValue> {
     .init(pairs.compactMap(transform))
   }
 
-  func map<AnotherKey: Hashable, AnotherValue>(
+  func map<AnotherKey: Equatable, AnotherValue>(
     _ transform: (Key, Value) -> (AnotherKey, AnotherValue)
   ) -> OrderedMultiDictionary<AnotherKey, AnotherValue> {
     compactMap(transform)
   }
 
-  func mapKeys<AnotherKey: Hashable>(_ transform: (Key) -> AnotherKey)
+  func mapKeys<AnotherKey: Equatable>(_ transform: (Key) -> AnotherKey)
     -> OrderedMultiDictionary<AnotherKey, Value> {
       map { (transform($0), $1) }
   }
@@ -129,7 +115,7 @@ public extension OrderedMultiDictionary {
 
 
 // MARK: - Swapping
-public extension OrderedMultiDictionary where Value: Hashable {
+public extension OrderedMultiDictionary where Value: Equatable {
 
   func swapped() -> OrderedMultiDictionary<Value, Key> {
     .init(keysAndValues.swapped())
@@ -137,10 +123,29 @@ public extension OrderedMultiDictionary where Value: Hashable {
 }
 
 
+// MARK: - Hashable keys
+extension OrderedMultiDictionary where Key: Hashable {
+
+  public init(_ dictionary: [Key: Value]) {
+    pairs = dictionary.map { $0 }
+  }
+
+  public var unorderedKeys: Set<Key> {
+    Set(pairs.map { $0.key })
+  }
+
+  public var asDictionary: [Key: [Value]] {
+    Dictionary(
+      uniqueKeysWithValues: unorderedKeys.map { ($0, self[all: $0]) }
+    )
+  }
+}
+
+
 // MARK: - Array to OrderedMultiDictionary
 public extension Array {
 
-  func asOrderedMultiDictionary<Key: Hashable, Value>() -> OrderedMultiDictionary<Key, Value>
+  func asOrderedMultiDictionary<Key: Equatable, Value>() -> OrderedMultiDictionary<Key, Value>
     where Element == (Key, Value) {
 
       OrderedMultiDictionary(self)
