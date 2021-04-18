@@ -25,6 +25,7 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
     }
   }
   
+  public let isEnabled: AnyObserver<Bool>
   @RxUiInput(nil) public var hint: AnyObserver<String?>
   @RxUiInput(nil) public var errorText: AnyObserver<String?>
 
@@ -50,12 +51,14 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
   public init(subviews: Subviews,
               spacing: CGFloat,
               insets: UIEdgeInsets,
-              respectSafeArea: Bool = true) {
+              respectSafeArea: Bool = true,
+              isEnabled: AnyObserver<Bool>) {
     self.hintLabel = subviews.hintLabel
     self.errorLabel = subviews.errorLabel
     self.button = subviews.button
     
     self.respectSafeArea = respectSafeArea
+    self.isEnabled = isEnabled
     
     self.contentView = UIView.vstack(
       spacing: spacing,
@@ -111,6 +114,18 @@ public extension EndOfScreenView where Button.Value == ButtonForeground {
 
 public extension EndOfScreenView where Button: LoadingButton {
 
+  convenience init(subviews: Subviews,
+                   spacing: CGFloat,
+                   insets: UIEdgeInsets,
+                   respectSafeArea: Bool = true) {
+    self.init(
+      subviews: subviews,
+      spacing: spacing,
+      insets: insets,
+      respectSafeArea: respectSafeArea,
+      isEnabled: subviews.button.rx.isEnabled.asObserver()
+    )
+  }
+
   var isLoading: AnyObserver<Bool> { button.rx.isLoading.asObserver() }
-  var isEnabled: AnyObserver<Bool> { button.rx.isEnabled.asObserver() }
 }
