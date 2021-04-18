@@ -62,6 +62,14 @@ public extension IllustrationView {
     public var illustrationToTitleSpacing: CGFloat
     public var titleToSubtitleSpacing: CGFloat
 
+    public init(alignment: UIStackView.Alignment,
+                illustrationToTitleSpacing: CGFloat,
+                titleToSubtitleSpacing: CGFloat) {
+      self.alignment = alignment
+      self.illustrationToTitleSpacing = illustrationToTitleSpacing
+      self.titleToSubtitleSpacing = titleToSubtitleSpacing
+    }
+
     static let standard = Layout(
       alignment: .center,
       illustrationToTitleSpacing: 0,
