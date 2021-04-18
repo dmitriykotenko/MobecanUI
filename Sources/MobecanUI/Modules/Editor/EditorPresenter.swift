@@ -44,7 +44,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   private let disposeBag = DisposeBag()
   
   public init(checker: Checker<InputValue, OutputValue, SomeError>,
-              hintFormatter: @escaping (Result<OutputValue, SomeError>) -> String?,
+              hintFormatter: @escaping (Result<OutputValue, SomeError>) -> String? = { _ in nil },
               errorFormatter: @escaping (SomeError) -> String?) {
     self.errorFormatter = errorFormatter
 
