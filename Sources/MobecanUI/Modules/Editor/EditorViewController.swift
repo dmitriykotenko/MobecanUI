@@ -14,7 +14,8 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   
   private let valueGetter: Observable<Result<OutputValue, SomeError>>
   private let valueSetter: AnyObserver<InputValue?>
-  
+  private let doNotDisturbModeSetter: AnyObserver<DoNotDisturbMode>
+
   private let subviews: EditorViewControllerSubviews
   private let layout: EditorViewControllerLayout
 
@@ -27,7 +28,8 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   public init(subviews: EditorViewControllerSubviews,
               layout: EditorViewControllerLayout,
               valueGetter: Observable<Result<OutputValue, SomeError>>,
-              valueSetter: AnyObserver<InputValue?>) {
+              valueSetter: AnyObserver<InputValue?>,
+              doNotDisturbModeSetter: AnyObserver<DoNotDisturbMode> = .empty) {
     
     self.subviews = subviews
     self.layout = layout
@@ -36,6 +38,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     
     self.valueGetter = valueGetter
     self.valueSetter = valueSetter
+    self.doNotDisturbModeSetter = doNotDisturbModeSetter
     
     super.init(nibName: nil, bundle: nil)
 
@@ -58,21 +61,24 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   }
   
   open func setPresenter<Presenter: EditorPresenterProtocol>(_ presenter: Presenter)
-    where
-    Presenter.InputValue == InputValue,
-    Presenter.OutputValue == OutputValue,
-    Presenter.SomeError == SomeError {
-      [
-        presenter.initialValue.drive(valueSetter),
-        presenter.isSaveButtonEnabled.drive(saveButtonContainer.isEnabled),
-        
-        presenter.isSaving.drive(isSaving),
-        // TODO: hide error message after raw value has been changed
-        presenter.errorText.drive(saveButtonContainer.errorText),
-        
-        valueGetter.bind(to: presenter.value),
-        saveButtonContainer.buttonTap.bind(to: presenter.saveButtonTap)
-      ]
-      .disposed(by: disposeBag)
+  where
+  Presenter.InputValue == InputValue,
+  Presenter.OutputValue == OutputValue,
+  Presenter.SomeError == SomeError {
+    [
+      presenter.initialValue.drive(valueSetter),
+
+      presenter.isSaveButtonEnabled.drive(saveButtonContainer.isEnabled),
+      presenter.isSaving.drive(isSaving),
+
+      presenter.doNotDisturbMode.drive(doNotDisturbModeSetter),
+      presenter.hint.drive(saveButtonContainer.hint),
+      // TODO: hide error message after raw value has been changed
+      presenter.errorText.drive(saveButtonContainer.errorText),
+
+      valueGetter.bind(to: presenter.value),
+      saveButtonContainer.buttonTap.bind(to: presenter.saveButtonTap)
+    ]
+    .disposed(by: disposeBag)
   }
 }
