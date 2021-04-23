@@ -14,7 +14,7 @@ public extension String {
       
       let regex = try NSRegularExpression(
         pattern: text
-          .trimmingCharacters(in: .whitespacesAndNewlines)
+          .trimmingBlanks
           .folding(options: .diacriticInsensitive, locale: .current),
         options: .caseInsensitive
       )

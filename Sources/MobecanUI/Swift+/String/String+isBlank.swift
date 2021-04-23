@@ -3,9 +3,7 @@
 
 public extension String {
 
-  var isBlank: Bool {
-    trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-  }
+  var isBlank: Bool { trimmingBlanks.isEmpty }
 
   var isNotBlank: Bool { !isBlank }
 

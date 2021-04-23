@@ -5,9 +5,7 @@ public class NameFormatter: StringFormatter {
   
   public init() {}
   
-  public func format(_ string: String) -> String {
-    string.trimmingCharacters(in: .whitespaces)
-  }
+  public func format(_ string: String) -> String { string.trimmingBlanks }
 }
 
 
