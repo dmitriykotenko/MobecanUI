@@ -7,8 +7,8 @@ import UIKit
 
 open class ParagraphView<Value>: UIView {
   
-  public var title: Binder<String?> { titleLabel.rx.text }
-  public var attributedTitle: Binder<NSAttributedString?> { titleLabel.rx.attributedText }
+  @RxUiInput(nil) public var title: AnyObserver<String?>
+  @RxUiInput(nil) public var attributedTitle: AnyObserver<NSAttributedString?>
   
   @RxUiInput(nil) public var body: AnyObserver<Value?>
   @RxUiInput(true) public var hidesWhenBodyIsNil: AnyObserver<Bool>
@@ -67,6 +67,7 @@ open class ParagraphView<Value>: UIView {
 
     self.hidesWhenBodyIsNil.onNext(hidesWhenBodyIsNil)
 
+    displayTitle()
     displayValue(body: content.body)
   }
 
@@ -84,17 +85,24 @@ open class ParagraphView<Value>: UIView {
       hidesWhenBodyIsNil: hidesWhenBodyIsNil
     )
   }
-  
+
+  private func displayTitle() {
+    [
+      _title.bind(to: titleLabel.rx.text),
+      _attributedTitle.bind(to: titleLabel.rx.attributedText),
+
+      Observable
+        .merge(_title.map { $0 != nil }, _attributedTitle.map { $0 != nil })
+        .bind(to: titleLabel.rx.isVisible)
+    ]
+    .disposed(by: disposeBag)
+  }
+
   private func displayValue(body: AnyObserver<Value?>) {
-    let uniqueId = String(UUID().uuidString.prefix(4))
-    
-    _body
-      .debug("Paragraph-View-Body---\(uniqueId)-\(Value.self)")
-      .bind(to: body).disposed(by: disposeBag)
+    _body.bind(to: body).disposed(by: disposeBag)
 
     _body.map { $0 == nil }
       .and(that: _hidesWhenBodyIsNil)
-      .debug("Paragraph-View-Should-Be-Hidden---\(uniqueId)-\(Value.self)")
       .bind(to: rx.isHidden)
       .disposed(by: disposeBag)
   }
