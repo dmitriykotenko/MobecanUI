@@ -6,14 +6,12 @@ import RxTest
 @testable import MobecanUI
 
 
-class SwitchViewTests: XCTestCase {
+class SwitchViewValueTests: XCTestCase {
 
   func testThatInitialIsOnAffectsCurrentIsOn() {
     let switchView = SwitchView(
       label: UILabel(),
-      uiSwitch: UISwitch(),
-      height: 44,
-      spacing: 0
+      uiSwitch: UISwitch()
     )
 
     let scheduler = TestScheduler(initialClock: 0)
@@ -31,7 +29,6 @@ class SwitchViewTests: XCTestCase {
       [.next(0, false), .next(10, true)]
     )
   }
-
 
   static var allTests = [
     ("Test that initial isOn affects current isOn", testThatInitialIsOnAffectsCurrentIsOn),
