@@ -18,6 +18,9 @@ public extension UIView {
     subview.snp.makeConstraints {
       $0.centerX.equalToSuperview().offset(offset).priority(priority)
       $0.top.bottom.equalToSuperview()
+
+      $0.left.greaterThanOrEqualToSuperview()
+      $0.right.lessThanOrEqualToSuperview()
     }
     
     return superview
@@ -35,6 +38,9 @@ public extension UIView {
     subview.snp.makeConstraints {
       $0.leading.trailing.equalToSuperview()
       $0.centerY.equalToSuperview().offset(offset).priority(priority)
+
+      $0.top.greaterThanOrEqualToSuperview()
+      $0.bottom.lessThanOrEqualToSuperview()
     }
     
     return superview

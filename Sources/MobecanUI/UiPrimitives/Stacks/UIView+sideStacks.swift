@@ -17,8 +17,9 @@ public extension UIView {
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
-      $0.top.equalToSuperview().inset(inset).priority(priority)
       $0.leading.trailing.equalToSuperview()
+      $0.bottom.lessThanOrEqualToSuperview()
+      $0.top.equalToSuperview().inset(inset).priority(priority)
     }
     
     return superview
@@ -34,8 +35,9 @@ public extension UIView {
     superview.addSubview(subview)
     
     subview.snp.makeConstraints {
-      $0.bottom.equalToSuperview().inset(inset).priority(priority)
       $0.leading.trailing.equalToSuperview()
+      $0.top.greaterThanOrEqualToSuperview()
+      $0.bottom.equalToSuperview().inset(inset).priority(priority)
     }
     
     return superview
@@ -52,6 +54,7 @@ public extension UIView {
     
     subview.snp.makeConstraints {
       $0.top.bottom.equalToSuperview()
+      $0.trailing.lessThanOrEqualToSuperview()
       $0.leading.equalToSuperview().inset(inset).priority(priority)
     }
     
@@ -69,6 +72,7 @@ public extension UIView {
     
     subview.snp.makeConstraints {
       $0.top.bottom.equalToSuperview()
+      $0.leading.greaterThanOrEqualToSuperview()
       $0.trailing.equalToSuperview().inset(inset).priority(priority)
     }
     
