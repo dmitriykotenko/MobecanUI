@@ -167,8 +167,7 @@ class SwitchViewLayoutTests: XCTestCase {
       layout: .init(
         spacing: 10,
         switchPlacement: SwitchView.SwitchPlacement.centerOrTop(maximumCenteredHeight: maximumCenteredHeight),
-        contentHuggintPriority: .required,
-        insets: .zero
+        contentHuggintPriority: .required
       )
     )
     .minimumHeight(minimumHeight)

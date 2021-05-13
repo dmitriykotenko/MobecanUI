@@ -13,16 +13,19 @@ public extension SwitchView {
     var spacing: CGFloat
     var switchPlacement: SwitchPlacement
     var contentHuggingPriority: ConstraintPriority
-    var insets: UIEdgeInsets
+    var titleInsets: UIEdgeInsets
+    var overallInsets: UIEdgeInsets
 
     public init(spacing: CGFloat,
                 switchPlacement: SwitchPlacement = .center(offset: 0),
                 contentHuggintPriority: ConstraintPriority = .required,
-                insets: UIEdgeInsets = .zero) {
+                titleInsets: UIEdgeInsets = .zero,
+                overallInsets: UIEdgeInsets = .zero) {
       self.spacing = spacing
       self.switchPlacement = switchPlacement
       self.contentHuggingPriority = contentHuggintPriority
-      self.insets = insets
+      self.titleInsets = titleInsets
+      self.overallInsets = overallInsets
     }
 
     public static func spacing(_ spacing: CGFloat) -> Layout {

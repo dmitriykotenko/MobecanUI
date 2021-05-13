@@ -41,10 +41,11 @@ public class SwitchView: UIView {
       .hstack(spacing: layout.spacing, [
         UIView
           .centeredVertically(label)
-          .hugSubviews(axis: .vertical, priority: layout.contentHuggingPriority),
+          .hugSubviews(axis: .vertical, priority: layout.contentHuggingPriority)
+          .withInsets(layout.titleInsets),
         switchContainer(layout: layout)
       ]),
-      insets: layout.insets
+      insets: layout.overallInsets
     )
   }
 
