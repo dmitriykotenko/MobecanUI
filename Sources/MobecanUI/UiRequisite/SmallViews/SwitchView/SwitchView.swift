@@ -43,6 +43,7 @@ public class SwitchView: UIView {
           .centeredVertically(label)
           .hugSubviews(axis: .vertical, priority: layout.contentHuggingPriority)
           .withInsets(layout.titleInsets),
+        .stretchableSpacer(),
         switchContainer(layout: layout)
       ]),
       insets: layout.overallInsets
