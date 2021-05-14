@@ -66,6 +66,7 @@ public class SwitchView: UIView {
       container.addSubview(uiSwitch)
 
       uiSwitch.snp.makeConstraints {
+        $0.leading.trailing.equalToSuperview()
         $0.centerY.equalToSuperview().priority(layout.contentHuggingPriority.advanced(by: -1))
         $0.centerY.lessThanOrEqualTo(thresholdHeight / 2.0)
       }
