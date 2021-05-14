@@ -31,7 +31,8 @@ public extension UIViewController {
       title: title,
       message: message,
       style: .actionSheet,
-      actions: actions
+      actions: actions,
+      pinnedTo: view
     )
   }
   
@@ -50,9 +51,13 @@ public extension UIViewController {
       alertController.addAction(UIAlertAction(title: $0.title, style: $0.style, handler: $0.handler))
     }
 
-    alertController.pin(to: view)
+    alertController.pin(to: view ?? defaultPinView)
 
     return alertController
+  }
+
+  private static var defaultPinView: UIView? {
+    UIApplication.shared.windows.first?.rootViewController?.view
   }
 }
 
