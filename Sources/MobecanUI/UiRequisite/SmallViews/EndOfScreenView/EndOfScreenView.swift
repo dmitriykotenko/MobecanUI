@@ -24,7 +24,15 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
       self.additionalViews = additionalViews
     }
   }
-  
+
+  public struct Layout {
+    public var arrange: (Subviews) -> (contentView: UIView, containerView: UIView)
+
+    public init(arrange: @escaping (Subviews) -> (contentView: UIView, containerView: UIView)) {
+      self.arrange = arrange
+    }
+  }
+
   public let isEnabled: AnyObserver<Bool>
   @RxUiInput(nil) public var hint: AnyObserver<String?>
   @RxUiInput(nil) public var errorText: AnyObserver<String?>
@@ -35,12 +43,12 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
   public var buttonTap: Observable<Button.Action> { button.tap }
 
   public let contentView: UIView
+
+  private var hintLabel: UILabel
+  private var errorLabel: UILabel
+  private var button: Button
   
-  private let hintLabel: UILabel
-  private let errorLabel: UILabel
-  private let button: Button
-  
-  private let respectSafeArea: Bool
+  private let layout: Layout
   
   private lazy var contentFrameListener = FramesListener(views: [contentView])
   
@@ -48,38 +56,39 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
+  public convenience init(subviews: Subviews,
+                          spacing: CGFloat,
+                          insets: UIEdgeInsets,
+                          respectSafeArea: Bool = true,
+                          isEnabled: AnyObserver<Bool>) {
+    self.init(
+      subviews: subviews,
+      layout: .vertical(spacing: spacing, insets: insets, respectSafeArea: respectSafeArea),
+      isEnabled: isEnabled
+    )
+  }
+
   public init(subviews: Subviews,
-              spacing: CGFloat,
-              insets: UIEdgeInsets,
-              respectSafeArea: Bool = true,
+              layout: Layout,
               isEnabled: AnyObserver<Bool>) {
     self.hintLabel = subviews.hintLabel
     self.errorLabel = subviews.errorLabel
     self.button = subviews.button
-    
-    self.respectSafeArea = respectSafeArea
+
+    self.layout = layout
     self.isEnabled = isEnabled
-    
-    self.contentView = UIView.vstack(
-      spacing: spacing,
-      [hintLabel] +
-      subviews.additionalViews +
-      [errorLabel] +
-      [button],
-      insets: insets
-    )
+
+    let (contentView, containerView) = layout.arrange(subviews)
+
+    self.contentView = contentView
     
     super.init(frame: .zero)
 
-    addSubviews()
+    disableTemporaryConstraints()
+    putSubview(containerView)
+
     setupLabels()
     setupHeightSignal()
-  }
-  
-  private func addSubviews() {
-    putSubview(
-      respectSafeArea ? .safeAreaZstack([contentView]) : contentView
-    )
   }
   
   private func setupLabels() {

@@ -9,7 +9,7 @@ import UIKit
 public extension SwitchView {
 
   /// Vertical placement of UISwitch.
-  public enum SwitchPlacement {
+  enum SwitchPlacement {
 
     /// Place UISwitch at the top with given inset.
     case top(inset: CGFloat)
