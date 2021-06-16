@@ -94,6 +94,18 @@ public class SwitchView: UIView {
 }
 
 
+extension SwitchView: MandatorinessListener {
+
+  public var isMandatory: AnyObserver<Bool> {
+    .fromArray(
+      [label, uiSwitch].compactMap {
+        ($0 as? MandatorinessListener)?.isMandatory
+      }
+    )
+  }
+}
+
+
 private extension UIView {
 
   func hugSubviews(axis: NSLayoutConstraint.Axis,
