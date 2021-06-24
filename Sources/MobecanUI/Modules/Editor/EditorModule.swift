@@ -58,7 +58,12 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     interactor.saver.onNext(saver)
     return self
   }
-  
+
+  open func with(externalValidator: @escaping AsyncValidator<OutputValue, SomeError>) -> Self {
+    view.externalValidator.onNext(externalValidator)
+    return self
+  }
+
   open func with(buttonTitle: String?) -> Self {
     view.buttonTitle.onNext(buttonTitle)
     return self

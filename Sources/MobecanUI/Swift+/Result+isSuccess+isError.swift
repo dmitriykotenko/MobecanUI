@@ -29,6 +29,8 @@ public extension Result {
       return false
     }
   }
+
+  var isError: Bool { !isSuccess }
 }
 
 

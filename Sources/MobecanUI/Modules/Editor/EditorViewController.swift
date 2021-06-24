@@ -7,10 +7,19 @@ import UIKit
 
 open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIViewController {
 
-  public var buttonTitle: AnyObserver<String?> { saveButtonContainer.title }
+  open var buttonTitle: AnyObserver<String?> { saveButtonContainer.title }
   
-  @RxUiInput(false) public var isSaving: AnyObserver<Bool>
-  public var saveButtonTap: Observable<Void> { saveButtonContainer.buttonTap }
+  @RxUiInput(false) open var isSaving: AnyObserver<Bool>
+  open var saveButtonTap: Observable<Void> { saveButtonContainer.buttonTap }
+
+  @RxUiInput({ .just(.success($0)) }) open var externalValidator: AnyObserver<AsyncValidator<OutputValue, SomeError>>
+
+  open var externalError: Driver<SomeError?> {
+    Observable
+      .combineLatest(valueGetter, _externalValidator)
+      .flatMap { $0.externalError(from: $1) }
+      .asDriver(onErrorDriveWith: .never())
+  }
   
   private let valueGetter: Observable<Result<OutputValue, SomeError>>
   private let valueSetter: AnyObserver<InputValue?>
@@ -43,7 +52,6 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     super.init(nibName: nil, bundle: nil)
 
     [
-      valueGetter.map { $0.isSuccess }.bind(to: saveButtonContainer.isEnabled),
       _isSaving.bind(to: saveButtonContainer.isLoading),
       _isSaving.bind(to: view.rx.isUserInteractionDisabled)
     ]
@@ -76,9 +84,35 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
       // TODO: hide error message after raw value has been changed
       presenter.errorText.drive(saveButtonContainer.errorText),
 
-      valueGetter.bind(to: presenter.value),
+      Observable
+        .combineLatest(valueGetter, _externalValidator)
+        .flatMap { $0.validate(via: $1) }
+        .bind(to: presenter.value),
+
       saveButtonContainer.buttonTap.bind(to: presenter.saveButtonTap)
     ]
     .disposed(by: disposeBag)
+  }
+}
+
+
+private extension Result {
+
+  func validate(via validator: AsyncValidator<Success, Failure>) -> Single<Self> {
+    switch self {
+    case .success(let value):
+      return validator(value)
+    case .failure(let error):
+      return .just(.failure(error))
+    }
+  }
+
+  func externalError(from validator: @escaping AsyncValidator<Success, Failure>) -> Single<Failure?> {
+    switch self {
+    case .success(let value):
+      return validator(value).map { $0.asError }
+    case .failure:
+      return .just(nil)
+    }
   }
 }
