@@ -56,4 +56,16 @@ public enum ActionsViewStructs {
       self.sideActions = sideActions
     }
   }
+
+  public struct ErrorContainerState {
+
+    public var errorText: String?
+    public var backgroundColor: UIColor?
+
+    public init(errorText: String? = nil,
+                backgroundColor: UIColor? = nil) {
+      self.errorText = errorText
+      self.backgroundColor = backgroundColor
+    }
+  }
 }

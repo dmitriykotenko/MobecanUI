@@ -11,11 +11,19 @@ ActionsViewIngredientMixer {
   
   public typealias State = String?
   public typealias Event = Void
-  
+
   private let initLabel: () -> UILabel
+  private let labelInsets: UIEdgeInsets
+  private let displayError: (String?) -> ActionsViewStructs.ErrorContainerState
   
-  public init(initLabel: @escaping () -> UILabel) {
+  public init(
+    initLabel: @escaping () -> UILabel,
+    labelInsets: UIEdgeInsets = .zero,
+    displayError: @escaping (String?) -> ActionsViewStructs.ErrorContainerState = { .init(errorText: $0) }
+  ) {
     self.initLabel = initLabel
+    self.labelInsets = labelInsets
+    self.displayError = displayError
   }
   
   public func setup(contentView: ContentView,
@@ -23,7 +31,9 @@ ActionsViewIngredientMixer {
     let errorView = ErrorContainer(
       contentView: contentView,
       containerView: containerView,
-      errorLabel: initLabel()
+      errorLabel: initLabel(),
+      errorLabelInsets: labelInsets,
+      displayError: displayError
     )
     
     return .init(
@@ -43,8 +53,10 @@ private class ErrorContainer: UIView {
   private let contentView: UIView
   private let containerView: UIView
   private let errorLabel: UILabel
+  private let errorLabelInsets: UIEdgeInsets
+  private let displayError: (String?) -> ActionsViewStructs.ErrorContainerState
   
-  private var contentViewBottom: Constraint?
+  private var containerViewBottom: Constraint?
   private var errorLabelBottom: Constraint?
   
   private let disposeBag = DisposeBag()
@@ -53,10 +65,14 @@ private class ErrorContainer: UIView {
 
   init(contentView: UIView,
        containerView: UIView,
-       errorLabel: UILabel) {
+       errorLabel: UILabel,
+       errorLabelInsets: UIEdgeInsets,
+       displayError: @escaping (String?) -> ActionsViewStructs.ErrorContainerState) {
     self.contentView = contentView
     self.containerView = containerView
     self.errorLabel = errorLabel
+    self.errorLabelInsets = errorLabelInsets
+    self.displayError = displayError
     
     super.init(frame: .zero)
     
@@ -64,7 +80,7 @@ private class ErrorContainer: UIView {
    
     pinContentViewToErrorLabel()
     initBottomConstraints()
-    displayError()
+    setupErrorDisplaying()
   }
   
   private func addSubviews() {
@@ -78,36 +94,45 @@ private class ErrorContainer: UIView {
   
   private func pinContentViewToErrorLabel() {
     contentView.forLastBaselineLayout.snp.makeConstraints {
-      $0.leading.equalTo(errorLabel)
-      $0.bottom.equalTo(errorLabel.snp.top)
+      $0.leading.equalTo(errorLabel).inset(-errorLabelInsets.left)
+      $0.trailing.equalTo(errorLabel).inset(-errorLabelInsets.right)
+      $0.bottom.equalTo(errorLabel.snp.top).inset(-errorLabelInsets.top)
     }
   }
   
   private func initBottomConstraints() {
-    contentView.snp.makeConstraints {
-      contentViewBottom = $0.bottom.equalToSuperview().constraint
+    containerView.snp.makeConstraints {
+      containerViewBottom = $0.bottom.equalToSuperview().constraint
     }
     
     errorLabel.snp.makeConstraints {
-      errorLabelBottom = $0.bottom.equalToSuperview().constraint
+      errorLabelBottom = $0.bottom.equalToSuperview().inset(errorLabelInsets.bottom).constraint
     }
   }
   
-  private func displayError() {
+  private func setupErrorDisplaying() {
+    _errorText
+      .subscribe(onNext: { [weak self] in self?.display(errorText: $0) })
+      .disposed(by: disposeBag)
+  }
+
+  private func display(errorText: String?) {
     guard
-      let contentViewBottom = contentViewBottom,
+      let containerViewBottom = containerViewBottom,
       let errorLabelBottom = errorLabelBottom
       else { return }
-    
-    let errorIsNil = _errorText.map { $0.isNilOrEmpty }
-    
-    [
-      _errorText.bind(to: errorLabel.rx.text),
-      errorIsNil.bind(to: errorLabel.rx.isHidden),
-      errorIsNil.bind(to: contentViewBottom.rx.isActive),
-      errorIsNil.bind(to: errorLabelBottom.rx.isActive)
-    ]
-    .disposed(by: disposeBag)
+
+    let stateToDisplay = displayError(errorText)
+    let errorTextToDisplay = stateToDisplay.errorText
+
+    let errorIsNil = errorTextToDisplay.isNilOrEmpty
+
+    errorLabel.text = errorTextToDisplay
+    errorLabel.isVisible = !errorIsNil
+    backgroundColor = stateToDisplay.backgroundColor
+
+    containerViewBottom.isActive = errorIsNil
+    errorLabelBottom.isActive = !errorIsNil
   }
 }
 
