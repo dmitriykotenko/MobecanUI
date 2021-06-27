@@ -103,4 +103,12 @@ open class PseudoButton<Value>: UIView, DataView {
       rxFormat: { .just(format($0)) }
     )
   }
+
+  override open var forFirstBaselineLayout: UIView {
+    subviews[0].forFirstBaselineLayout
+  }
+
+  override open var forLastBaselineLayout: UIView {
+    subviews[0].forLastBaselineLayout
+  }
 }

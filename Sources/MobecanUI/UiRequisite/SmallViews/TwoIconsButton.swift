@@ -123,4 +123,12 @@ public class TwoIconsButton: UIView {
 
     return self
   }
+
+  override open var forFirstBaselineLayout: UIView {
+    titleLabel.forFirstBaselineLayout
+  }
+
+  override open var forLastBaselineLayout: UIView {
+    titleLabel.forLastBaselineLayout
+  }
 }

@@ -91,6 +91,14 @@ public class SwitchView: UIView {
 
     return self
   }
+
+  override open var forFirstBaselineLayout: UIView {
+    label.forFirstBaselineLayout
+  }
+
+  override open var forLastBaselineLayout: UIView {
+    label.forLastBaselineLayout
+  }
 }
 
 

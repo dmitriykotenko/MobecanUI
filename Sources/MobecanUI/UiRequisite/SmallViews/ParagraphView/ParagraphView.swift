@@ -107,5 +107,5 @@ open class ParagraphView<Value>: UIView {
       .disposed(by: disposeBag)
   }
   
-  override public var forFirstBaselineLayout: UIView { titleLabel }
+  override open var forFirstBaselineLayout: UIView { titleLabel }  
 }
