@@ -29,11 +29,16 @@ public class AutoshrinkingScrollableView: WindowListeningView {
               scrollView: (UIView) -> UIScrollView) {
     self.contentView = contentView
     self.scrollView = scrollView(contentView)
-    
+
     super.init(frame: .zero)
 
     // Set low-priority width to suppress autolayout warning.
     _ = width(0, priority: .minimum)
+
+    // To disable horizontal scrolling, bind contentView's width to autoshrinking scrollable view's width.
+    self.contentView.snp.makeConstraints {
+      $0.width.equalTo(self)
+    }
     
     self.scrollView.contentInsetAdjustmentBehavior = .never
     self.scrollView.alwaysBounceVertical = false
