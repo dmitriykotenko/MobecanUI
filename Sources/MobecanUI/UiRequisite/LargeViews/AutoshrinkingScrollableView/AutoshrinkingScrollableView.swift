@@ -35,15 +35,15 @@ public class AutoshrinkingScrollableView: WindowListeningView {
     // Set low-priority width to suppress autolayout warning.
     _ = width(0, priority: .minimum)
 
-    // To disable horizontal scrolling, bind contentView's width to autoshrinking scrollable view's width.
-    self.contentView.snp.makeConstraints {
-      $0.width.equalTo(self)
-    }
-    
     self.scrollView.contentInsetAdjustmentBehavior = .never
     self.scrollView.alwaysBounceVertical = false
     
     putSubview(self.scrollView)
+
+    // To disable horizontal scrolling, bind contentView's width to autoshrinking scrollable view's width.
+    self.contentView.snp.makeConstraints {
+      $0.width.equalTo(self)
+    }
 
     self.windowChanged
       .delay(0.milliseconds) // wait until superview finishes its layout
