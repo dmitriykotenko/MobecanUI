@@ -9,6 +9,7 @@ import UIKit
 public extension UIImageView {
 
   func setMobecanImage(_ image: Image?,
+                       placeholder: UIImage? = nil,
                        hideIfNil: Bool = false) {
     switch image {
     case .image(let uiImage):
@@ -17,7 +18,7 @@ public extension UIImageView {
       self.image = uiImage.withRenderingMode(.alwaysTemplate)
       self.tintColor = color
     case .url(let url):
-      self.kf.setImage(with: url)
+      self.kf.setImage(with: url, placeholder: placeholder)
     case nil:
       self.image = nil
     }
@@ -29,9 +30,14 @@ public extension UIImageView {
 
 public extension Reactive where Base: UIImageView {
 
-  func mobecanImage(hideIfNil: Bool) -> Binder<Image?> {
+  func mobecanImage(placeholder: UIImage? = nil,
+                    hideIfNil: Bool) -> Binder<Image?> {
     Binder(base) { view, image in
-      view.setMobecanImage(image, hideIfNil: hideIfNil)
+      view.setMobecanImage(
+        image,
+        placeholder: placeholder,
+        hideIfNil: hideIfNil
+      )
     }
   }
 }
