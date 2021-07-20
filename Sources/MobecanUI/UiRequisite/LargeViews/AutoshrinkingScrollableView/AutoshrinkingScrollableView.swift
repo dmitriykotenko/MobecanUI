@@ -9,16 +9,29 @@ import UIKit
 
 /// Scrollable view which automatically changes its height
 /// depending on content, safe area insets and keyboard frame.
-public class AutoshrinkingScrollableView: WindowListeningView {
+public class AutoshrinkingScrollableView: WindowListeningView, UIScrollViewDelegate {
   
   public let scrollView: UIScrollView
-  
+
+  /// Bottom-right counterpart of UIScrollView.contentOffset property.
+  ///
+  /// Horizontal and vertical distance
+  /// between scroll view's visible area bottom-right corner and scroll view content's bottom-right corner.
+  open var oppositeContentOffset: Observable<CGPoint> { oppositeContentOffsetTracker.value }
+
   private let contentView: UIView
 
   private lazy var scrollViewDriver = ScrollViewHeightDriver(
     scrollView: scrollView,
     contentView: contentView,
     scrollViewWindowChanged: windowChanged.asObservable()
+  )
+
+  @RxOutput private var adjustedContentInsetDidChange: Observable<Void>
+
+  private lazy var oppositeContentOffsetTracker = RxScrollViewOppositeContentOffset(
+    scrollView: scrollView,
+    adjustedContentInsetDidChange: adjustedContentInsetDidChange
   )
 
   private let disposeBag = DisposeBag()
@@ -52,5 +65,13 @@ public class AutoshrinkingScrollableView: WindowListeningView {
       .compactMap { [weak self] in self?.longTermBottomY }
       .emit(to: scrollViewDriver.scrollViewBottomY)
       .disposed(by: disposeBag)
+
+    self.scrollView.delegate = self
+  }
+
+  // MARK: - Scroll View Delegate
+
+  open func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+    _adjustedContentInsetDidChange.onNext(())
   }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 /// Changes scroll view's height when scroll view's content and safe area insets are changed
 /// and when keyboard appears or disappears.
-class ScrollViewHeightDriver: NSObject, UIScrollViewDelegate {
+class ScrollViewHeightDriver: NSObject {
 
   private let uniqueId = UUID().uuidString
   

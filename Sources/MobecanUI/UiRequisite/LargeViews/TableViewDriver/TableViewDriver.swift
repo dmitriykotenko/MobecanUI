@@ -23,6 +23,12 @@ where
   public var cellEvents: Observable<CellEvent> { cellListener.events }
   public var stickerEvents: Observable<StickerEvent> { stickerListener.events }
 
+  /// Bottom-right counterpart of UIScrollView.contentOffset property.
+  ///
+  /// Horizontal and vertical distance
+  /// between table view's visible area bottom-right corner and table view content's bottom-right corner.
+  public var oppositeContentOffset: Observable<CGPoint> { oppositeContentOffsetTracker.value }
+
   private let tableView: UITableView
   
   private let stickerTuner: TableViewStickerTuner<Header, Sticker, StickerEvent>
@@ -32,6 +38,13 @@ where
   private let spacing: CGFloat?
 
   private let shaker: TableViewShaker
+
+  @RxOutput private var adjustedContentInsetDidChange: Observable<Void>
+
+  private lazy var oppositeContentOffsetTracker = RxScrollViewOppositeContentOffset(
+    scrollView: tableView,
+    adjustedContentInsetDidChange: adjustedContentInsetDidChange
+  )
   
   private let disposeBag = DisposeBag()
 
@@ -114,6 +127,12 @@ where
     focusedIndexPath.map {
       tableView.scrollToRow(at: $0, at: .top, animated: true)
     }
+  }
+
+  // MARK: - Scroll View Delegate
+
+  public func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+    _adjustedContentInsetDidChange.onNext(())
   }
 
   // MARK: - Table View Data Source and Delegate
