@@ -31,6 +31,8 @@ class TableViewShaker {
     
     case .insertRows(let rows, let section):
       tableView.insertRows(at: rows.map { IndexPath(row: $0, section: section) }, with: .automatic)
+    case .reloadRows(let rows, let section):
+      tableView.reloadRows(at: rows.map { IndexPath(row: $0, section: section) }, with: .automatic)
     case .deleteRows(let rows, let section):
       tableView.deleteRows(at: rows.map { IndexPath(row: $0, section: section) }, with: .automatic)
     }

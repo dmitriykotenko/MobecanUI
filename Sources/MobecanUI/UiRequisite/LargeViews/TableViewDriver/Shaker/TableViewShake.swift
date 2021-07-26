@@ -8,5 +8,6 @@ public enum TableViewShake: Equatable, Hashable {
   case reloadSection(Int)
   case deleteSection(Int)
   case insertRows(rows: [Int], section: Int)
+  case reloadRows(rows: [Int], section: Int)
   case deleteRows(rows: [Int], section: Int)
 }
