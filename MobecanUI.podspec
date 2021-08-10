@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'MobecanUI'
-  spec.version          = '0.7.9'
+  spec.version          = '0.8.0'
   spec.summary          = 'Mobecan UI (and non-UI) helpers'
   spec.homepage         = 'git@github.com:dmitriykotenko/mobecan-ui.git'
   spec.license          = { :type => 'MIT', :file => 'LICENSE' }
