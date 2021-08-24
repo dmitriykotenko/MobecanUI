@@ -28,10 +28,9 @@ public class RxOutput<Element>: ObserverType {
     switch event {
     case .next(let element):
       behaviorRelay?.accept(element) ?? publishRelay.accept(element)
-    case let .error(error):
-      fatalError("Binding error to RxOutput: \(error)")
-    case .completed:
-      fatalError("Binding .completed to RxOutput.")
+    case .error, .completed:
+      // Do nothing. RxOutput can not finish or produce error.
+      break
     }
   }
 }

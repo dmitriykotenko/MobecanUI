@@ -28,10 +28,9 @@ public class RxUiInput<Element>: ObservableType {
       switch $0 {
       case .next(let element):
         self?.behaviorRelay?.accept(element) ?? self?.publishRelay.accept(element)
-      case let .error(error):
-        fatalError("Binding error to RxUiInput: \(error)")
-      case .completed:
-        fatalError("Binding .completed to RxUiInput")
+      case .error, .completed:
+        // Do nothing. RxUiInput can not finish or produce error.
+        break
       }
     }
   }

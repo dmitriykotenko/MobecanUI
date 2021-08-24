@@ -46,7 +46,7 @@ open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView
     let elementViews = elements.map { createView($0) }
 
     elementViews.forEach {
-      $0.viewEvents.neverEnding().bind(to: _viewEvents).disposed(by: disposeBag)
+      $0.viewEvents.bind(to: _viewEvents).disposed(by: disposeBag)
     }
 
     putSingleSubview(.vstack(elementViews))

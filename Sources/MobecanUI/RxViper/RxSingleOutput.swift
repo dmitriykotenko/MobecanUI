@@ -21,13 +21,6 @@ public class RxSingleOutput<Element>: ObserverType {
   }
   
   public func on(_ event: Event<Element>) {
-    switch event {
-    case .next(let element):
-      subject.onNext(element)
-    case let .error(error):
-      fatalError("Binding error to RxSingleOutput: \(error)")
-    case .completed:
-      subject.onCompleted()
-    }
+    subject.on(event)
   }
 }

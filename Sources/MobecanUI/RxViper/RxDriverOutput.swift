@@ -25,9 +25,8 @@ public class RxDriverOutput<Element>: ObserverType {
     switch event {
     case .next(let element):
       relay.accept(element)
-    case let .error(error):
-      fatalError("Binding error to RxDriverOutput: \(error)")
-    case .completed:
+    case .error, .completed:
+      // Do nothing. RxDriverOutput can not finish or produce error.
       break
     }
   }

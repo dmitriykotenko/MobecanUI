@@ -19,8 +19,6 @@ class TableViewCellListener<Value, Event> {
     
     listenedCells.insert(cell)
     
-    events.neverEnding()
-      .bind(to: _events)
-      .disposed(by: disposeBag)
+    events.bind(to: _events).disposed(by: disposeBag)
   }
 }

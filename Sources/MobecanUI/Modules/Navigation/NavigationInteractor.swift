@@ -93,7 +93,6 @@ public class NavigationInteractor: NavigationInteractorProtocol {
     let moduleEvents = listeners.lazy.compactMap { $0.segues(module: module) }.first
     
     moduleEvents?
-      .neverEnding()
       .bind(to: events)
       .disposed(by: disposeBag)
   }

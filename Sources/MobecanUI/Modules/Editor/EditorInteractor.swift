@@ -37,7 +37,6 @@ public class EditorInteractor<InputValue, OutputValue, SomeError: Error>: Editor
   
   func with(initialValue: Observable<InputValue?>) {
     initialValue
-      .neverEnding()
       .bind(to: _initialValue)
       .disposed(by: disposeBag)    
   }

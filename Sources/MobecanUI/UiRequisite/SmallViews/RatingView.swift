@@ -107,7 +107,6 @@ public class RatingView: UIView {
     zip(stars, possibleRatings.dropFirst()).forEach { star, rating in
       star.rx.tap
         .map { rating }
-        .neverEnding()
         .bind(to: _desiredRating)
         .disposed(by: disposeBag)
     }

@@ -156,7 +156,7 @@ private class CustomViewController: UIViewController, NavigationBarContentProvid
     
     _contentSetter.bind(to: _content).disposed(by: disposeBag)
     
-    content.neverEnding().bind(to: _content).disposed(by: disposeBag)
+    content.bind(to: _content).disposed(by: disposeBag)
   }
 
   var navigationBarContent: Driver<NavigationBarContent> {

@@ -23,9 +23,8 @@ public class RxSignalOutput<Element>: ObserverType {
     switch event {
     case .next(let element):
       relay.accept(element)
-    case let .error(error):
-      fatalError("Binding error to RxSignalOutput: \(error)")
-    case .completed:
+    case .error, .completed:
+      // Do nothing. RxSignalOutput can not finish or produce error.
       break
     }
   }
