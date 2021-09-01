@@ -29,18 +29,17 @@ extension UiKitDemonstrator {
 
     var needsToBeFinished: Observable<Void> {
       .merge(
-        // If the user has recently initiated automatic dismissal
-        // (by swipe-down gesture or by other means), wait for inevitable .rxViewDidDisappear signal
-        // from containerViewController.
-        module.finished.filter { !containerViewController.isBeingDismissed },
-        containerViewController.rxViewDidDisappear
-          .asObservable()
-          .observeOn(MainScheduler.asyncInstance) // wait for automatic dismissal to completely finish
+        module.finished
+          // If the user has recently initiated automatic dismissal
+          // (by swipe-down gesture or by other means), wait for inevitable .rxViewDidDismiss signal
+          // from containerViewController.
+          .filter { !containerViewController.isBeingDismissed }
+          // Delay too early 'module.finished' signals.
+          .wait(for: containerViewController.rxViewDidAppear.map { true })
+          .observeOn(MainScheduler.instance),
+        containerViewController.rxViewDidDismiss.asObservable()
       )
-      // Delay too early 'module.finished' signals.
-      .wait(for: containerViewController.rxViewDidAppear.map { true })
       .take(1)
-      .observeOn(MainScheduler.instance)
     }
   }
 }

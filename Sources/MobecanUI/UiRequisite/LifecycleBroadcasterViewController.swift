@@ -16,6 +16,18 @@ open class LifecycleBroadcasterViewController: UIViewController {
   @RxSignalOutput open var rxViewWillDisappear: Signal<Void>
   @RxSignalOutput open var rxViewDidDisappear: Signal<Void>
 
+  /// The view controller was dismissed after being presented by another view controller.
+  open var rxViewDidDismiss: Signal<Void> {
+    rxViewDidDisappear
+      .filter { [weak self] in self?.isBeingDismissed == true }
+      .asObservable()
+      // Wait for dismissal to completely finish:
+      // view should be removed from superview,
+      // parentViewController and presentingViewController should become nil.
+      .observeOn(MainScheduler.asyncInstance)
+      .asSignal(onErrorSignalWith: .empty())
+  }
+
   private let child: UIViewController
 
   required public init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
