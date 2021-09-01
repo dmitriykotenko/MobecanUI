@@ -41,14 +41,15 @@ open class LifecycleBroadcasterViewController: UIViewController {
   override open func viewDidLoad() {
     super.viewDidLoad()
 
+    addChild(child)
+    view.putSingleSubview(child.view)
+    child.didMove(toParent: self)
+
     _rxViewDidLoad.onNext(())
   }
 
   override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
-    addChild(child)
-    view.putSingleSubview(child.view)
 
     _rxViewWillAppear.onNext(())
   }
@@ -56,24 +57,17 @@ open class LifecycleBroadcasterViewController: UIViewController {
   override open func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
 
-    child.didMove(toParent: self)
-
     _rxViewDidAppear.onNext(())
   }
 
   override open func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
 
-    child.willMove(toParent: nil)
-
     _rxViewWillDisappear.onNext(())
   }
 
   override open func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-
-    child.view.removeFromSuperview()
-    child.removeFromParent()
 
     _rxViewDidDisappear.onNext(())
   }
