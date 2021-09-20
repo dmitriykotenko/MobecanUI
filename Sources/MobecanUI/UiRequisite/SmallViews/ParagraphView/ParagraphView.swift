@@ -109,3 +109,11 @@ open class ParagraphView<Value>: UIView {
   
   override open var forFirstBaselineLayout: UIView { titleLabel }  
 }
+
+
+extension ParagraphView: MandatorinessListener {
+
+  open var isMandatory: AnyObserver<Bool> {
+    (titleLabel as? MandatorinessListener)?.isMandatory ?? .empty
+  }
+}
