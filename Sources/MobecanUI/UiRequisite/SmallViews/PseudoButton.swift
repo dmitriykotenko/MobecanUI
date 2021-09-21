@@ -104,6 +104,23 @@ open class PseudoButton<Value>: UIView, DataView {
     )
   }
 
+  @discardableResult
+  open func setupTouchReaction(onTouchDown: @escaping () -> Void,
+                               onTouchUp: @escaping () -> Void) -> Self {
+    setupTouchReaction(
+      onTouchDown: onTouchDown,
+      onTouchUp: onTouchUp,
+      disposeBag: disposeBag
+    )
+    return self
+  }
+
+  @discardableResult
+  open func highlightOnTaps() -> Self {
+    highlightOnTaps(disposeBag: disposeBag)
+    return self
+  }
+
   override open var forFirstBaselineLayout: UIView {
     subviews[0].forFirstBaselineLayout
   }
