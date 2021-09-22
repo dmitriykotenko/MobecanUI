@@ -11,7 +11,7 @@ open class ParagraphView<Value>: UIView {
   @RxUiInput(nil) public var attributedTitle: AnyObserver<NSAttributedString?>
   
   @RxUiInput(nil) public var body: AnyObserver<Value?>
-  @RxUiInput(true) public var hidesWhenBodyIsNil: AnyObserver<Bool>
+  @RxUiInput(.never()) public var hidesWhenBodyIs: AnyObserver<Predicate<Value?>>
 
   private let titleLabel: UILabel
   
@@ -48,7 +48,7 @@ open class ParagraphView<Value>: UIView {
               spacing: CGFloat,
               titleInsets: UIEdgeInsets = .zero,
               contentInsets: UIEdgeInsets = .zero,
-              hidesWhenBodyIsNil: Bool = false) {
+              hidesWhenBodyIs: Predicate<Value?> = .never()) {
     self.titleLabel = titleLabel
 
     super.init(frame: .zero)
@@ -65,7 +65,7 @@ open class ParagraphView<Value>: UIView {
       )
     )
 
-    self.hidesWhenBodyIsNil.onNext(hidesWhenBodyIsNil)
+    self.hidesWhenBodyIs.onNext(hidesWhenBodyIs)
 
     displayTitle()
     displayValue(body: content.body)
@@ -75,14 +75,14 @@ open class ParagraphView<Value>: UIView {
                           content: ParagraphViewContent<Value>,
                           spacing: CGFloat,
                           insets: UIEdgeInsets,
-                          hidesWhenBodyIsNil: Bool = false) {
+                          hidesWhenBodyIs: Predicate<Value?> = .never()) {
     self.init(
       titleLabel: titleLabel,
       content: content,
       spacing: spacing,
       titleInsets: insets.with(bottom: 0),
       contentInsets: insets.with(top: 0),
-      hidesWhenBodyIsNil: hidesWhenBodyIsNil
+      hidesWhenBodyIs: hidesWhenBodyIs
     )
   }
 
@@ -101,8 +101,9 @@ open class ParagraphView<Value>: UIView {
   private func displayValue(body: AnyObserver<Value?>) {
     _body.bind(to: body).disposed(by: disposeBag)
 
-    _body.map { $0 == nil }
-      .and(that: _hidesWhenBodyIsNil)
+    Observable
+      .combineLatest(_hidesWhenBodyIs, _body)
+      .map { $0($1) }
       .bind(to: rx.isHidden)
       .disposed(by: disposeBag)
   }
