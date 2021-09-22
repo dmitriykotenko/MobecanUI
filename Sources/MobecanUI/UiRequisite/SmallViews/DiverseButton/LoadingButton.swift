@@ -15,9 +15,10 @@ open class LoadingButton: DiverseButton {
       // Use zero alpha to hide title label, because `titleLabel?.isHidden = true` does not work.
       titleLabel?.alpha = newValue ? 0 : 1
       isUserInteractionEnabled = !newValue
+      updateImageViewAlpha()
     }
   }
-  
+
   private let activityIndicator: UIActivityIndicatorView
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
@@ -44,6 +45,20 @@ open class LoadingButton: DiverseButton {
         activityIndicator.color = titleColor
       }
     }
+  }
+
+  override open func setImage(_ image: UIImage?,
+                              for state: UIControl.State) {
+    super.setImage(image, for: state)
+    updateImageViewAlpha()
+  }
+
+  override open var isEnabled: Bool { didSet { updateImageViewAlpha() } }
+  override open var isHighlighted: Bool { didSet { updateImageViewAlpha() } }
+  override open var isSelected: Bool { didSet { updateImageViewAlpha() } }
+
+  private func updateImageViewAlpha() {
+    imageView?.alpha = isLoading ? 0 : 1
   }
 }
 
