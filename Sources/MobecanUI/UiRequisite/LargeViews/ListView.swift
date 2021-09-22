@@ -22,6 +22,7 @@ open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView
   public typealias ViewEvent = View.ViewEvent
 
   @RxUiInput(nil) open var value: AnyObserver<[Element]?>
+  @RxUiInput(false) var hideIfEmpty: AnyObserver<Bool>
   @RxOutput open var viewEvents: Observable<View.ViewEvent>
 
   private let createView: (Element) -> View
@@ -30,18 +31,25 @@ open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
-  public init(createView: @escaping (Element) -> View) {
+  public init(createView: @escaping (Element) -> View,
+              hideIfEmpty: Bool = false) {
     self.createView = createView
 
     super.init(frame: .zero)
 
-    _value
-      .subscribe(onNext: { [weak self] in self?.displayElements($0 ?? []) })
+    Observable
+      .combineLatest(_value, _hideIfEmpty)
+      .subscribe(onNext: { [weak self] in self?.displayElements($0 ?? [], hideIfEmpty: $1) })
       .disposed(by: disposeBag)
+
+    self.hideIfEmpty.onNext(hideIfEmpty)
   }
 
-  private func displayElements(_ elements: [Element]) {
+  private func displayElements(_ elements: [Element],
+                               hideIfEmpty: Bool) {
     removeAllSubviews()
+
+    isHidden = elements.isEmpty && hideIfEmpty
 
     let elementViews = elements.map { createView($0) }
 
@@ -50,5 +58,11 @@ open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView
     }
 
     putSingleSubview(.vstack(elementViews))
+  }
+
+  @discardableResult
+  open func hideIfEmpty(_ hideIfEmpty: Bool) -> Self {
+    self.hideIfEmpty.onNext(hideIfEmpty)
+    return self
   }
 }
