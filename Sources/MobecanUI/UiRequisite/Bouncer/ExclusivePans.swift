@@ -14,9 +14,7 @@ public extension Reactive where Base: UIView {
     let view = self.base
     
     return panGesture { _, delegate in
-      delegate.beginPolicy = .custom {
-        guard let pan = $0 as? UIPanGestureRecognizer else { return false }
-        
+      delegate.beginPolicy = .custom { pan in
         // Track only pans started above, around or below anotherView.
         let startPositionIsValid = startPosition?.isValid(for: pan) ?? true
         

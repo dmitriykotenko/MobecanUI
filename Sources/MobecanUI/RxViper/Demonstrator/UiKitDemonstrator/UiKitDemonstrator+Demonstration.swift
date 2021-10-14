@@ -21,7 +21,7 @@ extension UiKitDemonstrator {
       containerViewController.isBeingDismissed ?
         containerViewController.rxViewDidDisappear
           .asObservable()
-          .observeOn(MainScheduler.asyncInstance)
+          .observe(on: MainScheduler.asyncInstance)
           .take(1)
           .asSingle() :
         .just(())
@@ -36,7 +36,7 @@ extension UiKitDemonstrator {
           .filter { !containerViewController.isBeingDismissed }
           // Delay too early 'module.finished' signals.
           .wait(for: containerViewController.rxViewDidAppear.map { true })
-          .observeOn(MainScheduler.instance),
+          .observe(on: MainScheduler.instance),
         containerViewController.rxViewDidDismiss.asObservable()
       )
       .take(1)

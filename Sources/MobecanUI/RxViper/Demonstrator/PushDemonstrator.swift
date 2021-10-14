@@ -36,7 +36,7 @@ public class PushDemonstrator: Demonstrator {
     demonstratedModule = module
     
     module.finished
-      .observeOn(MainScheduler.instance)
+      .observe(on: MainScheduler.instance)
       .flatMap { [weak self] in
         self?.stopDemonstration(of: module, animating: animating) ?? .just(())
       }

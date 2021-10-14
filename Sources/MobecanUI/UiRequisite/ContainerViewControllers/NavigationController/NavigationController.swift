@@ -89,7 +89,7 @@ open class NavigationController: UIViewController {
     if customNavigationBar.affectsSafeArea {
       navigationBarFrameListener
         .framesChanged
-        .observeOn(MainScheduler.instance)
+        .observe(on: MainScheduler.instance)
         .compactMap { [weak self] in self?.customNavigationBar.frame.height }
         .subscribe(onNext: { [weak self] in self?.additionalSafeAreaInsets = .top($0) })
         .disposed(by: disposeBag)

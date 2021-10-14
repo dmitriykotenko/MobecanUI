@@ -19,6 +19,6 @@ public extension Observable where Element == Duration {
       .startWith(())
       .map { (deadline - clock.now).rounded(to: interval) }
       .map { $0.clipped(inside: (.zero)...(.max)) }
-      .takeWhile { $0 >= .zero }
+      .take(while: { $0 >= .zero })
   }
 }

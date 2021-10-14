@@ -24,7 +24,7 @@ open class LifecycleBroadcasterViewController: UIViewController {
       // Wait for dismissal to completely finish:
       // view should be removed from superview,
       // parentViewController and presentingViewController should become nil.
-      .observeOn(MainScheduler.asyncInstance)
+      .observe(on: MainScheduler.asyncInstance)
       .asSignal(onErrorSignalWith: .empty())
   }
 

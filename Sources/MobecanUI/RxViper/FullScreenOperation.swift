@@ -21,7 +21,7 @@ open class FullScreenOperation<Input, Output> {
     self.when = when
     
     let moduleAndOutput =
-      when.observeOn(MainScheduler.instance).map { initModule($0) }.share()
+      when.observe(on: MainScheduler.instance).map { initModule($0) }.share()
     
     moduleAndOutput
       .flatMap { $0.output }

@@ -38,7 +38,7 @@ public class RxUiInput<Element>: ObservableType {
   public func subscribe<Observer>(_ observer: Observer) -> Disposable
   where Observer: ObserverType, Element == Observer.Element {
 
-    behaviorRelay?.observeOn(mainScheduler).subscribe(observer)
-    ?? publishRelay.observeOn(mainScheduler).subscribe(observer)
+    behaviorRelay?.observe(on: mainScheduler).subscribe(observer)
+    ?? publishRelay.observe(on: mainScheduler).subscribe(observer)
   }
 }
