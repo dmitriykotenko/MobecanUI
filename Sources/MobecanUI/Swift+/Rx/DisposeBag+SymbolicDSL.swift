@@ -73,4 +73,14 @@ public extension ObserverType {
   where Output.Element == Element {
     output.0.bind(to: input).disposed(by: output.1)
   }
+
+  static func <== <Output: ObservableConvertibleType>(input: Self, output: Output) -> Disposable
+  where Output.Element == Element {
+    output.asObservable().bind(to: input)
+  }
+
+  static func <== <Output: ObservableConvertibleType>(input: Self, output: (Output, DisposeBag))
+  where Output.Element == Element {
+    output.0.asObservable().bind(to: input).disposed(by: output.1)
+  }
 }
