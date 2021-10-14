@@ -48,25 +48,14 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
               errorFormatter: @escaping (SomeError) -> String?) {
     self.errorFormatter = errorFormatter
 
-    Observable
-      .combineLatest(initialValue.asObservable(), _value) { checker.isOutputValueValid($0, $1) }
-      .bind(to: _isSaveButtonEnabled)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _isSaveButtonEnabled <==
+        .combineLatest(initialValue.asObservable(), _value) { checker.isOutputValueValid($0, $1) }
 
-    _value
-      .map { hintFormatter($0) }
-      .bind(to: _hint)
-      .disposed(by: disposeBag)
-
-    error
-      .map { $0.flatMap(errorFormatter) }
-      .bind(to: _errorText)
-      .disposed(by: disposeBag)
-
-    _saveButtonTap
-      .map { .off }
-      .bind(to: _doNotDisturbMode)
-      .disposed(by: disposeBag)
+      _hint <== _value.map { hintFormatter($0) }
+      _errorText <== error.map { $0.flatMap(errorFormatter) }
+      _doNotDisturbMode <== _saveButtonTap.map { .off }
+    }
   }
   
   public convenience init() {

@@ -92,14 +92,14 @@ open class NavigationBar: ClickThroughView {
   }
 
   open func displayContent(_ content: NavigationBarContent) {
-    titleView.value.onNext(content.title)
-    subtitleView.value.onNext(content.subtitle)
+    titleView.value =^ content.title
+    subtitleView.value =^ content.subtitle
     
     rightViewContainer.putSingleSubview(
       .vstack(content.rightView.asSequence)
     )
     
-    backgroundView.value.onNext(content.background)
+    backgroundView.value =^ content.background
   }
   
   open func screenBackgroundColorUpdated(_ screenBackgroundColor: UIColor?) {}
