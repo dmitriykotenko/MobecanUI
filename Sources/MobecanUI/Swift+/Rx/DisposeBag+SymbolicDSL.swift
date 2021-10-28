@@ -26,28 +26,42 @@ infix operator ==> : DefaultPrecedence
 
 public extension Observable {
 
-  static func ==> <Input: ObserverType>(output: Observable<Element>, input: Input) -> Disposable
-  where Input.Element == Element {
-    output.bind(to: input)
+  static func ==> <Observer: ObserverType>(signal: Observable<Element>, listener: Observer) -> Disposable
+  where Observer.Element == Element {
+    signal.bind(to: listener)
   }
 
-  static func ==> <Input: ObserverType>(output: Observable<Element>, input: (Input, DisposeBag))
-  where Input.Element == Element {
-    output.bind(to: input.0).disposed(by: input.1)
+  static func ==> <Observer: ObserverType>(signal: Observable<Element>, listener: Observer) -> Disposable
+  where Observer.Element == Element? {
+    signal.bind(to: listener)
+  }
+}
+
+
+public extension ObservableType {
+
+  static func ==> <Observer: ObserverType>(signal: Self, listener: Observer) -> Disposable
+  where Observer.Element == Element {
+    signal.bind(to: listener)
+  }
+
+  static func ==> <Observer: ObserverType>(signal: Self, listener: Observer) -> Disposable
+  where Observer.Element == Element? {
+    signal.bind(to: listener)
   }
 }
 
 
 public extension ObservableConvertibleType {
 
-  static func ==> <Input: ObserverType>(output: Self, input: Input) -> Disposable
-  where Input.Element == Element {
-    output.asObservable().bind(to: input)
+  static func ==> <Observer: ObserverType>(signal: Self, listener: Observer) -> Disposable
+  where Observer.Element == Element {
+    signal.asObservable().bind(to: listener)
   }
 
-  static func ==> <Input: ObserverType>(output: Self, input: (Input, DisposeBag))
-  where Input.Element == Element {
-    output.asObservable().bind(to: input.0).disposed(by: input.1)
+  static func ==> <Observer: ObserverType>(signal: Self, listener: Observer) -> Disposable
+  where Observer.Element == Element? {
+    signal.asObservable().bind(to: listener)
   }
 }
 
@@ -56,31 +70,32 @@ infix operator <== : DefaultPrecedence
 
 public extension ObserverType {
 
-  static func <== <Output: Observable<Element>>(input: Self, output: Output) -> Disposable {
-    output.bind(to: input)
+  static func <== (listener: Self, signal: Observable<Element>) -> Disposable {
+    signal.bind(to: listener)
   }
 
-  static func <== <Output: Observable<Element>>(input: Self, output: (Output, DisposeBag)) {
-    output.0.bind(to: input).disposed(by: output.1)
+  static func <== <NestedElement>(listener: Self, signal: Observable<NestedElement>) -> Disposable
+  where Element == NestedElement? {
+    signal.bind(to: listener)
   }
 
-  static func <== <Output: ObservableType>(input: Self, output: Output) -> Disposable
-  where Output.Element == Element {
-    output.bind(to: input)
+  static func <== <Source: ObservableType>(listener: Self, signal: Source) -> Disposable
+  where Source.Element == Element {
+    signal.bind(to: listener)
   }
 
-  static func <== <Output: ObservableType>(input: Self, output: (Output, DisposeBag))
-  where Output.Element == Element {
-    output.0.bind(to: input).disposed(by: output.1)
+  static func <== <Source: ObservableType>(listener: Self, signal: Source) -> Disposable
+  where Element == Source.Element? {
+    signal.bind(to: listener)
   }
 
-  static func <== <Output: ObservableConvertibleType>(input: Self, output: Output) -> Disposable
-  where Output.Element == Element {
-    output.asObservable().bind(to: input)
+  static func <== <Source: ObservableConvertibleType>(listener: Self, signal: Source) -> Disposable
+  where Source.Element == Element {
+    signal.asObservable().bind(to: listener)
   }
 
-  static func <== <Output: ObservableConvertibleType>(input: Self, output: (Output, DisposeBag))
-  where Output.Element == Element {
-    output.0.asObservable().bind(to: input).disposed(by: output.1)
+  static func <== <Source: ObservableConvertibleType>(listener: Self, signal: Source) -> Disposable
+  where Element == Source.Element? {
+    signal.asObservable().bind(to: listener)
   }
 }
