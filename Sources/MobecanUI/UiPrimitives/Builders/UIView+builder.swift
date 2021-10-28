@@ -33,7 +33,12 @@ public extension UIView {
     self.clipsToBounds = clipsToBounds
     return self
   }
-  
+
+  func alpha(_ alpha: CGFloat) -> Self {
+    self.alpha = alpha
+    return self
+  }
+
   func backgroundColor(_ backgroundColor: UIColor) -> Self {
     self.backgroundColor = backgroundColor
     return self
