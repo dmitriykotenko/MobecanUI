@@ -30,7 +30,8 @@ public extension ObservableType where Element == Bool {
     whenIsEqual(to: false)
   }
 
-  static func not(_ observable: Observable<Bool>) -> Observable<Bool> {
+  static func not<SomeObservable: ObservableType>(_ observable: SomeObservable) -> Observable<Bool>
+  where SomeObservable.Element == Bool {
     observable.not()
   }
 }
