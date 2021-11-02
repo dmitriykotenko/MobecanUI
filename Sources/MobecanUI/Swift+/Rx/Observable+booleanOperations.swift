@@ -6,13 +6,13 @@ import RxSwift
 
 public extension ObservableType where Element == Bool {
   
-  func and<ThatObservableType: ObservableType>(that: ThatObservableType) -> Observable<Bool>
+  func and<ThatObservableType: ObservableType>(_ that: ThatObservableType) -> Observable<Bool>
     where ThatObservableType.Element == Bool {
       
       Observable.combineLatest(self, that) { $0 && $1 }
   }
   
-  func or<ThatObservableType: ObservableType>(that: ThatObservableType) -> Observable<Bool>
+  func or<ThatObservableType: ObservableType>(_ that: ThatObservableType) -> Observable<Bool>
     where ThatObservableType.Element == Bool {
       
       Observable.combineLatest(self, that) { $0 || $1 }
@@ -28,5 +28,9 @@ public extension ObservableType where Element == Bool {
 
   func whenFalse() -> Observable<Void> {
     whenIsEqual(to: false)
+  }
+
+  static func not(_ observable: Observable<Bool>) -> Observable<Bool> {
+    observable.not()
   }
 }
