@@ -21,7 +21,7 @@ public class CheckboxView<NestedValue>: UIView, DataView, EventfulView {
   private let checkmark: CheckmarkView
   private let label: UILabel
 
-  private let formatValue: (NestedValue?) -> String?
+  private let formatValue: (NestedValue?) -> Observable<NSAttributedString?>
   
   private let disposeBag = DisposeBag()
   
@@ -29,7 +29,7 @@ public class CheckboxView<NestedValue>: UIView, DataView, EventfulView {
 
   public init(checkmark: CheckmarkView,
               label: UILabel,
-              formatValue: @escaping (NestedValue?) -> String?,
+              formatValue: @escaping (NestedValue?) -> Observable<NSAttributedString?>,
               height: CGFloat,
               insets: UIEdgeInsets) {
     self.checkmark = checkmark
@@ -60,14 +60,45 @@ public class CheckboxView<NestedValue>: UIView, DataView, EventfulView {
   }
   
   private func displayValue() {
-    _value
-      .compactMap { $0?.isSelected }
-      .bind(to: checkmark.setIsSelected)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _value.compactMap { $0?.isSelected } ==> checkmark.setIsSelected
 
     _value
-      .map { [weak self] in self?.formatValue($0?.value) }
-      .bind(to: label.rx.text)
-      .disposed(by: disposeBag)
+      .weakFlatMapLatest(self) { $1.formatValue($0?.value) } ==> label.rx.attributedText
+    }
+  }
+}
+
+
+public extension CheckboxView {
+
+  convenience init(checkmark: CheckmarkView,
+                   label: UILabel,
+                   formatValue: @escaping (NestedValue?) -> String?,
+                   height: CGFloat,
+                   insets: UIEdgeInsets) {
+    self.init(
+      checkmark: checkmark,
+      label: label,
+      formatValue: {
+        .just(formatValue($0).map { .plain($0) })
+      },
+      height: height,
+      insets: insets
+    )
+  }
+
+  convenience init(checkmark: CheckmarkView,
+                   label: UILabel,
+                   formatValue: @escaping (NestedValue?) -> NSAttributedString?,
+                   height: CGFloat,
+                   insets: UIEdgeInsets) {
+    self.init(
+      checkmark: checkmark,
+      label: label,
+      formatValue: { .just(formatValue($0)) },
+      height: height,
+      insets: insets
+    )
   }
 }
