@@ -34,6 +34,16 @@ public extension UIView {
     return self
   }
 
+  func isVisible(_ isVisible: Bool) -> Self {
+    self.isVisible = isVisible
+    return self
+  }
+
+  func isHidden(_ isHidden: Bool) -> Self {
+    self.isHidden = isHidden
+    return self
+  }
+
   func alpha(_ alpha: CGFloat) -> Self {
     self.alpha = alpha
     return self
