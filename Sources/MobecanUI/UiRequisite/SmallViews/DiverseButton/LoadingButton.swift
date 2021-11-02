@@ -19,11 +19,11 @@ open class LoadingButton: DiverseButton {
     }
   }
 
-  private let activityIndicator: UIActivityIndicatorView
+  private let activityIndicator: ActivityIndicatorProtocol
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
-  public init(activityIndicator: UIActivityIndicatorView) {
+  public init(activityIndicator: ActivityIndicatorProtocol) {
     self.activityIndicator = activityIndicator
     
     super.init(frame: .zero)

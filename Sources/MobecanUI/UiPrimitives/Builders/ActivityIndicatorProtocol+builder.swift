@@ -3,7 +3,7 @@
 import UIKit
 
 
-public extension UIActivityIndicatorView {
+public extension ActivityIndicatorProtocol {
   
   func color(_ color: UIColor?) -> Self {
     self.color = color

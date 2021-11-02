@@ -13,12 +13,12 @@ public class TwoIconsButton: UIView {
     public let leadingIconView: UIImageView
     public let titleLabel: UILabel
     public let trailingIconView: UIImageView
-    public let loadingIndicator: UIActivityIndicatorView
+    public let loadingIndicator: ActivityIndicatorProtocol
     
     public init(leadingIconView: UIImageView,
                 titleLabel: UILabel,
                 trailingIconView: UIImageView,
-                loadingIndicator: UIActivityIndicatorView) {
+                loadingIndicator: ActivityIndicatorProtocol) {
       self.leadingIconView = leadingIconView
       self.titleLabel = titleLabel
       self.trailingIconView = trailingIconView
@@ -49,7 +49,7 @@ public class TwoIconsButton: UIView {
   private let titleLabel: UILabel
   private let trailingIconView: UIImageView
   
-  private let loadingIndicator: UIActivityIndicatorView
+  private let loadingIndicator: ActivityIndicatorProtocol
   
   private lazy var tapGesture = rx.tapGesture()
   
@@ -100,11 +100,10 @@ public class TwoIconsButton: UIView {
   }
   
   private func setupIsLoading() {
-    [
-      _isLoading.bind(to: trailingIconView.rx.isHidden),
-      _isLoading.bind(to: loadingIndicator.rx.isAnimating)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      _isLoading ==> trailingIconView.rx.isHidden
+      _isLoading ==> loadingIndicator.rxIsAnimating
+    }
   }
   
   public func foreground(_ foreground: Foreground) -> Self {
