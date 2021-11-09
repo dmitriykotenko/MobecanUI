@@ -48,14 +48,6 @@ class SafeAreaInsetsListener {
 private extension UIView {
   
   var parentViewControllers: [UIViewController] {
-    [parentViewController].compactMap { $0 }
-  }
-}
-
-
-private extension UIResponder {
-  
-  var parentViewController: UIViewController? {
-    (next as? UIViewController) ?? next?.parentViewController
+    parentViewController.asSequence
   }
 }

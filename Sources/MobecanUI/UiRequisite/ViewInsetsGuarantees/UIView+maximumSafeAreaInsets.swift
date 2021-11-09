@@ -25,14 +25,6 @@ extension UIView {
 }
 
 
-private extension UIResponder {
-    
-  var parentViewController: UIViewController? {
-    (next as? UIViewController) ?? next?.parentViewController
-  }
-}
-
-
 private extension UIViewController {
   
   var maximumSafeAreaInsets: UIEdgeInsets {
