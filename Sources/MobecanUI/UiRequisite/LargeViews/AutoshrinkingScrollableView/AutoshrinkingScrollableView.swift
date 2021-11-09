@@ -10,7 +10,7 @@ import UIKit
 /// Scrollable view which automatically changes its height
 /// depending on content, safe area insets and keyboard frame.
 public class AutoshrinkingScrollableView: WindowListeningView, UIScrollViewDelegate {
-  
+
   public let scrollView: UIScrollView
 
   /// Bottom-right counterpart of UIScrollView.contentOffset property.
@@ -35,9 +35,9 @@ public class AutoshrinkingScrollableView: WindowListeningView, UIScrollViewDeleg
   )
 
   private let disposeBag = DisposeBag()
-    
+
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
-  
+
   public init(contentView: UIView,
               scrollView: (UIView) -> UIScrollView) {
     self.contentView = contentView
@@ -50,7 +50,7 @@ public class AutoshrinkingScrollableView: WindowListeningView, UIScrollViewDeleg
 
     self.scrollView.contentInsetAdjustmentBehavior = .never
     self.scrollView.alwaysBounceVertical = false
-    
+
     putSubview(self.scrollView)
 
     // To disable horizontal scrolling, bind contentView's width to autoshrinking scrollable view's width.
