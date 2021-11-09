@@ -44,7 +44,6 @@ class RxScrollViewOppositeContentOffsetTests: XCTestCase {
   func testContentSizeChange() {
     testTiming(
       events: [
-        //      .next(0, .zero),
         .next(10, CGSize(width: 200, height: 100)),
         .next(20, CGSize(width: 200, height: 90)),
         .next(25, CGSize(width: 200, height: 500))
