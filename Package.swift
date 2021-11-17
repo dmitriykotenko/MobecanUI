@@ -19,6 +19,7 @@ let package = Package(
     .package(url: "https://github.com/RxSwiftCommunity/RxKeyboard", from: .init(2, 0, 0)),
     .package(url: "https://github.com/onevcat/Kingfisher", from: .init(6, 3, 0)),
     .package(url: "https://github.com/SnapKit/SnapKit", from: .init(5, 0, 1)),
+    .package(url: "https://github.com/dmitriykotenko/LayoutKit", .branch("feature/swift-5.3")),
     .package(url: "https://github.com/dmitriykotenko/SwiftDateTime", from: .init(0, 1, 6))
   ],
   targets: [
@@ -27,6 +28,7 @@ let package = Package(
       dependencies: [
         "RxSwift", "RxOptional", "RxGesture", "RxKeyboard",
         "SnapKit",
+        "LayoutKit",
         "Kingfisher",
         "SwiftDateTime"
       ]
