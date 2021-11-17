@@ -1,21 +1,19 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SnapKit
 import UIKit
 
 
-public class ReactiveSpacerView: UIView {
+public class ReactiveSpacerView: LayoutableView {
   
   private weak var targetView: UIView?
   private let axis: [NSLayoutConstraint.Axis]
   private let insets: UIEdgeInsets
 
   private let framesListener: FramesListener
-
-  private var widthConstraint: Constraint?
-  private var heightConstraint: Constraint?
 
   private let disposeBag = DisposeBag()
 
@@ -30,37 +28,40 @@ public class ReactiveSpacerView: UIView {
     
     self.framesListener = FramesListener(views: [targetView])
     
-    super.init(frame: .zero)
+    super.init(
+      layout: SizeLayout<ReactiveSpacerView>(size: .zero)
+    )
 
-    setupInitialSize()
     setupSizeUpdating()
   }
-  
-  private func setupInitialSize() {
-    disableTemporaryConstraints()
 
-    snp.makeConstraints {
-      widthConstraint = $0.width.equalTo(0).priority(.minimum).constraint
-      heightConstraint = $0.height.equalTo(0).priority(.minimum).constraint
-    }
-  }
-  
   private func setupSizeUpdating() {
-    framesListener.framesChanged
-      .subscribe(onNext: { [weak self] in self?.updateSize() })
-      .disposed(by: disposeBag)
+    disposeBag {
+      framesListener.framesChanged
+        .compactMap { [weak self] in self?.targetView?.frame.size }
+        .startWith(.zero)
+        .distinctUntilChanged { [axis] in $0.isEqual(to: $1, in: axis) }
+        ==> { [weak self] in self?.updateSize($0) }
+    }
   }
 
-  private func updateSize() {
-    targetView.map {
-      if axis.contains(.horizontal) {
-        widthConstraint?.update(priority: .required)
-        widthConstraint?.update(offset: $0.frame.width + insets.left + insets.right)
-      }
-      if axis.contains(.vertical) {
-        heightConstraint?.update(priority: .required)
-        heightConstraint?.update(offset: $0.frame.height + insets.top + insets.bottom)
-      }
-    }
+  private func updateSize(_ targetViewSize: CGSize) {
+    layout = SizeLayout<ReactiveSpacerView>(
+      size: targetViewSize.insetBy(insets.negated)
+    )
+
+    invalidateIntrinsicContentSize()
+  }
+}
+
+
+private extension CGSize {
+
+  func isEqual(to that: CGSize,
+               in axis: [NSLayoutConstraint.Axis]) -> Bool {
+    let widthIsDifferent = axis.contains(.horizontal) && self.width != that.width
+    let heightIsDifferent = axis.contains(.vertical) && self.height != that.height
+
+    return !widthIsDifferent && !heightIsDifferent
   }
 }

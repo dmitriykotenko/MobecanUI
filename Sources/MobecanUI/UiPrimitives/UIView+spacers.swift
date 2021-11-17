@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import SnapKit
 import UIKit
 
@@ -7,40 +8,32 @@ import UIKit
 public extension UIView {
   
   static func zeroHeightView(layoutPriority: ConstraintPriority = .required) -> UIView {
-    let zeroHeightView = UIView()
-
-    zeroHeightView.disableTemporaryConstraints()
-
-    return zeroHeightView.height(0, priority: layoutPriority)
+    LayoutableView(
+      layout: SizeLayout(height: 0)
+    )
   }
 
   static func spacer(width: CGFloat? = nil,
                      height: CGFloat? = nil,
                      layoutPriority: ConstraintPriority = .required) -> UIView {
-    let spacer = UIView()
-    
-    spacer.disableTemporaryConstraints()
-
-    width.map { _ = spacer.width($0, priority: layoutPriority) }
-    height.map { _ = spacer.height($0, priority: layoutPriority) }
-    
-    return spacer
+    LayoutableView(
+      layout: SizeLayout(
+        minWidth: width,
+        maxWidth: width,
+        minHeight: height,
+        maxHeight: height
+      )
+    )
   }
 
   static func stretchableSpacer(minimumWidth: CGFloat? = nil,
                                 minimumHeight: CGFloat? = nil) -> UIView {
-    let spacer = UIView()
-
-    spacer.disableTemporaryConstraints()
-
-    spacer.snp.makeConstraints {
-      $0.width.height.equalTo(0).priority(.minimum)
-    }
-    
-    minimumWidth.map { _ = spacer.minimumWidth($0) }
-    minimumHeight.map { _ = spacer.minimumHeight($0) }
-    
-    return spacer
+    LayoutableView(
+      layout: SizeLayout(
+        minWidth: minimumWidth,
+        minHeight: minimumHeight
+      )
+    )
   }
 
   static func rxHorizontalSpacer(_ targetView: UIView,
