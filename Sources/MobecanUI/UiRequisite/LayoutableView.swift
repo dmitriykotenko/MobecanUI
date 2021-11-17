@@ -6,6 +6,7 @@ import UIKit
 
 open class LayoutableView: UIView {
 
+  open var isClickThroughEnabled: Bool = false
   open var layout: Layout
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
@@ -29,6 +30,22 @@ open class LayoutableView: UIView {
 
   override open func layoutSubviews() {
     layout.measurement(within: bounds.size).arrangement(within: bounds).makeViews(in: self)
+  }
+
+  override open func hitTest(_ point: CGPoint,
+                             with event: UIEvent?) -> UIView? {
+    let hit = super.hitTest(point, with: event)
+
+    switch hit {
+    case self where isClickThroughEnabled: return nil
+    default: return hit
+    }
+  }
+
+  @discardableResult
+  open func isClickThroughEnabled(_ isClickThroughEnabled: Bool) -> Self {
+    self.isClickThroughEnabled = isClickThroughEnabled
+    return self
   }
 }
 

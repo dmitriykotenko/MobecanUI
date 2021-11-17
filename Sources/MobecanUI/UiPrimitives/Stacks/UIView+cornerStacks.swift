@@ -9,80 +9,40 @@ public extension UIView {
   static func topLeading(_ subview: UIView,
                          topInset: CGFloat = 0,
                          leadingInset: CGFloat = 0,
-                         priority: ConstraintPriority = .required) -> Self {
-    let superview = Self()
-    
-    superview.disableTemporaryConstraints()
-
-    superview.addSubview(subview)
-    
-    subview.snp.makeConstraints {
-      $0.top.equalToSuperview().inset(topInset).priority(priority)
-      $0.leading.equalToSuperview().inset(leadingInset).priority(priority)
-
-      $0.bottom.lessThanOrEqualToSuperview()
-      $0.trailing.lessThanOrEqualToSuperview()
-    }
-    
-    return superview
+                         priority: ConstraintPriority = .required) -> LayoutableView {
+    subview.insideOverlay(
+      alignment: .topLeading,
+      insets: .init(top: topInset, left: leadingInset)
+    )
   }
 
   static func topTrailing(_ subview: UIView,
                           topInset: CGFloat = 0,
                           trailingInset: CGFloat = 0,
-                          priority: ConstraintPriority = .required) -> Self {
-    let superview = Self()
-
-    superview.disableTemporaryConstraints()
-
-    superview.addSubview(subview)
-    
-    subview.snp.makeConstraints {
-      $0.top.equalToSuperview().inset(topInset).priority(priority)
-      $0.trailing.equalToSuperview().inset(trailingInset).priority(priority)
-
-      $0.bottom.lessThanOrEqualToSuperview()
-      $0.leading.greaterThanOrEqualToSuperview()
-    }
-    
-    return superview
+                          priority: ConstraintPriority = .required) -> LayoutableView {
+    subview.insideOverlay(
+      alignment: .topTrailing,
+      insets: .init(top: topInset, right: trailingInset)
+    )
   }
 
   static func bottomLeading(_ subview: UIView,
                             bottomInset: CGFloat = 0,
                             leadingInset: CGFloat = 0,
-                            priority: ConstraintPriority = .required) -> Self {
-    let superview = Self()
-
-    superview.addSubview(subview)
-
-    subview.snp.makeConstraints {
-      $0.bottom.equalToSuperview().inset(bottomInset).priority(priority)
-      $0.leading.equalToSuperview().inset(leadingInset).priority(priority)
-
-      $0.top.greaterThanOrEqualToSuperview()
-      $0.trailing.lessThanOrEqualToSuperview()
-    }
-
-    return superview
+                            priority: ConstraintPriority = .required) -> LayoutableView {
+    subview.insideOverlay(
+      alignment: .bottomLeading,
+      insets: .init(left: leadingInset, bottom: bottomInset)
+    )
   }
 
   static func bottomTrailing(_ subview: UIView,
                              bottomInset: CGFloat = 0,
                              trailingInset: CGFloat = 0,
-                             priority: ConstraintPriority = .required) -> Self {
-    let superview = Self()
-
-    superview.addSubview(subview)
-
-    subview.snp.makeConstraints {
-      $0.bottom.equalToSuperview().inset(bottomInset).priority(priority)
-      $0.trailing.equalToSuperview().inset(trailingInset).priority(priority)
-
-      $0.top.greaterThanOrEqualToSuperview()
-      $0.leading.greaterThanOrEqualToSuperview()
-    }
-
-    return superview
+                             priority: ConstraintPriority = .required) -> LayoutableView {
+    subview.insideOverlay(
+      alignment: .bottomTrailing,
+      insets: .init(bottom: bottomInset, right: trailingInset)
+    )
   }
 }

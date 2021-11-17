@@ -1,11 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxSwift
 import UIKit
 
 
 /// Automatically hides and shows itself when content view's visibility changes.
-public class AutohidingContainerView: ClickThroughView {
+public class AutohidingContainerView: LayoutableView {
   
   private var visibilityListener: NSKeyValueObservation?
   
@@ -17,9 +18,14 @@ public class AutohidingContainerView: ClickThroughView {
               layout: (UIView) -> UIView = { $0 },
               insets: UIEdgeInsets = .zero) {
 
-    super.init(frame: .zero)
+    super.init()
 
-    putSubview(layout(subview), insets: insets)
+    self.isClickThroughEnabled = true
+
+    self.layout = InsetLayout(
+      insets: insets,
+      sublayout: BoilerplateLayout(layout(subview))
+    )
 
     visibilityListener = subview.observe(\.isHidden, options: .initial) { [weak self] view, _ in
       self?.isHidden = view.isHidden
