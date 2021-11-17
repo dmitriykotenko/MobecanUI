@@ -5,7 +5,7 @@ import UIKit
 
 public extension UIView {
   
-  static func blur(style: UIBlurEffect.Style) -> Self {
+  static func blur(style: UIBlurEffect.Style) -> ClickThroughView {
     .zstack([
       UIVisualEffectView(effect: UIBlurEffect(style: style))
     ])
