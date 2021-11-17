@@ -23,24 +23,16 @@ public extension UIView {
                    cornerRadius: CGFloat,
                    _ subviews: [UIView] = [],
                    insets: UIEdgeInsets = .zero) -> UIView {
-    let minimumSize = CGSize(
-      width: insets.left + insets.right,
-      height: insets.top + insets.bottom
-    )
-    
     // Do not insert vertical stack if card content must be empty.
     let card = subviews.isEmpty ?
-      viewWithoutTemporaryConstraints().minimumSize(minimumSize) :
+      UIView.stretchableSpacer(
+        minimumWidth: insets.left + insets.right,
+        minimumHeight: insets.top + insets.bottom
+      ) :
       UIView.vstack(subviews, insets: insets)
     
     return card
       .cornerRadius(cornerRadius)
       .roundedCorners(roundedCorners)
-  }
-
-  private static func viewWithoutTemporaryConstraints() -> UIView {
-    let view = UIView()
-    view.disableTemporaryConstraints()
-    return view
   }
 }

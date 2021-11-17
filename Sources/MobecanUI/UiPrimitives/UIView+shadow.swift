@@ -12,11 +12,8 @@ public extension UIView {
   static func shadow(_ shadow: Shadow,
                      backgroundColor: UIColor,
                      cornerRadius: CGFloat = 0) -> UIView {
-    let shadowView = UIView()
-
-    shadowView.disableTemporaryConstraints()
-
-    return shadowView
+    UIView()
+      .translatesAutoresizingMaskIntoConstraints(false)
       .backgroundColor(backgroundColor)
       .cornerRadius(cornerRadius)
       .withShadow(shadow)
