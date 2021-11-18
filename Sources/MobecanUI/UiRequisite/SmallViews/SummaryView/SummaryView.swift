@@ -1,6 +1,7 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 import Kingfisher
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
@@ -85,10 +86,10 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
     backgroundView.map { putSubview($0) }
     
     putSubview(
-      .hstack(
+      .autolayoutHstack(
         alignment: .fill,
         spacing: spacing,
-        [iconContainer.containerView, .vstack([labels.view(), .stretchableSpacer()])],
+        [iconContainer.containerView, .autolayoutVstack([labels.view(), .stretchableSpacer()])],
         insets: insets
       )
     )
@@ -101,12 +102,11 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
     let iconAndTexts = _value
       .flatMapLatest { [weak self] in self?.formatValue($0) ?? .never() }
 
-    iconAndTexts
-      .distinctUntilChanged()
-      .subscribe(onNext: { [weak self] in
+    disposeBag {
+      iconAndTexts.distinctUntilChanged() ==> { [weak self] in
         self?.displayValue(iconAndTexts: $0)
-      })
-      .disposed(by: disposeBag)
+      }
+    }
   }
   
   private func displayValue(iconAndTexts: IconAndTexts?) {
@@ -119,6 +119,10 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
     .just(nil)
   }
   
-  open override var forFirstBaselineLayout: UIView { labels.firstBaselineLabel }
-  open override var forLastBaselineLayout: UIView { labels.lastBaselineLabel }
+  override open var forFirstBaselineLayout: UIView { labels.firstBaselineLabel }
+  override open var forLastBaselineLayout: UIView { labels.lastBaselineLabel }
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    systemLayoutSizeFitting(size)
+  }
 }

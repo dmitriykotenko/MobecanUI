@@ -48,19 +48,19 @@ open class SimpleImageViewContainer: ImageViewContainer {
                                     verticalPlacement: VerticalPlacement) -> UIView {
     switch verticalPlacement {
     case .top(let offset):
-      return .vstack([imageView, .stretchableSpacer()], insets: .top(offset))
+      return .autolayoutVstack([imageView, .stretchableSpacer()], insets: .top(offset))
     case .bottom(let offset):
-      return .vstack([.stretchableSpacer(), imageView], insets: .bottom(offset))
+      return .autolayoutVstack([.stretchableSpacer(), imageView], insets: .bottom(offset))
     case .center:
       let topSpacer = UIView.stretchableSpacer()
       let bottomSpacer = UIView.stretchableSpacer()
-      let containerView = UIView.vstack([topSpacer, imageView, bottomSpacer])
+      let containerView = UIView.autolayoutVstack([topSpacer, imageView, bottomSpacer])
       
       topSpacer.snp.makeConstraints { $0.height.equalTo(bottomSpacer) }
       
       return containerView
     case .firstBaseline:
-      return .vstack([.stretchableSpacer(), imageView, .stretchableSpacer()])
+      return .autolayoutVstack([.stretchableSpacer(), imageView, .stretchableSpacer()])
     }
   }
   

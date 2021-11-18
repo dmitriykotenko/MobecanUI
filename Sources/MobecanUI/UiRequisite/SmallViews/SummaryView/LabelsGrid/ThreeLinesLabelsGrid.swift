@@ -67,10 +67,10 @@ public struct ThreeLinesLabelsGrid: LabelsGrid {
   public func view() -> UIView {
     _ = topRightLabel.fitToContent(axis: [.horizontal])
     
-    return .vstack(
+    return .autolayoutVstack(
       spacing: spacing.vertical,
       [
-        .hstack(
+        .autolayoutHstack(
           alignment: .firstBaseline,
           distribution: .fill,
           spacing: spacing.horizontal,

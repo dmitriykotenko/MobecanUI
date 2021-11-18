@@ -104,4 +104,8 @@ open class NavigationBar: ClickThroughView {
   open func screenBackgroundColorUpdated(_ screenBackgroundColor: UIColor?) {}
 
   open var affectsSafeArea: Bool { true }
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    systemLayoutSizeFitting(size)
+  }
 }
