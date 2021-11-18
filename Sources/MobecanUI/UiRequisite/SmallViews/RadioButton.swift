@@ -1,13 +1,14 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
+import LayoutKit
 import RxSwift
 import RxCocoa
 import SnapKit
 import UIKit
 
 
-open class RadioButton<Element: Equatable>: UIView {
+open class RadioButton<Element: Equatable>: LayoutableView {
 
   public enum SelectionStrategy {
     /// At most one element can be selected. When you tap on selected element, it becomes unselected.
@@ -23,7 +24,7 @@ open class RadioButton<Element: Equatable>: UIView {
   @RxSignalOutput public var userDidSelectElement: Signal<Element?>
 
   // MARK: - Subviews
-  private let horizontalStack = UIStackView(arrangedSubviews: [])
+  private var horizontalStack: StackView?
   
   private let createButton: (Element) -> UIButton
   private let selectionStrategy: SelectionStrategy
@@ -37,63 +38,66 @@ open class RadioButton<Element: Equatable>: UIView {
               createButton: @escaping (Element) -> UIButton,
               selectionStrategy: SelectionStrategy = .singleElement,
               distribution: UIStackView.Distribution = .fillEqually,
-              insets: UIEdgeInsets = .zero,
-              spacing: CGFloat = 0) {
+              spacing: CGFloat = 0,
+              insets: UIEdgeInsets = .zero) {
     
     self.createButton = createButton
     self.selectionStrategy = selectionStrategy
 
-    super.init(frame: .zero)
+    super.init()
+
     translatesAutoresizingMaskIntoConstraints = false
-    
+
     setupHorizontalStack(distribution: distribution, spacing: spacing, insets: insets)
     setupVisibleElements(createButton: createButton)
 
     setupProgrammaticSelection()
     setupInitialState(visibleElements: visibleElements)
   }
-  
-  private func setupVisibleElements(createButton: @escaping (Element) -> UIButton) {
-    _visibleElements
-      .subscribe(onNext: { [weak self] in self?.recreateButtons(visibleElements: $0) })
-      .disposed(by: disposeBag)
-    
-    _visibleElements
-      .withLatestFrom(selectedElement) { [selectionStrategy] visible, selected -> Element? in
-        switch selectionStrategy {
-        case .singleElement:
-          return visible.contains { $0 == selected } ? selected : visible.first
-        case .singleElementOrNil:
-          return visible.contains { $0 == selected } ? selected : nil
-        }
-      }
-    .bind(to: _selectedElement)
-    .disposed(by: disposeBag)
-  }
-  
+
   private func setupHorizontalStack(distribution: UIStackView.Distribution,
                                     spacing: CGFloat,
                                     insets: UIEdgeInsets) {
-    horizontalStack.axis = .horizontal
-    horizontalStack.distribution = distribution
-    horizontalStack.spacing = spacing
-    
-    // TODO: Investigate why .isLayoutMarginsRelativeArrangement breaks the layout
-    horizontalStack.isLayoutMarginsRelativeArrangement = false
+    horizontalStack = .init(
+      axis: .horizontal,
+      spacing: spacing,
+      distribution: distribution.asLayoutKitDistribution,
+      contentInsets: insets,
+      flexibility: .flexible
+    )
 
-    putSubview(horizontalStack, insets: insets)
+    horizontalStack.map {
+      layout = $0.asLayout.withInsets(insets)
+    }
   }
-    
+
+  private func setupVisibleElements(createButton: @escaping (Element) -> UIButton) {
+    disposeBag {
+      _visibleElements ==> { [weak self] in self?.recreateButtons(visibleElements: $0) }
+
+      _visibleElements
+        .withLatestFrom(selectedElement) { [selectionStrategy] visible, selected -> Element? in
+          switch selectionStrategy {
+          case .singleElement:
+            return visible.contains { $0 == selected } ? selected : visible.first
+          case .singleElementOrNil:
+            return visible.contains { $0 == selected } ? selected : nil
+          }
+        } ==> _selectedElement
+    }
+  }
 
   private func recreateButtons(visibleElements: [Element]) {
     let buttons = visibleElements.map { createButton($0) }
     
-    horizontalStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    
-    buttons.forEach { horizontalStack.addArrangedSubview($0) }
-    
+    horizontalStack?.removeArrangedSubviews()
+    horizontalStack?.addArrangedSubviews(buttons)
+
     zip(buttons, visibleElements)
       .forEach { button, element in bindButton(button, to: element) }
+
+    invalidateIntrinsicContentSize()
+    setNeedsLayout()
   }
   
   private func bindButton(_ button: UIButton,
@@ -109,12 +113,11 @@ open class RadioButton<Element: Equatable>: UIView {
           return tapped == selected ? nil : tapped
         }
       }
-    
-    [
-      selectedElement.asObservable().map { $0 == element }.bind(to: button.rx.isSelected),
-      elementToSelect.bind(to: _userDidSelectElement)
-    ]
-    .disposed(by: disposeBag)
+
+    disposeBag {
+      selectedElement.isEqual(to: element) ==> button.rx.isSelected
+      elementToSelect ==> _userDidSelectElement
+    }
   }
 
   private func setupProgrammaticSelection() {
@@ -130,10 +133,10 @@ open class RadioButton<Element: Equatable>: UIView {
         }
       }
       .map { $0.new }
-    
-    programmaticallySelectedElement
-      .bind(to: _selectedElement)
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      programmaticallySelectedElement ==> _selectedElement
+    }
   }
   
   private func setupInitialState(visibleElements: [Element]) {

@@ -56,3 +56,17 @@ public struct BoilerplateLayout: ConfigurableLayout {
     }
   }
 }
+
+
+public extension Layout where Self == BoilerplateLayout {
+
+  static func fromView(_ view: UIView) -> BoilerplateLayout {
+    BoilerplateLayout(view)
+  }
+}
+
+
+public extension UIView {
+
+  var asLayout: Layout { .fromView(self) }
+}

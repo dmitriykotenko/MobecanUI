@@ -35,7 +35,12 @@ let package = Package(
     ),
     .testTarget(
       name: "MobecanUITests",
-      dependencies: ["MobecanUI", "RxTest", "RxBlocking"]
+      dependencies: [
+        "MobecanUI",
+        "LayoutKit",
+        "RxTest",
+        "RxBlocking"
+      ]
     )
   ]
 )

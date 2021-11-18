@@ -149,7 +149,7 @@ class SwitchViewLayoutTests: XCTestCase {
 
     let containerView = UIView
       .zstack([.vstack([switchView, .stretchableSpacer()])])
-      .height(veryLargeHeight)
+      .autolayoutHeight(veryLargeHeight)
 
     containerView.setNeedsLayout()
     containerView.layoutIfNeeded()
@@ -170,8 +170,8 @@ class SwitchViewLayoutTests: XCTestCase {
         contentHuggintPriority: .required
       )
     )
-    .minimumHeight(minimumHeight)
-    .width(screenWidth)
+    .autolayoutMinimumHeight(minimumHeight)
+    .autolayoutWidth(screenWidth)
   }
 
   private func textHeight(_ title: String) -> CGFloat {

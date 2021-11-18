@@ -11,8 +11,8 @@ public class LabelOrView: UIView, DataView {
   public typealias Value = StringOrView
   @RxUiInput(nil) public var value: AnyObserver<StringOrView?>
   
-  public let label: UILabel
-  public let customViewContainer = UIView().size(.zero, priority: .minimum)
+  private let label: UILabel
+  private let customViewContainer = UIView.stretchableSpacer()
   
   private let disposeBag = DisposeBag()
   
@@ -32,9 +32,9 @@ public class LabelOrView: UIView, DataView {
   }
   
   private func displayValue() {
-    _value
-      .subscribe(onNext: { [weak self] in self?.displayValue($0) })
-      .disposed(by: disposeBag)
+    disposeBag {
+      _value ==> { [weak self] in self?.displayValue($0) }
+    }
   }
   
   private func displayValue(_ value: StringOrView?) {

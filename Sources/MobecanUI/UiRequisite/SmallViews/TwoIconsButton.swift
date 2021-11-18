@@ -1,12 +1,13 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 import Kingfisher
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class TwoIconsButton: UIView {
+public class TwoIconsButton: LayoutableView {
   
   public struct Subviews {
 
@@ -67,11 +68,10 @@ public class TwoIconsButton: UIView {
     
     self.loadingIndicator = subviews.loadingIndicator
     
-    super.init(frame: .zero)
-    
-    _ = self.height(height)
-    
-    addSubviews(spacing: spacing)
+    super.init()
+
+    setupLayout(height: height, spacing: spacing)
+
     highlightOnTaps(disposeBag: disposeBag)
     
     displayIconsAndText(foreground: foreground)
@@ -79,13 +79,17 @@ public class TwoIconsButton: UIView {
     setupIsLoading()
   }
   
-  private func addSubviews(spacing: CGFloat) {
-    putSubview(
-      .hstack(distribution: .fill, spacing: spacing, [
-        leadingIconView,
-        titleLabel,
-        .zstack([trailingIconView, .centered(loadingIndicator)])
-      ])
+  private func setupLayout(height: CGFloat,
+                           spacing: CGFloat) {
+    layout = SizeLayout(
+      height: height,
+      sublayout: .fromView(
+        .hstack(distribution: .fill, spacing: spacing, [
+          leadingIconView,
+          titleLabel,
+          .zstack([trailingIconView, .centered(loadingIndicator)])
+        ])
+      )
     )
   }
   

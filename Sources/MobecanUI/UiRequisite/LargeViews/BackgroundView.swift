@@ -12,7 +12,7 @@ open class BackgroundView: ClickThroughView, DataView {
   @RxUiInput(nil) public var value: AnyObserver<ColorImageOrView?>
 
   private let imageView: UIImageView
-  private let customViewContainer = ClickThroughView().size(.zero, priority: .minimum)
+  private let customViewContainer = UIView.stretchableSpacer().isClickThroughEnabled(true)
   
   private let disposeBag = DisposeBag()
   
@@ -34,9 +34,9 @@ open class BackgroundView: ClickThroughView, DataView {
   }
   
   private func displayValue() {
-    _value
-      .subscribe(onNext: { [weak self] in self?.displayValue($0) })
-      .disposed(by: disposeBag)
+    disposeBag {
+      _value ==> { [weak self] in self?.displayValue($0) }
+    }
   }
   
   private func displayValue(_ value: ColorImageOrView?) {

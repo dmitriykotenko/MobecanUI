@@ -34,7 +34,7 @@ public class SilentNavigationBar: NavigationBar {
       $0.trailing.lessThanOrEqualTo(rightViewContainer).inset(spacing)
     }
 
-    height.map { _ = self.height($0) }
+    height.map { _ = self.autolayoutHeight($0) }
   }
   
   override public var affectsSafeArea: Bool { false }

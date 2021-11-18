@@ -1,11 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class RatingView: UIView {
+public class RatingView: LayoutableView {
   
   public struct Icon {
     public let image: UIImage
@@ -42,15 +43,18 @@ public class RatingView: UIView {
     self.spacing = spacing
     self.isEditable = isEditable
     
-    super.init(frame: .zero)
+    super.init()
 
-    addSubviews()
+    setupLayout()
     displayRating()
     setupEditing()
   }
   
-  private func addSubviews() {
-    putSubview(.hstack(stars))
+  private func setupLayout() {
+    layout = StackLayout<RatingView>(
+      axis: .horizontal,
+      sublayouts: stars.map(\.asLayout)
+    )
   }
   
   private func starButton() -> UIButton {
@@ -58,17 +62,12 @@ public class RatingView: UIView {
     let actualSpacing = spacing ?? 0.2 * actualIconSize.width
 
     let button = DiverseButton()
+    button.fixedWidth = actualIconSize.width + actualSpacing
+    button.fixedHeight = actualIconSize.height
     
-    _ = button.imageView?
-      .contentMode(.scaleAspectFit)
-      .size(actualIconSize)
-
-    // Button's width and height must be set after .imageView's width and height.
-    // Otherwise, autolayout engine generates a warning and breaks some constraints.
-    _ = button
-      .image(icon.image.withRenderingMode(.alwaysTemplate))
-      .width(actualIconSize.width + actualSpacing)
-      .height(actualIconSize.height)
+    _ = button.imageView?.contentMode(.scaleAspectFit)
+    _ = button.image(icon.image.withRenderingMode(.alwaysTemplate))
+    // FIXME: ensure imageView's frame is always correct
 
     button.contentEdgeInsets = .horizontal(actualSpacing / 2)
 
@@ -81,15 +80,13 @@ public class RatingView: UIView {
   }
   
   private func displayRating() {
-    _rating.asObservable()
-      .bind(to: _desiredRating)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _rating ==> _desiredRating
 
-    desiredRating
-      .map { [lowestRating] in $0 ?? lowestRating }
-      .clipped(inside: possibleRatings)
-      .subscribe(onNext: { [weak self] in self?.displayRating($0) })
-      .disposed(by: disposeBag)
+      desiredRating
+        .map { [lowestRating] in $0 ?? lowestRating }
+        .clipped(inside: possibleRatings) ==> { [weak self] in self?.displayRating($0) }
+    }
   }
   
   private func displayRating(_ rating: Int) {
@@ -105,10 +102,9 @@ public class RatingView: UIView {
     stars.forEach { $0.isUserInteractionEnabled = true }
 
     zip(stars, possibleRatings.dropFirst()).forEach { star, rating in
-      star.rx.tap
-        .map { rating }
-        .bind(to: _desiredRating)
-        .disposed(by: disposeBag)
+      disposeBag {
+        star.rx.tap.map { rating } ==> _desiredRating
+      }
     }
   }
   

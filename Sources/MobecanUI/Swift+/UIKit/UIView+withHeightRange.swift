@@ -1,5 +1,6 @@
 // Copyright © 2021 Mobecan. All rights reserved.
 
+import LayoutKit
 import SnapKit
 import UIKit
 
@@ -21,10 +22,20 @@ public extension UIView {
 
   func withHeightRange(_ heightRange: ClosedRange<CGFloat>,
                        preferredHeight: HeightGuide,
-                       preferredHeightPriority: ConstraintPriority = .required) -> Self {
-    self
-      .minimumHeight(heightRange.lowerBound)
-      .maximumHeight(heightRange.upperBound)
-      .height(preferredHeight.asCGFloat, priority: preferredHeightPriority)
+                       preferredHeightPriority: ConstraintPriority = .required) -> LayoutableView {
+    LayoutableView(
+      layout: SizeLayout<UIView>(
+        minHeight: heightRange.lowerBound,
+        maxHeight: heightRange.upperBound,
+        sublayout: SizeLayout<UIView>(
+          height: preferredHeight.asCGFloat,
+          flexibility: .init(
+            horizontal: Flexibility.inflexibleFlex,
+            vertical: -Int32(preferredHeightPriority.value)
+          ),
+          sublayout: .fromView(self)
+        )
+      )
+    )
   }
 }

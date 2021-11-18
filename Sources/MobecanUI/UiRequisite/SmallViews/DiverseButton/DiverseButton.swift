@@ -30,6 +30,9 @@ open class DiverseButton: UIButton {
 
   open var titleTransformer: (String?) -> (String?) = { $0 }
 
+  open var fixedWidth: CGFloat?
+  open var fixedHeight: CGFloat?
+
   override open func setTitle(_ title: String?,
                               for state: UIControl.State) {
     super.setTitle(
@@ -82,5 +85,26 @@ open class DiverseButton: UIButton {
       .map { $0.alpha }
     
     newAlpha.map { self.alpha = $0 }
+  }
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    var result = super.sizeThatFits(size)
+
+    fixedWidth.map { result.width = $0 }
+    fixedHeight.map { result.height = $0 }
+
+    return result
+  }
+
+  @discardableResult
+  func fixedWidth(_ width: CGFloat?) -> Self {
+    self.fixedWidth = width
+    return self
+  }
+
+  @discardableResult
+  func fixedHeight(_ height: CGFloat?) -> Self {
+    self.fixedHeight = height
+    return self
   }
 }

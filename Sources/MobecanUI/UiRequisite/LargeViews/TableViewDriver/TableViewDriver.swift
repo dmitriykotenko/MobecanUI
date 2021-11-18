@@ -170,7 +170,7 @@ where
   }
   
   private func footerView() -> UIView? {
-    spacing.map { UIView().height($0) }
+    spacing.map { UIView.spacer(height: $0) }
   }
   
   public func tableView(_ tableView: UITableView,

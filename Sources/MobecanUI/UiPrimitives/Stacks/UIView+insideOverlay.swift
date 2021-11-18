@@ -14,7 +14,7 @@ extension UIView {
         primaryLayouts: [
           InsetLayout(
             insets: insets,
-            sublayout: BoilerplateLayout(self)
+            sublayout: .fromView(self)
           )
         ],
         alignment: alignment,

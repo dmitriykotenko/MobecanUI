@@ -20,7 +20,7 @@ final class SummaryViewTests: XCTestCase {
 
   func testTopImagePlacement() {
     check(
-      imageView: UIImageView().size(imageSize),
+      imageView: UIImageView().autolayoutSize(imageSize),
       placement: .top(5),
       expectedImageViewFrame: .init(origin: .init(x: 0, y: 5), size: imageSize)
     )
@@ -28,7 +28,7 @@ final class SummaryViewTests: XCTestCase {
   
   func testBottomImagePlacement() {
     check(
-      imageView: UIImageView().size(imageSize),
+      imageView: UIImageView().autolayoutSize(imageSize),
       labels: labels,
       placement: .bottom(5),
       summaryViewSize: .init(width: 320, height: imageSize.height + 9),
@@ -38,7 +38,7 @@ final class SummaryViewTests: XCTestCase {
   
   func testCenterImagePlacement() {
     check(
-      imageView: UIImageView().size(imageSize),
+      imageView: UIImageView().autolayoutSize(imageSize),
       labels: labels,
       placement: .center,
       summaryViewSize: .init(width: 320, height: imageSize.height + 50),
@@ -47,7 +47,7 @@ final class SummaryViewTests: XCTestCase {
   }
   
   func testFirstBaselineImagePlacement() {
-    let imageView = UIImageView().size(imageSize)
+    let imageView = UIImageView().autolayoutSize(imageSize)
     
     let summaryView =
       SummaryView<Int, ThreeLinesLabelsGrid>(
@@ -61,7 +61,7 @@ final class SummaryViewTests: XCTestCase {
         spacing: 0,
         insets: .zero
       )
-      .size(.init(width: 500, height: imageSize.height + 50))
+      .autolayoutSize(.init(width: 500, height: imageSize.height + 50))
     
     summaryView.layoutIfNeeded()
     
@@ -95,7 +95,7 @@ final class SummaryViewTests: XCTestCase {
         spacing: spacing,
         insets: insets
       )
-      .size(summaryViewSize)
+      .autolayoutSize(summaryViewSize)
     
     summaryView.layoutIfNeeded()
     

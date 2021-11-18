@@ -10,8 +10,8 @@ public extension UIScrollView {
                 axis: NSLayoutConstraint.Axis,
                 width: CGFloat? = nil,
                 height: CGFloat? = nil) -> Self {
-    width.map { _ = content.width($0) }
-    height.map { _ = content.height($0) }
+    width.map { _ = content.autolayoutWidth($0) }
+    height.map { _ = content.autolayoutHeight($0) }
 
     content.layoutIfNeeded()
     
@@ -21,9 +21,9 @@ public extension UIScrollView {
     
     switch axis {
     case .horizontal:
-      _ = self.height(contentSize.height)
+      _ = self.autolayoutHeight(contentSize.height)
     case .vertical:
-      _ = self.width(contentSize.width)
+      _ = self.autolayoutWidth(contentSize.width)
     @unknown default:
       fatalError("UIScrollView.fittedTo(content:insets:) does not yet support \(axis) axis.")
     }

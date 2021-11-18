@@ -1,13 +1,14 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
+import LayoutKit
 import RxSwift
 import RxCocoa
 import SnapKit
 import UIKit
 
 
-public class TabBar: UIView {
+public class TabBar: LayoutableView {
 
   public var visibleTabs: AnyObserver<[Tab]> { radioButton.visibleElements }
   public var selectTab: AnyObserver<Tab?> { radioButton.selectElement }
@@ -29,20 +30,24 @@ public class TabBar: UIView {
     self.backgroundView = backgroundView
     self.contentHeight = contentHeight
     
-    radioButton =
-      RadioButton(
-        visibleElements: tabs,
-        createButton: { initTabButton($0.title, $0.icon) }
-      )
-      .height(contentHeight)
+    radioButton = RadioButton(
+      visibleElements: tabs,
+      createButton: { initTabButton($0.title, $0.icon) }
+    )
 
-    super.init(frame: .zero)
+    super.init()
     
-    addSubviews()
+    setupLayout(contentHeight: contentHeight)
   }
   
-  private func addSubviews() {
-    putSubview(backgroundView)
-    putSubview(.top(radioButton))
+  private func setupLayout(contentHeight: CGFloat) {
+    layout =
+      .fromView(
+        .zstack([
+          backgroundView,
+          .top(radioButton)
+        ])
+      )
+      .with(height: contentHeight)
   }
 }

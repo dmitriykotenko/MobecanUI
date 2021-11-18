@@ -22,10 +22,7 @@ public class AutohidingContainerView: LayoutableView {
 
     self.isClickThroughEnabled = true
 
-    self.layout = InsetLayout(
-      insets: insets,
-      sublayout: BoilerplateLayout(layout(subview))
-    )
+    self.layout = BoilerplateLayout(layout(subview)).withInsets(insets)
 
     visibilityListener = subview.observe(\.isHidden, options: .initial) { [weak self] view, _ in
       self?.isHidden = view.isHidden

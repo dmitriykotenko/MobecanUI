@@ -28,9 +28,9 @@ public class ReactiveSpacerView: LayoutableView {
     
     self.framesListener = FramesListener(views: [targetView])
     
-    super.init(
-      layout: SizeLayout<ReactiveSpacerView>(size: .zero)
-    )
+    super.init()
+
+    self.layout = SizeLayout<UIView>(size: .zero)
 
     setupSizeUpdating()
   }

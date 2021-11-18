@@ -1,11 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class CheckboxView<NestedValue>: UIView, DataView, EventfulView {
+public class CheckboxView<NestedValue>: LayoutableView, DataView, EventfulView {
   
   public typealias Value = IsSelected<NestedValue>
   public typealias ViewEvent = Tap<Value>
@@ -36,27 +37,23 @@ public class CheckboxView<NestedValue>: UIView, DataView, EventfulView {
     self.label = label
     self.formatValue = formatValue
     
-    super.init(frame: .zero)
+    super.init()
     
-    setupHeight(height)
-    addSubviews(insets: insets)
+    setupLayout(height: height, insets: insets)
     displayValue()
     
     highlightOnTaps(disposeBag: disposeBag)
   }
-  
-  private func setupHeight(_ height: CGFloat) {
-    _ = self.height(height)
-  }
-  
-  private func addSubviews(insets: UIEdgeInsets) {
-    putSubview(
-      .hstack(
-        alignment: .top,
-        [checkmark, label]
-      ),
-      insets: insets
-    )
+
+  private func setupLayout(height: CGFloat,
+                           insets: UIEdgeInsets) {
+
+    layout =
+      .fromView(
+        .hstack(alignment: .top, [checkmark, label])
+      )
+      .withInsets(insets)
+      .with(height: height)
   }
   
   private func displayValue() {

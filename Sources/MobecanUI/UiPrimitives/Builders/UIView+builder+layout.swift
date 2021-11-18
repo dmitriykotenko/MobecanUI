@@ -6,71 +6,83 @@ import UIKit
 
 public extension UIView {
 
+  @discardableResult
   func translatesAutoresizingMaskIntoConstraints(_ translatesAutoresizingMaskIntoConstraints: Bool) -> Self {
     self.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints
     return self
   }
 
-  func width(_ width: CGFloat,
-             priority: ConstraintPriority = .required) -> Self {
+  @discardableResult
+  func autolayoutWidth(_ width: CGFloat,
+                       priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.width.equalTo(width).priority(priority) }
     return self
   }
-  
-  func height(_ height: CGFloat,
-              priority: ConstraintPriority = .required) -> Self {
+
+  @discardableResult
+  func autolayoutHeight(_ height: CGFloat,
+                        priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.height.equalTo(height).priority(priority) }
     return self
   }
-  
-  func size(_ size: CGSize,
-            priority: ConstraintPriority = .required) -> Self {
-    width(size.width, priority: priority)
-      .height(size.height, priority: priority)
+
+  @discardableResult
+  func autolayoutSize(_ size: CGSize,
+                      priority: ConstraintPriority = .required) -> Self {
+    autolayoutWidth(size.width, priority: priority)
+      .autolayoutHeight(size.height, priority: priority)
   }
 
-  func minimumWidth(_ width: CGFloat,
-                    priority: ConstraintPriority = .required) -> Self {
+  @discardableResult
+  func autolayoutMinimumWidth(_ width: CGFloat,
+                              priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.width.greaterThanOrEqualTo(width).priority(priority) }
     return self
   }
 
-  func minimumHeight(_ height: CGFloat,
-                     priority: ConstraintPriority = .required) -> Self {
+  @discardableResult
+  func autolayoutMinimumHeight(_ height: CGFloat,
+                               priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.height.greaterThanOrEqualTo(height).priority(priority) }
     return self
   }
-  
-  func minimumSize(_ size: CGSize,
-                   priority: ConstraintPriority = .required) -> Self {
-    minimumWidth(size.width, priority: priority)
-      .minimumHeight(size.height, priority: priority)
+
+  @discardableResult
+  func autolayoutMinimumSize(_ size: CGSize,
+                             priority: ConstraintPriority = .required) -> Self {
+    autolayoutMinimumWidth(size.width, priority: priority)
+      .autolayoutMinimumHeight(size.height, priority: priority)
   }
 
-  func maximumWidth(_ width: CGFloat,
-                    priority: ConstraintPriority = .required) -> Self {
+  @discardableResult
+  func autolayoutMaximumWidth(_ width: CGFloat,
+                              priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.width.lessThanOrEqualTo(width).priority(priority) }
     return self
   }
 
-  func maximumHeight(_ height: CGFloat,
-                     priority: ConstraintPriority = .required) -> Self {
+  @discardableResult
+  func autolayoutMaximumHeight(_ height: CGFloat,
+                               priority: ConstraintPriority = .required) -> Self {
     snp.makeConstraints { $0.height.lessThanOrEqualTo(height).priority(priority) }
     return self
   }
 
-  func maximumSize(_ size: CGSize,
-                   priority: ConstraintPriority = .required) -> Self {
-    maximumWidth(size.width, priority: priority)
-      .maximumHeight(size.height, priority: priority)
+  @discardableResult
+  func autolayoutMaximumSize(_ size: CGSize,
+                             priority: ConstraintPriority = .required) -> Self {
+    autolayoutMaximumWidth(size.width, priority: priority)
+      .autolayoutMaximumHeight(size.height, priority: priority)
   }
 
+  @discardableResult
   func fitToContent(axis: [NSLayoutConstraint.Axis]) -> Self {
     self
       .contentHuggingPriority(.required, axis: axis)
       .contentCompressionResistancePriority(.required, axis: axis)
   }
 
+  @discardableResult
   func contentHuggingPriority(_ priority: UILayoutPriority,
                               axis: [NSLayoutConstraint.Axis]) -> Self {
     axis.forEach {
@@ -80,6 +92,7 @@ public extension UIView {
     return self
   }
 
+  @discardableResult
   func contentCompressionResistancePriority(_ priority: UILayoutPriority,
                                             axis: [NSLayoutConstraint.Axis]) -> Self {
     axis.forEach {
@@ -89,6 +102,7 @@ public extension UIView {
     return self
   }
 
+  @discardableResult
   func layoutMargins(_ layoutMargins: UIEdgeInsets) -> Self {
     (self as? UIStackView).map { $0.isLayoutMarginsRelativeArrangement = true }
 

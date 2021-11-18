@@ -33,7 +33,7 @@ open class NavigationBar: ClickThroughView {
   public var leftButtonTap: Observable<Void> { leftButton.rx.tap.asObservable() }
   
   private let leftButton: UIButton
-  private let rightViewContainer = UIView().size(.zero, priority: .minimum)
+  private let rightViewContainer = UIView.stretchableSpacer()
   
   private let titleView: LabelOrView
   private let subtitleView: LabelOrView
@@ -66,12 +66,11 @@ open class NavigationBar: ClickThroughView {
       spacing: spacing
     )
     
-    [
-      _backButtonStyle.subscribe(onNext: { applyButtonStyle(subviews.leftButton, $0) }),
-      _content.subscribe(onNext: { [weak self] in self?.displayContent($0) }),
-      _screenBackgroundColor.subscribe(onNext: { [weak self] in self?.screenBackgroundColorUpdated($0) })
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      _backButtonStyle ==> { applyButtonStyle(subviews.leftButton, $0) }
+      _content ==> { [weak self] in self?.displayContent($0) }
+      _screenBackgroundColor ==> { [weak self] in self?.screenBackgroundColorUpdated($0) }
+    }
   }
   
   open func insertSubviews() {
