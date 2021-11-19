@@ -7,13 +7,15 @@ import UIKit
 /// Wraps a UIView so that it conforms to Layout protocol.
 public struct BoilerplateLayout: ConfigurableLayout {
 
-  public let alignment: Alignment = .fill
+  public let alignment: Alignment
   public let needsView = true
   public let view: UIView
   public let viewReuseId: String? = nil
 
-  public init(_ view: UIView) {
+  public init(_ view: UIView,
+              alignment: Alignment = .center) {
     self.view = view
+    self.alignment = alignment
   }
 
   public func measurement(within maxSize: CGSize) -> LayoutMeasurement {
@@ -48,7 +50,7 @@ public struct BoilerplateLayout: ConfigurableLayout {
   }
 
   private func flexForAxis(_ axis: NSLayoutConstraint.Axis) -> Flexibility.Flex {
-    switch view.contentHuggingPriority(for: .horizontal) {
+    switch view.contentHuggingPriority(for: axis) {
     case .required:
       return nil
     case let priority:
@@ -60,8 +62,9 @@ public struct BoilerplateLayout: ConfigurableLayout {
 
 public extension Layout where Self == BoilerplateLayout {
 
-  static func fromView(_ view: UIView) -> BoilerplateLayout {
-    BoilerplateLayout(view)
+  static func fromView(_ view: UIView,
+                       alignment: Alignment = .center) -> BoilerplateLayout {
+    BoilerplateLayout(view, alignment: alignment)
   }
 }
 
@@ -69,4 +72,8 @@ public extension Layout where Self == BoilerplateLayout {
 public extension UIView {
 
   var asLayout: Layout { .fromView(self) }
+
+  func withAlignment(_ alignment: Alignment) -> Layout {
+    .fromView(self, alignment: alignment)
+  }
 }

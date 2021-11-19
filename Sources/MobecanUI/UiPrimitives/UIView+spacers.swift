@@ -3,7 +3,6 @@
 import LayoutKit
 import SnapKit
 import UIKit
-import SwiftUI
 
 
 public extension UIView {
@@ -104,7 +103,7 @@ private class StretchableSpacerLayout: BaseLayout<UIView>, Layout {
 
     super.init(
       alignment: .fill,
-      flexibility: .flexible,
+      flexibility: .max,
       config: nil
     )
   }

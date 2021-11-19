@@ -1,5 +1,6 @@
 import XCTest
 
+import LayoutKit
 import RxSwift
 import RxTest
 
@@ -11,6 +12,7 @@ class SwitchViewLayoutTests: XCTestCase {
   private let inaccuracy: CGFloat = 0.5
   private let font = UILabel().font!
   private let screenWidth: CGFloat = 320
+  private let veryLargeHeight: CGFloat = 2000
 
   func testNilTitleLayout() {
     check(
@@ -114,7 +116,7 @@ class SwitchViewLayoutTests: XCTestCase {
                      expectedLabelCenterY: CGFloat,
                      expectedUiSwitchCenterY: CGFloat) {
     let label = UILabel().multilined().fitToContent(axis: [.vertical]).text(title)
-    let uiSwitch = UISwitch()
+    let uiSwitch = uiSwitch()
 
     let switchView = createSwitchView(
       label: label,
@@ -123,9 +125,19 @@ class SwitchViewLayoutTests: XCTestCase {
       minimumHeight: minimumHeight
     )
 
-    switchView.setNeedsLayout()
-    switchView.layoutIfNeeded()
+    let containerView = TestableContainerView(
+      frame: .init(
+        origin: .zero,
+        size: .init(width: screenWidth, height: veryLargeHeight)
+      )
+    )
 
+    containerView.addSubview(switchView)
+
+    containerView.setNeedsLayout()
+    containerView.layoutIfNeeded()
+
+    assertEqual(switchView.frame.width, containerView.bounds.width)
     assertEqual(switchView.frame.height, expectedOverallHeight)
     assertEqual(label.frame.center.y, expectedLabelCenterY)
     assertEqual(uiSwitch.frame.center.y, expectedUiSwitchCenterY)
@@ -137,7 +149,7 @@ class SwitchViewLayoutTests: XCTestCase {
                             expectedOverallHeight: CGFloat) {
     let switchView = createSwitchView(
       label: UILabel().multilined().fitToContent(axis: [.vertical]).text(title),
-      uiSwitch: UISwitch(),
+      uiSwitch: uiSwitch(),
       maximumCenteredHeight: maximumCenteredHeight,
       minimumHeight: minimumHeight
     )
@@ -145,16 +157,23 @@ class SwitchViewLayoutTests: XCTestCase {
     switchView.setNeedsLayout()
     switchView.layoutIfNeeded()
 
-    let veryLargeHeight: CGFloat = 2000
+    let containerView = TestableContainerView(
+      frame: .init(
+        origin: .zero,
+        size: .init(width: screenWidth, height: veryLargeHeight)
+      )
+    )
 
-    let containerView = UIView
-      .zstack([.vstack([switchView, .stretchableSpacer()])])
-      .autolayoutHeight(veryLargeHeight)
+    containerView.addSubview(switchView)
 
     containerView.setNeedsLayout()
     containerView.layoutIfNeeded()
 
     assertEqual(switchView.frame.height, expectedOverallHeight)
+  }
+
+  private func uiSwitch() -> UISwitch {
+    UISwitch().fitToContent(axis: [.horizontal, .vertical])
   }
 
   private func createSwitchView(label: UILabel,
@@ -165,13 +184,11 @@ class SwitchViewLayoutTests: XCTestCase {
       label: label,
       uiSwitch: uiSwitch,
       layout: .init(
+        minimumHeight: minimumHeight,
         spacing: 10,
-        switchPlacement: SwitchView.SwitchPlacement.centerOrTop(maximumCenteredHeight: maximumCenteredHeight),
-        contentHuggintPriority: .required
+        switchPlacement: .centerOrTop(maximumCenteredHeight: maximumCenteredHeight)
       )
     )
-    .autolayoutMinimumHeight(minimumHeight)
-    .autolayoutWidth(screenWidth)
   }
 
   private func textHeight(_ title: String) -> CGFloat {
@@ -193,4 +210,14 @@ class SwitchViewLayoutTests: XCTestCase {
     ("Test that SwitchView hugs its content when title has medium size", testHuggingOfMediumTitle),
     ("Test that SwitchView hugs its content when title is large", testHuggingOfLargeTitle),
   ]
+}
+
+
+private class TestableContainerView: UIView {
+
+  override func layoutSubviews() {
+    subviews.forEach {
+      $0.frame = .init(origin: .zero, size: $0.sizeThatFits(self.bounds.size))
+    }
+  }
 }

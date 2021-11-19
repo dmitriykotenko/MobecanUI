@@ -10,20 +10,20 @@ public extension SwitchView {
 
   struct Layout {
 
+    var minimumHeight: CGFloat?
     var spacing: CGFloat
     var switchPlacement: SwitchPlacement
-    var contentHuggingPriority: ConstraintPriority
     var titleInsets: UIEdgeInsets
     var overallInsets: UIEdgeInsets
 
-    public init(spacing: CGFloat,
+    public init(minimumHeight: CGFloat? = nil,
+                spacing: CGFloat,
                 switchPlacement: SwitchPlacement = .center(offset: 0),
-                contentHuggintPriority: ConstraintPriority = .required,
                 titleInsets: UIEdgeInsets = .zero,
                 overallInsets: UIEdgeInsets = .zero) {
+      self.minimumHeight = minimumHeight
       self.spacing = spacing
       self.switchPlacement = switchPlacement
-      self.contentHuggingPriority = contentHuggintPriority
       self.titleInsets = titleInsets
       self.overallInsets = overallInsets
     }

@@ -1,5 +1,6 @@
 //  Copyright © 2021 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -27,5 +28,66 @@ public extension SwitchView {
     /// If SwitchView height is greater than maximumCenteredHeight,
     /// set UISwitch's vertical center at 0.5 * maximumCenteredHeight.
     case centerOrTop(maximumCenteredHeight: CGFloat)
+  }
+}
+
+
+extension SwitchView.SwitchPlacement {
+
+  var asAlignment: LayoutKit.Alignment {
+    switch self {
+    case .top(let inset):
+      return Alignment { size, frame in
+        CGRect.from(
+          y: frame.minY + inset,
+          size: size,
+          centerHorizontallyIn: frame
+        )
+      }
+    case .center(let offset):
+      return Alignment { size, frame in
+        CGRect.from(
+          y: frame.midY - (size.height / 2.0) + offset,
+          size: size,
+          centerHorizontallyIn: frame
+        )
+      }
+    case .bottom(let inset):
+      return Alignment { size, frame in
+        CGRect.from(
+          y: frame.maxY - size.height - inset,
+          size: size,
+          centerHorizontallyIn: frame
+        )
+      }
+    case .centerOrTop(let thresholdHeight):
+      return Alignment { size, frame in
+        let y = (frame.height < thresholdHeight) ?
+        frame.midY - (size.height / 2.0) :
+        frame.minY + (thresholdHeight / 2.0) - (size.height / 2.0)
+
+        return CGRect.from(
+          y: y,
+          size: size,
+          centerHorizontallyIn: frame
+        )
+      }
+    }
+  }
+}
+
+
+private extension CGRect {
+
+  static func from(y: CGFloat,
+                   size: CGSize,
+                   centerHorizontallyIn frame: CGRect) -> CGRect {
+    let (x, width) = Alignment.Horizontal.center.align(
+      length: size.width,
+      availableLength: frame.width,
+      offset: frame.origin.x
+    )
+
+    return CGRect(x: x, y: y, width: width, height: size.height)
   }
 }
