@@ -5,7 +5,7 @@ import RxSwift
 import UIKit
 
 
-open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UIControl, MandatorinessListener {
+open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: LayoutableControl, MandatorinessListener {
   
   @RxUiInput(.empty) open var texts: AnyObserver<EditableFieldTexts>
   @RxUiInput open var initialRawValue: AnyObserver<RawValue>
@@ -71,11 +71,11 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UICo
     self.validator = validator
     self.selectNextField = selectNextField
     
-    super.init(frame: .zero)
+    super.init()
 
     translatesAutoresizingMaskIntoConstraints = false
 
-    addSubviews(subviews: subviews, layout: layout)
+    setupLayout(subviews: subviews, layout: layout)
     
     setupTitle()
     setupPlaceholder()
@@ -86,29 +86,25 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UICo
     setupInitialValue()
   }
   
-  private func addSubviews(subviews: EditableFieldSubviews,
+  private func setupLayout(subviews: EditableFieldSubviews,
                            layout: EditableFieldLayout) {
-    putSubview(
-      layout.mainSubview(subviews)
-    )
+    self.layout = layout.mainSubview(subviews).asLayout
   }
   
   private func setupTitle() {
     let title = _texts.map { $0.title }
     
-    [
-      title.bind(to: titleLabel.rx.text),
-      title.map { $0.isNilOrEmpty }.bind(to: titleLabel.rx.isHidden)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      title ==> titleLabel.rx.text
+      title.map(\.isNilOrEmpty) ==> titleLabel.rx.isHidden
+    }
   }
   
   private func setupPlaceholder() {
     if let placeholderContainer = valueEditor as? PlaceholderContainer {
-      _texts
-        .map { $0.placeholder }
-        .bind(to: placeholderContainer.rxPlaceholder)
-        .disposed(by: disposeBag)
+      disposeBag {
+        _texts.map(\.placeholder) ==> placeholderContainer.rxPlaceholder
+      }
     }
   }
 
@@ -120,13 +116,12 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UICo
         error == nil ? texts.hint : nil
       }
       
-    [
-      errorText.bind(to: errorLabel.rx.text),
-      errorText.map { $0.isNilOrEmpty }.bind(to: errorLabel.rx.isHidden),
-      hintText.bind(to: hintLabel.rx.text),
-      hintText.map { $0.isNilOrEmpty }.bind(to: hintLabel.rx.isHidden)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      errorText ==> errorLabel.rx.text
+      errorText.map(\.isNilOrEmpty) ==> errorLabel.rx.isHidden
+      hintText ==> hintLabel.rx.text
+      hintText.map(\.isNilOrEmpty) ==> hintLabel.rx.isHidden
+    }
   }
 
   private func setupMandatoriness(subviews: EditableFieldSubviews) {
@@ -140,22 +135,23 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: UICo
   }
   
   private func setupBackground() {
-    Observable
-      .combineLatest(rxIsEnabled, rxIsFocused.asObservable(), errorToShow) {
-        EditableFieldBackground.State(
-          isEnabled: $0,
-          isFocused: $1,
-          error: $2
-        )
-      }
-      .bind(to: backgroundView.state)
-      .disposed(by: disposeBag)
+    disposeBag {
+      backgroundView.state <==
+        .combineLatest(rxIsEnabled, rxIsFocused.asObservable(), errorToShow) {
+          EditableFieldBackground.State(
+            isEnabled: $0,
+            isFocused: $1,
+            error: $2
+          )
+        }
+        .distinctUntilChanged()
+    }
   }
   
   private func setupInitialValue() {
-    _initialRawValue
-      .bind(to: rawValue)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _initialRawValue ==> rawValue
+    }
   }
   
   override open var isEnabled: Bool { didSet { rxIsEnabled.accept(isEnabled) } }

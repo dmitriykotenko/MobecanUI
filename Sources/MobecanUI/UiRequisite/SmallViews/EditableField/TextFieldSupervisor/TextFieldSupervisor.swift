@@ -1,11 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class TextFieldSupervisor<Value>: UIControl, UITextFieldDelegate {
+public class TextFieldSupervisor<Value>: LayoutableControl, UITextFieldDelegate {
   
   @RxUiInput(nil) public var initialValue: AnyObserver<Value?>
   @RxOutput(nil) public var value: Observable<Value?>
@@ -41,9 +42,11 @@ public class TextFieldSupervisor<Value>: UIControl, UITextFieldDelegate {
       textField.rx.editingDidBegin.asObservable()
         .compactMap { autoappearingValue }
     
-    super.init(frame: .zero)
-    
-    putSubview(textField)
+    super.init()
+
+    layout = textField.asLayout
+      .withInsets(.zero) // ensure that layout's main view is not a text field
+
     setupTextField()
     setupOutput()
     
@@ -56,26 +59,23 @@ public class TextFieldSupervisor<Value>: UIControl, UITextFieldDelegate {
   }
   
   private func setupOutput() {
-    Observable
-      .merge(_initialValue.asObservable(), autoappearingValue)
-      .filterNil()
-      .bind(to: valueSetter)
-      .disposed(by: disposeBag)
-    
+    disposeBag {
+      Observable
+        .merge(_initialValue.asObservable(), autoappearingValue)
+        .filterNil() ==> valueSetter
+    }
+
     let currentValue = Observable.merge(
       _initialValue.asObservable(),
       autoappearingValue.filterWith(value.map { $0 == nil }),
       valueGetter.map { $0 }
     )
+
+    disposeBag {
+      currentValue ==> _value
     
-    currentValue
-      .bind(to: _value)
-      .disposed(by: disposeBag)
-    
-    value
-      .map { [weak self] value in value.flatMap { self?.formatter($0) } }
-      .bind(to: textField.rx.text)
-      .disposed(by: disposeBag)
+      value.nestedMap { [formatter] in formatter($0) } ==> textField.rx.text
+    }
   }
   
   private func setupClearButton() {

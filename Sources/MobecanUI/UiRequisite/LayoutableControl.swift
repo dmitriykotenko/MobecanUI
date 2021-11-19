@@ -4,7 +4,7 @@ import LayoutKit
 import UIKit
 
 
-open class LayoutableView: UIView {
+open class LayoutableControl: UIControl {
 
   open var isClickThroughEnabled: Bool = false
   open var layout: Layout

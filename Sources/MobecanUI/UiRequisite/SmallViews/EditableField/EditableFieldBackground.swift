@@ -1,13 +1,14 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class EditableFieldBackground: UIView {
+public class EditableFieldBackground: LayoutableView {
   
-  public enum State {
+  public enum State: String, Equatable, Hashable, Codable {
     case regular
     case disabled
     case focused
@@ -41,24 +42,23 @@ public class EditableFieldBackground: UIView {
     focusedBackground = focused
     errorBackground = error
     
-    super.init(frame: .zero)
+    super.init()
     
-    addSubviews()
+    setupLayout()
     setupVisibleSubview()
   }
   
-  private func addSubviews() {
-    putSubview(.zstack(allBackgrounds))
+  private func setupLayout() {
+    layout = UIView.zstack(allBackgrounds).asLayout
   }
   
   private func setupVisibleSubview() {
     let visibleBackground = _state.map { [weak self] in self?.visibleSubview(state: $0) }
     
     allBackgrounds.forEach { view in
-      visibleBackground
-        .map { $0 != view }
-        .bind(to: view.rx.isHidden)
-        .disposed(by: disposeBag)
+      disposeBag {
+        visibleBackground.isNotEqual(to: view) ==> view.rx.isHidden
+      }
     }
   }
   
