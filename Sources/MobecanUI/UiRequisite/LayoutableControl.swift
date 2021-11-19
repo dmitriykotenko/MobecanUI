@@ -7,7 +7,8 @@ import UIKit
 open class LayoutableControl: UIControl {
 
   open var isClickThroughEnabled: Bool = false
-  open var layout: Layout
+
+  open var layout: Layout { didSet { removeAllSubviews() } }
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 

@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxSwift
 import UIKit
 
@@ -16,7 +17,7 @@ import UIKit
 ///
 /// — при обновлении списка данных полностью перезагружает ячейки и из-за этого как будто моргает
 /// (это будет исправлено в следующих версиях)
-open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView {
+open class ListView<Element, View: EventfulView>: LayoutableView, DataView, EventfulView {
 
   public typealias Value = [Element]
   public typealias ViewEvent = View.ViewEvent
@@ -35,12 +36,13 @@ open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView
               hideIfEmpty: Bool = false) {
     self.createView = createView
 
-    super.init(frame: .zero)
+    super.init()
 
-    Observable
-      .combineLatest(_value, _hideIfEmpty)
-      .subscribe(onNext: { [weak self] in self?.displayElements($0 ?? [], hideIfEmpty: $1) })
-      .disposed(by: disposeBag)
+    disposeBag {
+      Observable.combineLatest(_value, _hideIfEmpty) ==> { [weak self] in
+        self?.displayElements($0 ?? [], hideIfEmpty: $1)
+      }
+    }
 
     self.hideIfEmpty.onNext(hideIfEmpty)
   }
@@ -53,11 +55,13 @@ open class ListView<Element, View: EventfulView>: UIView, DataView, EventfulView
 
     let elementViews = elements.map { createView($0) }
 
-    elementViews.forEach {
-      $0.viewEvents.bind(to: _viewEvents).disposed(by: disposeBag)
+    elementViews.forEach { view in
+      disposeBag {
+        view.viewEvents ==> _viewEvents
+      }
     }
 
-    putSingleSubview(.vstack(elementViews))
+    layout = .fromView(.vstack(elementViews))
   }
 
   @discardableResult

@@ -1,15 +1,16 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class IllustrationView: UIView {
+open class IllustrationView: LayoutableView {
 
-  public var illustration: AnyObserver<UIImage?> { illustrationView.rx.image.asObserver() }
-  public var title: AnyObserver<String?> { titleLabel.rx.text.asObserver() }
-  public var subtitle: AnyObserver<String?> { subtitleLabel.rx.text.asObserver() }
+  open var illustration: AnyObserver<UIImage?> { illustrationView.rx.image.asObserver() }
+  open var title: AnyObserver<String?> { titleLabel.rx.text.asObserver() }
+  open var subtitle: AnyObserver<String?> { subtitleLabel.rx.text.asObserver() }
   
   public let illustrationView: UIImageView
   public let titleLabel: UILabel
@@ -26,12 +27,10 @@ public class IllustrationView: UIView {
     self.titleLabel = subviews.titleLabel
     self.subtitleLabel = subviews.subtitleLabel
     
-    super.init(frame: .zero)
-    
-    putSubview(
-      layout.mainSubview(subviews: subviews)
-    )
-    
+    super.init()
+
+    self.layout = .fromView(layout.mainSubview(subviews: subviews))
+
     illustration.map { self.illustration.onNext($0) }
     title.map { self.title.onNext($0) }
     subtitle.map { self.subtitle.onNext($0) }
