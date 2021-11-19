@@ -10,7 +10,7 @@ public extension UIView {
                          topInset: CGFloat = 0,
                          leadingInset: CGFloat = 0,
                          priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .topLeading,
       insets: .init(top: topInset, left: leadingInset)
     )
@@ -20,7 +20,7 @@ public extension UIView {
                           topInset: CGFloat = 0,
                           trailingInset: CGFloat = 0,
                           priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .topTrailing,
       insets: .init(top: topInset, right: trailingInset)
     )
@@ -30,7 +30,7 @@ public extension UIView {
                             bottomInset: CGFloat = 0,
                             leadingInset: CGFloat = 0,
                             priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .bottomLeading,
       insets: .init(left: leadingInset, bottom: bottomInset)
     )
@@ -40,7 +40,7 @@ public extension UIView {
                              bottomInset: CGFloat = 0,
                              trailingInset: CGFloat = 0,
                              priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .bottomTrailing,
       insets: .init(bottom: bottomInset, right: trailingInset)
     )

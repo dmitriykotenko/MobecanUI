@@ -9,7 +9,7 @@ public extension UIView {
   static func centeredHorizontally(_ subview: UIView,
                                    offset: CGFloat = 0,
                                    priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .init(
         vertical: .fill,
         horizontal: .center
@@ -24,7 +24,7 @@ public extension UIView {
   static func centeredVertically(_ subview: UIView,
                                  offset: CGFloat = 0,
                                  priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .init(
         vertical: .center,
         horizontal: .fill
@@ -39,7 +39,7 @@ public extension UIView {
   static func centered(_ subview: UIView,
                        offset: CGSize = .zero,
                        priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .center,
       insets: .init(
         top: offset.height,

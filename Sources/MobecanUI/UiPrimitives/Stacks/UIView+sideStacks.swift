@@ -11,7 +11,7 @@ public extension UIView {
   static func top(_ subview: UIView,
                   inset: CGFloat = 0,
                   priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .topFill,
       insets: .top(inset)
     )
@@ -20,7 +20,7 @@ public extension UIView {
   static func bottom(_ subview: UIView,
                      inset: CGFloat = 0,
                      priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .bottomFill,
       insets: .bottom(inset)
     )
@@ -29,7 +29,7 @@ public extension UIView {
   static func leading(_ subview: UIView,
                       inset: CGFloat = 0,
                       priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .fillLeading,
       insets: .left(inset)
     )
@@ -38,7 +38,7 @@ public extension UIView {
   static func trailing(_ subview: UIView,
                        inset: CGFloat = 0,
                        priority: ConstraintPriority = .required) -> LayoutableView {
-    subview.insideOverlay(
+    subview.insideAlignedLayout(
       alignment: .fillTrailing,
       insets: .right(inset)
     )
