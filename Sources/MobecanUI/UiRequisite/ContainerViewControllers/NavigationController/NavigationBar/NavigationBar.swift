@@ -33,7 +33,7 @@ open class NavigationBar: ClickThroughView {
   public var leftButtonTap: Observable<Void> { leftButton.rx.tap.asObservable() }
   
   private let leftButton: UIButton
-  private let rightViewContainer = UIView.stretchableSpacer()
+  private let rightViewContainer = UIView.autolayoutStretchableSpacer()
   
   private let titleView: LabelOrView
   private let subtitleView: LabelOrView

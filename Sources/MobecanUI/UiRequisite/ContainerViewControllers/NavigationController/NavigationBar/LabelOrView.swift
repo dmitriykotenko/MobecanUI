@@ -12,7 +12,7 @@ public class LabelOrView: UIView, DataView {
   @RxUiInput(nil) public var value: AnyObserver<StringOrView?>
   
   private let label: UILabel
-  private let customViewContainer = UIView.stretchableSpacer()
+  private let customViewContainer = UIView.autolayoutStretchableSpacer()
   
   private let disposeBag = DisposeBag()
   

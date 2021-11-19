@@ -12,7 +12,7 @@ open class BackgroundView: ClickThroughView, DataView {
   @RxUiInput(nil) public var value: AnyObserver<ColorImageOrView?>
 
   private let imageView: UIImageView
-  private let customViewContainer = UIView.stretchableSpacer().isClickThroughEnabled(true)
+  private let customViewContainer = ClickThroughView.autolayoutStretchableSpacer()
   
   private let disposeBag = DisposeBag()
   

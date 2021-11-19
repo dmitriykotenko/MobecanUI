@@ -89,7 +89,13 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
       .autolayoutHstack(
         alignment: .fill,
         spacing: spacing,
-        [iconContainer.containerView, .autolayoutVstack([labels.view(), .stretchableSpacer()])],
+        [
+          iconContainer.containerView,
+            .autolayoutVstack([
+                labels.view(),
+                .autolayoutStretchableSpacer()
+            ])
+        ],
         insets: insets
       )
     )
