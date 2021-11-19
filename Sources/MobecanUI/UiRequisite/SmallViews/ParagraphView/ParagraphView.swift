@@ -5,7 +5,7 @@ import RxSwift
 import UIKit
 
 
-open class ParagraphView<Value>: UIView {
+open class ParagraphView<Value>: LayoutableView {
   
   @RxUiInput(nil) public var title: AnyObserver<String?>
   @RxUiInput(nil) public var attributedTitle: AnyObserver<NSAttributedString?>
@@ -38,9 +38,9 @@ open class ParagraphView<Value>: UIView {
   ///
   /// To avoid these kinds of crashes, we require that every subclass of ParagraphView
   /// has explicitly declared parameterless init().
-  public required init() {
+  override public required init() {
     self.titleLabel = UILabel()
-    super.init(frame: .zero)
+    super.init()
   }
 
   public init(titleLabel: UILabel,
@@ -51,19 +51,17 @@ open class ParagraphView<Value>: UIView {
               hidesWhenBodyIs: Predicate<Value?> = .never()) {
     self.titleLabel = titleLabel
 
-    super.init(frame: .zero)
+    super.init()
 
-    disableTemporaryConstraints()
-
-    putSubview(
-      .vstack(
+    layout =
+      UIView.vstack(
         spacing: spacing,
         [
           titleLabel.withInsets(titleInsets),
           content.bodyView.withInsets(contentInsets)
         ]
       )
-    )
+      .asLayout
 
     self.hidesWhenBodyIs.onNext(hidesWhenBodyIs)
 
@@ -87,25 +85,20 @@ open class ParagraphView<Value>: UIView {
   }
 
   private func displayTitle() {
-    [
-      _title.bind(to: titleLabel.rx.text),
-      _attributedTitle.bind(to: titleLabel.rx.attributedText),
+    disposeBag {
+      _title ==> titleLabel.rx.text
+      _attributedTitle ==> titleLabel.rx.attributedText
 
-      Observable
-        .merge(_title.map { $0 != nil }, _attributedTitle.map { $0 != nil })
-        .bind(to: titleLabel.rx.isVisible)
-    ]
-    .disposed(by: disposeBag)
+      titleLabel.rx.isVisible <==
+        .merge(_title.isNotEqual(to: nil), _attributedTitle.isNotEqual(to: nil))
+    }
   }
 
   private func displayValue(body: AnyObserver<Value?>) {
-    _body.bind(to: body).disposed(by: disposeBag)
-
-    Observable
-      .combineLatest(_hidesWhenBodyIs, _body)
-      .map { $0($1) }
-      .bind(to: rx.isHidden)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _body ==> body
+      rx.isHidden <== .combineLatest(_hidesWhenBodyIs, _body) { $0($1) }
+    }
   }
   
   override open var forFirstBaselineLayout: UIView { titleLabel }  
