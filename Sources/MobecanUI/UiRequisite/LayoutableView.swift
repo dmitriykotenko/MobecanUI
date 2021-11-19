@@ -49,3 +49,6 @@ open class LayoutableView: UIView {
     return self
   }
 }
+
+
+extension LayoutableView: LayoutContainer {}
