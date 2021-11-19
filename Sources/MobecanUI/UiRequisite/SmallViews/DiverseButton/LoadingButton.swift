@@ -28,15 +28,15 @@ open class LoadingButton: DiverseButton {
     
     super.init(frame: .zero)
     
-    addActivityIndicator()
-  }
-  
-  private func addActivityIndicator() {
     addSubview(activityIndicator)
-    
-    activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
   }
-  
+
+  override open func layoutSubviews() {
+    super.layoutSubviews()
+
+    activityIndicator.center = bounds.center
+  }
+
   override open var colorsByState: [ButtonColorsState] {
     didSet {
       let colors = colorsByState.first { $0.state == .normal }?.colors

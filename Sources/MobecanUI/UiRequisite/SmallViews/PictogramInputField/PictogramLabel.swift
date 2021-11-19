@@ -1,12 +1,13 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class PictogramLabel: UIView {
+public class PictogramLabel: LayoutableView {
   
   @RxUiInput public var text: AnyObserver<String?>
   
@@ -14,7 +15,11 @@ public class PictogramLabel: UIView {
   private let spacing: CGFloat
   private let alignment: NSTextAlignment
   
-  private let mainSubview = UIView()
+  private lazy var mainSubview = StackView(
+    axis: .horizontal,
+    spacing: spacing,
+    childrenAlignment: .bottomFill
+  )
   
   private let disposeBag = DisposeBag()
   
@@ -27,57 +32,30 @@ public class PictogramLabel: UIView {
     self.spacing = spacing
     self.alignment = alignment
     
-    super.init(frame: .zero)
+    super.init()
     
     translatesAutoresizingMaskIntoConstraints = false
 
-    addMainSubview()
+    setupLayout()
     listenForText()
   }
   
-  private func addMainSubview() {
-    addSubview(mainSubview)
-    
-    mainSubview.snp.makeConstraints {
-      $0.centerY.equalToSuperview()
-      $0.top.left.greaterThanOrEqualToSuperview()
-      $0.bottom.right.lessThanOrEqualToSuperview()
-      
-      switch alignment {
-      case .left:
-        $0.left.equalToSuperview()
-      case .right:
-        $0.right.equalToSuperview()
-      case .natural:
-        $0.leading.equalToSuperview()
-      case .center:
-        $0.centerX.equalToSuperview()
-      case .justified:
-        $0.leading.trailing.equalToSuperview()
-      @unknown default:
-        fatalError("Text alignment \(alignment) is not yet supported")
-      }
-    }
+  private func setupLayout() {
+    layout = AlignedLayout(
+      childAlignment: alignment.asLayoutKitAlignment,
+      sublayouts: [mainSubview.asLayout]
+    )
   }
   
   private func listenForText() {
-    _text
-      .subscribe(onNext: { [weak self] in
-        self?.displayText($0)
-      })
-      .disposed(by: disposeBag)
+    disposeBag {
+      _text ==> { [weak self] in self?.displayText($0) }
+    }
   }
   
   private func displayText(_ text: String?) {    
-    mainSubview.subviews.forEach { $0.removeFromSuperview() }
-    
-    mainSubview.putSubview(
-      .hstack(
-        alignment: .bottom,
-        spacing: spacing,
-        (text ?? "").map { characterView($0) }
-      )
-    )
+    mainSubview.removeArrangedSubviews()
+    mainSubview.addArrangedSubviews((text ?? "").map(characterView))
   }
 
   public func sizeForText(_ text: String?) -> CGSize {
@@ -97,5 +75,26 @@ public class PictogramLabel: UIView {
   public func text(_ text: String?) -> Self {
     self.text.onNext(text)
     return self
+  }
+}
+
+
+private extension NSTextAlignment {
+
+  var asLayoutKitAlignment: Alignment {
+    switch self {
+    case .left:
+      return .fillLeading
+    case .right:
+      return .fillTrailing
+    case .natural:
+      return .fillLeading
+    case .center:
+      return .fillCenter
+    case .justified:
+      return .fill
+    @unknown default:
+      fatalError("Text alignment \(self) is not yet supported")
+    }
   }
 }

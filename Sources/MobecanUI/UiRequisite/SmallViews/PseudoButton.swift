@@ -1,11 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-open class PseudoButton<Value>: UIView, DataView {
+open class PseudoButton<Value>: LayoutableView, DataView {
   
   public typealias ViewEvent = Tap<Void>
   
@@ -23,25 +24,16 @@ open class PseudoButton<Value>: UIView, DataView {
               insets: UIEdgeInsets = .zero,
               valueSetter: AnyObserver<Value?>,
               tap: Observable<Void>? = nil) {
-    super.init(frame: .zero)
+    super.init()
 
-    addSubviews(subview, insets: insets)
+    setupLayout(subview, insets: insets)
     setupTaps(tap: tap)
     setupValue(setter: valueSetter)
   }
 
-  private func addSubviews(_ subview: UIView,
+  private func setupLayout(_ subview: UIView,
                            insets: UIEdgeInsets) {
-    addSubview(subview)
-
-    subview.snp.makeConstraints {
-      $0.edges.equalToSuperview().inset(insets).priority(900)
-
-      $0.top.greaterThanOrEqualToSuperview().inset(insets.top)
-      $0.bottom.lessThanOrEqualToSuperview().inset(insets.bottom)
-      $0.left.greaterThanOrEqualToSuperview().inset(insets.left)
-      $0.right.lessThanOrEqualToSuperview().inset(insets.right)
-    }
+    self.layout = subview.asLayout.withInsets(insets)
   }
 
   private func setupTaps(tap: Observable<Void>?) {
@@ -49,8 +41,10 @@ open class PseudoButton<Value>: UIView, DataView {
   }
 
   private func setupValue(setter: AnyObserver<Value?>) {
-    _value.bind(to: setter).disposed(by: disposeBag)
-    _value.bind(to: _valueGetter).disposed(by: disposeBag)
+    disposeBag {
+      _value ==> setter
+      _value ==> _valueGetter
+    }
   }
   
   public convenience init(button: UIButton,
@@ -62,11 +56,10 @@ open class PseudoButton<Value>: UIView, DataView {
       valueSetter: subject.asObserver(),
       tap: button.rx.tap.asObservable()
     )
-    
-    subject
-      .flatMap(rxFormat)
-      .bind(to: button.rx.foreground())
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      subject.flatMap(rxFormat) ==> button.rx.foreground()
+    }
   }
 
   public convenience init(button: UIButton,
@@ -88,10 +81,9 @@ open class PseudoButton<Value>: UIView, DataView {
       valueSetter: subject.asObserver()
     )
 
-    subject
-      .flatMap(rxFormat)
-      .bind(to: label.rx.text)
-      .disposed(by: disposeBag)
+    disposeBag {
+      subject.flatMap(rxFormat) ==> label.rx.text
+    }
   }
 
   public convenience init(label: UILabel,
