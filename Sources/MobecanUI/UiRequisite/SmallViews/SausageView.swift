@@ -4,7 +4,7 @@
 import UIKit
 
 
-public class SausageView: UIView {
+open class SausageView: UIView {
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
@@ -14,11 +14,13 @@ public class SausageView: UIView {
     clipsToBounds = true
   }
 
-  override public var frame: CGRect {
+  override open func sizeThatFits(_ size: CGSize) -> CGSize { size }
+
+  override open var frame: CGRect {
     didSet { layer.cornerRadius = min(bounds.width, bounds.height) / 2 }
   }
   
-  override public var bounds: CGRect {
+  override open var bounds: CGRect {
     didSet { layer.cornerRadius = min(bounds.width, bounds.height) / 2 }
   }
 }

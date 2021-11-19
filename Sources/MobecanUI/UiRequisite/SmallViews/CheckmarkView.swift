@@ -1,10 +1,11 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxSwift
 import UIKit
 
 
-public class CheckmarkView: UIView {
+public class CheckmarkView: LayoutableView {
 
   @RxUiInput(false) public var setIsSelected: AnyObserver<Bool>
   @RxOutput(false) public var isSelected: Observable<Bool>
@@ -24,30 +25,30 @@ public class CheckmarkView: UIView {
     self.selectedView = selectedView
     self.notSelectedView = notSelectedView
     
-    super.init(frame: .zero)
+    super.init()
 
-    addSubviews(
+    setupLayout(
       horizontalInset: horizontalInset,
       verticalInset: verticalInset
     )
-    
-    _setIsSelected
-      .subscribe(onNext: { [weak self] in
+
+    disposeBag {
+      _setIsSelected ==> { [weak self] in
         self?.selectedView.isHidden = !$0
         self?.notSelectedView.isHidden = $0
         self?._isSelected.onNext($0)
-      })
-      .disposed(by: disposeBag)
-    
+      }
+    }
+
     setIsSelected.onNext(isSelected)
   }
   
-  private func addSubviews(horizontalInset: CGFloat,
+  private func setupLayout(horizontalInset: CGFloat,
                            verticalInset: CGFloat?) {
-    putSubview(
-      mainSubview(verticalInset: verticalInset),
-      insets: .horizontal(horizontalInset)
+    layout = .fromView(
+      mainSubview(verticalInset: verticalInset)
     )
+    .withInsets(.horizontal(horizontalInset))
   }
 
   private func mainSubview(verticalInset: CGFloat?) -> UIView {

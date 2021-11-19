@@ -1,12 +1,13 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SwiftDateTime
 import UIKit
 
 
-public class PuckButton: UIControl {
+public class PuckButton: LayoutableControl {
   
   public var tap: Observable<Void> { rx.tapGesture().when(.recognized).mapToVoid() }
 
@@ -33,17 +34,12 @@ public class PuckButton: UIControl {
     
     self.tapInsets = tapInsets
     
-    super.init(frame: .zero)
+    super.init()
 
-    addSubviews()
-    highlightOnTaps(disposeBag: disposeBag)
-  }
-  
-  private func addSubviews() {
-    putSubview(
-      .zstack(
-        [backgroundView, iconView]
-      )
+    layout = .fromView(
+      .zstack([backgroundView, iconView])
     )
+
+    highlightOnTaps(disposeBag: disposeBag)
   }
 }
