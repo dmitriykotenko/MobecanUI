@@ -1,11 +1,12 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class EndOfScreenView<Button: TypedButton>: UIView {
+public class EndOfScreenView<Button: TypedButton>: LayoutableView {
   
   public struct Subviews {
     
@@ -25,7 +26,7 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
     }
   }
 
-  public struct Layout {
+  public struct LegacyLayout {
     public var arrange: (Subviews) -> (contentView: UIView, containerView: UIView)
 
     public init(arrange: @escaping (Subviews) -> (contentView: UIView, containerView: UIView)) {
@@ -48,7 +49,7 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
   private var errorLabel: UILabel
   private var button: Button
   
-  private let layout: Layout
+  private let legacyLayout: LegacyLayout
   
   private lazy var contentFrameListener = FramesListener(views: [contentView])
   
@@ -63,50 +64,51 @@ public class EndOfScreenView<Button: TypedButton>: UIView {
                           isEnabled: AnyObserver<Bool>) {
     self.init(
       subviews: subviews,
-      layout: .vertical(spacing: spacing, insets: insets, respectSafeArea: respectSafeArea),
+      legacyLayout: .vertical(spacing: spacing, insets: insets, respectSafeArea: respectSafeArea),
       isEnabled: isEnabled
     )
   }
 
   public init(subviews: Subviews,
-              layout: Layout,
+              legacyLayout: LegacyLayout,
               isEnabled: AnyObserver<Bool>) {
     self.hintLabel = subviews.hintLabel
     self.errorLabel = subviews.errorLabel
     self.button = subviews.button
 
-    self.layout = layout
+    self.legacyLayout = legacyLayout
     self.isEnabled = isEnabled
 
-    let (contentView, containerView) = layout.arrange(subviews)
+    let (contentView, containerView) = legacyLayout.arrange(subviews)
 
     self.contentView = contentView
     
-    super.init(frame: .zero)
+    super.init()
 
-    disableTemporaryConstraints()
-    putSubview(containerView)
+    layout = containerView.asLayout
+      .withInsets(.zero) // ensure that layout's main view is not a container view
 
     setupLabels()
     setupHeightSignal()
   }
   
   private func setupLabels() {
-    [
-      _hint.bind(to: hintLabel.rx.text),
-      _hint.map { $0 == nil }.bind(to: hintLabel.rx.isHidden),
+    disposeBag {
+      _hint ==> hintLabel.rx.text
+      _hint.isEqual(to: nil) ==> hintLabel.rx.isHidden
     
-      _errorText.bind(to: errorLabel.rx.text),
-      _errorText.map { $0 == nil }.bind(to: errorLabel.rx.isHidden)
-    ]
-    .disposed(by: disposeBag)
+      _errorText ==> errorLabel.rx.text
+      _errorText.isEqual(to: nil) ==> errorLabel.rx.isHidden
+    }
   }
   
   private func setupHeightSignal() {
-    contentFrameListener.framesChanged
-      .compactMap { [weak self] in self?.contentView.frame.height }
-      .bind(to: _height)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _height <==
+        contentFrameListener.framesChanged
+          .compactMap { [weak self] in self?.contentView.frame.height }
+          .distinctUntilChanged()
+    }
   }
 }
 

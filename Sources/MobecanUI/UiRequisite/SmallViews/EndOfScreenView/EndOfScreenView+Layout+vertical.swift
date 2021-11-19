@@ -5,11 +5,11 @@ import RxSwift
 import UIKit
 
 
-public extension EndOfScreenView.Layout {
+public extension EndOfScreenView.LegacyLayout {
 
   static func vertical(spacing: CGFloat,
                        insets: UIEdgeInsets,
-                       respectSafeArea: Bool = true) -> EndOfScreenView.Layout {
+                       respectSafeArea: Bool = true) -> EndOfScreenView.LegacyLayout {
     .init { subviews in
       let contentView = UIView.vstack(
         spacing: spacing,
