@@ -7,7 +7,7 @@ import UIKit
 public extension Layout where Self == BoilerplateLayout {
 
   static func fromView(_ view: UIView,
-                       alignment: Alignment = .center) -> BoilerplateLayout {
+                       alignment: Alignment = .fill) -> BoilerplateLayout {
     BoilerplateLayout(view, alignment: alignment)
   }
 }
