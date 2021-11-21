@@ -13,7 +13,7 @@ public extension UIView {
       
     return .zstack([
       contentView,
-      ClickThroughView.top(topLine)
+      .top(topLine).clickThrough()
     ])
   }
 }

@@ -47,9 +47,10 @@ open class EditorViewControllerLayout {
             ]),
             scrollView: initScrollView
           ),
-          ClickThroughView.safeAreaZstack([
-            ClickThroughView.topTrailing(saveButtonContainer)
+          .safeAreaZstack([
+            .topTrailing(saveButtonContainer).clickThrough()
           ])
+          .clickThrough()
         ])
       )
     }

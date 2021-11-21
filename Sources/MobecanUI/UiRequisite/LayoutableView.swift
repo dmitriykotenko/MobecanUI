@@ -48,6 +48,15 @@ open class LayoutableView: UIView {
     self.isClickThroughEnabled = isClickThroughEnabled
     return self
   }
+
+  /// Makes the view transparent for clicks.
+  ///
+  /// Does the same as `isClickThroughEnabled(true)`, but has more concise name.
+  @discardableResult
+  open func clickThrough() -> Self {
+    self.isClickThroughEnabled = true
+    return self
+  }
 }
 
 
