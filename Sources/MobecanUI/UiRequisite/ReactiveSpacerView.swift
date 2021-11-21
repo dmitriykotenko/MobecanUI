@@ -30,7 +30,7 @@ public class ReactiveSpacerView: LayoutableView {
     
     super.init()
 
-    self.layout = SizeLayout<UIView>(size: .zero)
+    self.layout = EmptyLayout().with(size: .zero)
 
     setupSizeUpdating()
   }
@@ -46,7 +46,7 @@ public class ReactiveSpacerView: LayoutableView {
   }
 
   private func updateSize(_ targetViewSize: CGSize) {
-    layout = SizeLayout<ReactiveSpacerView>(
+    layout = EmptyLayout().with(
       size: targetViewSize.insetBy(insets.negated)
     )
 

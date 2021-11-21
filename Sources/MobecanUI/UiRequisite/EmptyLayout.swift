@@ -6,6 +6,8 @@ import UIKit
 
 open class EmptyLayout: Layout {
 
+  public init() {}
+
   open func measurement(within maxSize: CGSize) -> LayoutMeasurement {
     .init(
       layout: self,
