@@ -101,7 +101,6 @@ public extension UIView {
       distribution: distribution?.asLayoutKitDistribution ?? .fillFlexing,
       contentInsets: insets,
       childrenAlignment: alignment.asLayoutKitAlignment,
-      flexibility: .inflexible,
       intrinsicWidth: intrinsicWidth,
       intrinsicHeight: intrinsicHeight
     )

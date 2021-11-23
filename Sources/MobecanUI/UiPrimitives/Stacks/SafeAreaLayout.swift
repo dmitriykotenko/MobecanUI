@@ -10,13 +10,14 @@ open class SafeAreaLayout: BaseLayout<UIView>, Layout {
   private let sublayout: Layout
 
   init(owningView: UIView,
+       flexibility: Flexibility? = nil,
        sublayout: Layout) {
     self.owningView = owningView
     self.sublayout = sublayout
 
     super.init(
       alignment: .fill,
-      flexibility: .inflexible,
+      flexibility: flexibility ?? sublayout.flexibility,
       config: nil
     )
   }

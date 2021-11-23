@@ -128,7 +128,6 @@ class AlignedLayoutTests: XCTestCase {
     let size = measurement.size
     let desiredFrame = CGRect(origin: containerBounds.origin, size: size)
     let arrangement = measurement.arrangement(within: desiredFrame)
-    let frame = arrangement.frame
 
     XCTAssertEqual(expectedSize, measurement.size)
     XCTAssertEqual(expectedChildSize, measurement.sublayouts[0].size)

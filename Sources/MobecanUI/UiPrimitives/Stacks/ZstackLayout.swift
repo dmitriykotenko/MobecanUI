@@ -8,12 +8,16 @@ open class ZstackLayout: BaseLayout<UIView>, Layout {
 
   private let sublayouts: [Layout]
 
-  init(sublayouts: [Layout]) {
+  init(sublayouts: [Layout],
+       flexibility: Flexibility? = nil) {
     self.sublayouts = sublayouts
 
     super.init(
       alignment: .fill,
-      flexibility: .inflexible,
+      flexibility: flexibility ?? .init(
+        horizontal: sublayouts.minimumFlexibility(.horizontal) ?? Flexibility.inflexibleFlex,
+        vertical: sublayouts.minimumFlexibility(.vertical) ?? Flexibility.inflexibleFlex
+      ),
       config: nil
     )
   }
@@ -42,6 +46,15 @@ open class ZstackLayout: BaseLayout<UIView>, Layout {
       frame: .init(origin: frame.origin, size: measurement.size),
       sublayouts: measurement.sublayouts.map { $0.arrangement(within: bounds) }
     )
+  }
+}
+
+
+private extension Array where Element == Layout {
+
+  func minimumFlexibility(_ axis: Axis) -> Flexibility.Flex? {
+    let leastFlexibleLayout = self.min { $0.isMoreFlexible(than: $1, axis: axis) }
+    return leastFlexibleLayout?.flexibility.flex(axis)
   }
 }
 

@@ -8,7 +8,12 @@ open class LayoutableControl: UIControl {
 
   open var isClickThroughEnabled: Bool = false
 
-  open var layout: Layout { didSet { removeAllSubviews() } }
+  open var layout: Layout {
+    didSet {
+      removeAllSubviews()
+      updateContentHuggingPriority()
+    }
+  }
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
@@ -23,6 +28,12 @@ open class LayoutableControl: UIControl {
   public convenience init(layout: Layout) {
     self.init()
     self.layout = layout
+    updateContentHuggingPriority()
+  }
+
+  private func updateContentHuggingPriority() {
+    setContentHuggingPriority(.from(layout.flexibility.horizontal), for: .horizontal)
+    setContentHuggingPriority(.from(layout.flexibility.vertical), for: .vertical)
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -31,6 +42,8 @@ open class LayoutableControl: UIControl {
 
   override open func layoutSubviews() {
     layout.measurement(within: bounds.size).arrangement(within: bounds).makeViews(in: self)
+
+    subviews.forEach { $0.layoutSubviews() }
   }
 
   override open func hitTest(_ point: CGPoint,
@@ -47,5 +60,14 @@ open class LayoutableControl: UIControl {
   open func isClickThroughEnabled(_ isClickThroughEnabled: Bool) -> Self {
     self.isClickThroughEnabled = isClickThroughEnabled
     return self
+  }
+}
+
+
+private extension UILayoutPriority {
+
+  static func from(_ flex: Flexibility.Flex) -> UILayoutPriority {
+    flex.map { UILayoutPriority(rawValue: Float(-$0).clipped(inside: 0...999)) }
+    ?? .required
   }
 }
