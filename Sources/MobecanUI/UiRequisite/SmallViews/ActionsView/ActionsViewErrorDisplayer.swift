@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -46,7 +47,7 @@ ActionsViewIngredientMixer {
 }
 
 
-private class ErrorContainer: UIView {
+private class ErrorContainer: LayoutableView {
   
   @RxUiInput(nil) var errorText: AnyObserver<String?>
   
@@ -55,9 +56,6 @@ private class ErrorContainer: UIView {
   private let errorLabel: UILabel
   private let errorLabelInsets: UIEdgeInsets
   private let displayError: (String?) -> ActionsViewStructs.ErrorContainerState
-  
-  private var containerViewBottom: Constraint?
-  private var errorLabelBottom: Constraint?
   
   private let disposeBag = DisposeBag()
   
@@ -74,54 +72,29 @@ private class ErrorContainer: UIView {
     self.errorLabelInsets = errorLabelInsets
     self.displayError = displayError
     
-    super.init(frame: .zero)
+    super.init()
     
-    addSubviews()
-   
-    pinContentViewToErrorLabel()
-    initBottomConstraints()
+    setupLayout()
     setupErrorDisplaying()
   }
   
-  private func addSubviews() {
-    putSubview(
-      .zstack([
-        .veryFlexibleContainer(errorLabel),
-        containerView
+  private func setupLayout() {
+    layout =
+      UIView.vstack([
+        containerView,
+        errorLabel.withInsets(errorLabelInsets)
       ])
-    )
+      .asLayout
+      .withInsets(.zero)
   }
-  
-  private func pinContentViewToErrorLabel() {
-    contentView.forLastBaselineLayout.snp.makeConstraints {
-      $0.leading.equalTo(errorLabel).inset(-errorLabelInsets.left)
-      $0.trailing.equalTo(errorLabel).inset(-errorLabelInsets.right)
-      $0.bottom.equalTo(errorLabel.snp.top).inset(-errorLabelInsets.top)
-    }
-  }
-  
-  private func initBottomConstraints() {
-    containerView.snp.makeConstraints {
-      containerViewBottom = $0.bottom.equalToSuperview().constraint
-    }
-    
-    errorLabel.snp.makeConstraints {
-      errorLabelBottom = $0.bottom.equalToSuperview().inset(errorLabelInsets.bottom).constraint
-    }
-  }
-  
+
   private func setupErrorDisplaying() {
-    _errorText
-      .subscribe(onNext: { [weak self] in self?.display(errorText: $0) })
-      .disposed(by: disposeBag)
+    disposeBag {
+      _errorText ==> { [weak self] in self?.display(errorText: $0) }
+    }
   }
 
   private func display(errorText: String?) {
-    guard
-      let containerViewBottom = containerViewBottom,
-      let errorLabelBottom = errorLabelBottom
-      else { return }
-
     let stateToDisplay = displayError(errorText)
     let errorTextToDisplay = stateToDisplay.errorText
 
@@ -131,24 +104,10 @@ private class ErrorContainer: UIView {
     errorLabel.isVisible = !errorIsNil
     backgroundColor = stateToDisplay.backgroundColor
 
-    containerViewBottom.isActive = errorIsNil
-    errorLabelBottom.isActive = !errorIsNil
+    setNeedsLayout()
   }
-}
 
-
-private extension UIView {
-  
-  static func veryFlexibleContainer(_ subview: UIView) -> UIView {
-    let containerView = UIView()
-    
-    containerView.addSubview(subview)
-    
-    subview.snp.makeConstraints {
-      $0.left.greaterThanOrEqualToSuperview()
-      $0.right.lessThanOrEqualToSuperview()
-    }
-    
-    return containerView
+  override func layoutSubviews() {
+    super.layoutSubviews()
   }
 }

@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -25,8 +26,13 @@ open class ActionsViewSwiper<ContentView: DataView & EventfulView>: ActionsViewI
     self.possibleButtonsAndActions = possibleButtonsAndActions
     
     self.buttonWidths = possibleButtonsAndActions.mapValues {
-      $0.layoutIfNeeded()
-      return $0.frame.width
+      $0.sizeThatFits(
+        .init(
+          width: CGFloat.greatestFiniteMagnitude,
+          height: CGFloat.greatestFiniteMagnitude
+        )
+      )
+      .width
     }
     
     self.buttons = Array(possibleButtonsAndActions.values)
@@ -36,13 +42,15 @@ open class ActionsViewSwiper<ContentView: DataView & EventfulView>: ActionsViewI
 
   open func setup(contentView: ContentView,
                   containerView: UIView) -> ActionsViewStructs.Ingredient<ContentView.Value, State, Event> {
-    
     let newContainerView = SwipableView(
       contentView: containerView,
       trailingView: .hstack(buttons),
       trailingViewWidth: buttonWidths.values.reduce(0, +),
       animationDuration: animationDuration
     )
+
+    containerView.layoutSubviews()
+    newContainerView.layoutSubviews()
     
     let valueSetter = BehaviorSubject<Value?>(value: nil)
     
@@ -72,11 +80,10 @@ open class ActionsViewSwiper<ContentView: DataView & EventfulView>: ActionsViewI
 }
 
 
-private class SwipableView: UIView {
+private class SwipableView: LayoutableView {
 
   @RxUiInput(0) var trailingViewWidth: AnyObserver<CGFloat>
   
-  private var mainSubviewTrailing: Constraint?
   private var bouncer: Bouncer?
   
   private let disposeBag = DisposeBag()
@@ -87,20 +94,17 @@ private class SwipableView: UIView {
        trailingView: UIView,
        trailingViewWidth: CGFloat,
        animationDuration: Duration) {
-    super.init(frame: .zero)
+    super.init()
     
-    let mainSubview = TranslationView(.hstack([contentView, trailingView]))
+    let mainSubview = TranslationView(
+      .hstack([
+        contentView,
+        .stretchableHorizontalSpacer(),
+        trailingView
+      ])
+    )
 
-    addSubview(mainSubview)
-    
-    mainSubview.snp.makeConstraints {
-      $0.top.bottom.leading.equalToSuperview()
-      mainSubviewTrailing = $0.trailing.equalToSuperview().inset(trailingViewWidth).constraint
-    }
-    
-    contentView.snp.makeConstraints {
-      $0.width.equalTo(self)
-    }
+    self.layout = mainSubview.asLayout.withInsets(.right(-trailingViewWidth))
 
     let bouncer = HorizontalBouncer(
       panContainer: self,
@@ -109,25 +113,30 @@ private class SwipableView: UIView {
       attractors: [0, trailingViewWidth]
     )
 
-    Observable
-      .combineLatest(bouncer.offset, _trailingViewWidth) { offset, trailingWidth in
-        CGPoint(x: offset - trailingWidth, y: 0)
-      }
-      .bind(to: mainSubview.translation)
-      .disposed(by: disposeBag)
-    
+    disposeBag {
+      mainSubview.translation <==
+        .combineLatest(bouncer.offset, _trailingViewWidth) { offset, trailingWidth in
+          CGPoint(x: offset - trailingWidth, y: 0)
+        }
+    }
+
     self.bouncer = bouncer
     
-    [
-      _trailingViewWidth.map { $0 == 0 ? [0] : [0, $0] }.bind(to: bouncer.attractors),
-      _trailingViewWidth.bind(to: bouncer.attractor)
-    ]
-    .disposed(by: disposeBag)
-
-    mainSubviewTrailing.map {
-      _trailingViewWidth.map { -$0 }.bind(to: $0.rx.inset).disposed(by: disposeBag)
+    disposeBag {
+      _trailingViewWidth.map { $0 == 0 ? [0] : [0, $0] } ==> bouncer.attractors
+      _trailingViewWidth ==> bouncer.attractor
     }
-    
+
+    disposeBag {
+      _trailingViewWidth ==> { [weak self] in
+        self?.layout = mainSubview.asLayout.withInsets(.right(-$0))
+      }
+    }
+
     self.trailingViewWidth.onNext(trailingViewWidth)
+  }
+
+  override func sizeThatFits(_ size: CGSize) -> CGSize {
+    super.sizeThatFits(size)
   }
 }

@@ -45,10 +45,27 @@ public class CheckmarkView: LayoutableView {
   
   private func setupLayout(horizontalInset: CGFloat,
                            verticalInset: CGFloat?) {
-    layout = .fromView(
-      mainSubview(verticalInset: verticalInset)
+    let mainSubview = mainSubview(verticalInset: verticalInset)
+
+    layout = .fromView(mainSubview).withInsets(.horizontal(horizontalInset))
+
+    setupContentHuggingPriority(mainSubview: mainSubview)
+  }
+
+  private func setupContentHuggingPriority(mainSubview: UIView) {
+    setupContentHuggingPriority(mainSubview: mainSubview, axis: .horizontal)
+    setupContentHuggingPriority(mainSubview: mainSubview, axis: .vertical)
+  }
+
+  private func setupContentHuggingPriority(mainSubview: UIView,
+                                           axis: NSLayoutConstraint.Axis) {
+    let maximum = max(
+      selectedView.contentHuggingPriority(for: axis),
+      notSelectedView.contentHuggingPriority(for: axis)
     )
-    .withInsets(.horizontal(horizontalInset))
+
+    mainSubview.setContentHuggingPriority(maximum, for: axis)
+    setContentHuggingPriority(maximum, for: axis)
   }
 
   private func mainSubview(verticalInset: CGFloat?) -> UIView {

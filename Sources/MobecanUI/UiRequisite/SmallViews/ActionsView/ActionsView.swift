@@ -1,12 +1,13 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SnapKit
 import UIKit
 
 
-public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView, EventfulView {
+public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, DataView, EventfulView {
 
   public typealias Structs = ActionsViewStructs
   
@@ -57,7 +58,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
     self.checkboxer = checkboxer
     self.swiper = swiper
     
-    super.init(frame: .zero)
+    super.init()
     
     addSubviews()
   }
@@ -67,21 +68,21 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
       contentView: contentView,
       containerView: .zstack([contentView], insets: contentViewInsets)
     )
-    
+
     let errorIngredient = errorDisplayer.setup(
       contentView: contentView,
       containerView: checkboxIngredient.containerView
     )
-    
+
     let swiperIngredient = swiper.setup(
       contentView: contentView,
       containerView: errorIngredient.containerView
     )
-    
-    putSubview(swiperIngredient.containerView)
-    
-    Observable
-      .merge(
+
+    layout = swiperIngredient.containerView.asLayout.withInsets(.zero)
+
+    disposeBag {
+      _viewEvents <== .merge(
         checkboxIngredient.events.map {
           switch $0 {
           case .select(let value):
@@ -98,9 +99,8 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
           }
         }
       )
-      .bind(to: _viewEvents)
-      .disposed(by: disposeBag)
-    
+    }
+
     displayEverything(
       valueObservers: [contentView.value, checkboxIngredient.value, errorIngredient.value, swiperIngredient.value],
       selectionState: checkboxIngredient.state,
@@ -117,11 +117,10 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
       .map { _value.bind(to: $0) }
       .disposed(by: disposeBag)
 
-    [
-      _ingredientsState.compactMap { $0?.selectionState }.bind(to: selectionState),
-      _ingredientsState.map { $0?.errorText }.bind(to: errorText),
-      _ingredientsState.compactMap { $0?.sideActions }.bind(to: sideActions)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      _ingredientsState.compactMap { $0?.selectionState } ==> selectionState
+      _ingredientsState.map { $0?.errorText } ==> errorText
+      _ingredientsState.compactMap { $0?.sideActions } ==> sideActions
+    }
   }
 }

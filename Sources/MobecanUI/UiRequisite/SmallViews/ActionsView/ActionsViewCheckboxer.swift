@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -66,54 +67,66 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
   private func container(contentView: ContentView,
                          containerView: UIView,
                          checkmarkView: CheckmarkView) -> UIView {
-    let container = unalignedContainer(
-      containerView: containerView,
-      checkmarkView: checkmarkView
+    LayoutableView(
+      layout: StackLayout(
+        axis: .horizontal,
+        sublayouts: orderHorizontally(
+          containerViewLayout:
+            containerView.asLayout,
+          checkmarkViewLayout:
+            checkmarkView.withAlignment(verticalCheckmarkAlignment(contentView: contentView))
+        )
+      )
     )
-    
-    verticallyAlignCheckmark(
-      contentView: contentView,
-      checkmarkView: checkmarkView
-    )
-    
-    return container
   }
 
-  private func unalignedContainer(containerView: UIView,
-                                  checkmarkView: CheckmarkView) -> UIView {
+  private func orderHorizontally(containerViewLayout: Layout,
+                                 checkmarkViewLayout: Layout) -> [Layout] {
+    let stretchableSpacer = UIView.stretchableHorizontalSpacer().asLayout
+
     switch checkmarkPlacement.horizontal {
     case .leading:
-      return .hstack([ .verticallyFlexible(checkmarkView), containerView])
+      return [checkmarkViewLayout, containerViewLayout, stretchableSpacer]
     case .trailing:
-      return .hstack([containerView, .verticallyFlexible(checkmarkView)])
+      return [containerViewLayout, stretchableSpacer, checkmarkViewLayout]
     }
   }
-  
-  private func verticallyAlignCheckmark(contentView: ContentView,
-                                        checkmarkView: CheckmarkView) {
+
+  private func verticalCheckmarkAlignment(contentView: UIView) -> Alignment {
     switch checkmarkPlacement.vertical {
     case .center:
-      checkmarkView.snp.makeConstraints { $0.centerY.equalTo(contentView) }
-    case .contentViewFirstBaseline(let offset):
-      checkmarkView.snp.makeConstraints {
-        $0.bottom.equalTo(contentView.snp.firstBaseline).offset(offset)
-      }
+      return .centerY(contentView)
+    case .top(let offset):
+      return .top(offset: offset)
     }
   }
 }
 
 
-private extension UIView {
-  
-  static func verticallyFlexible(_ subview: UIView) -> UIView {
-    let containerView = UIView()
-    
-    containerView.addSubview(subview)
-    
-    subview.snp.makeConstraints {
-      $0.leading.trailing.equalToSuperview()
+private extension Alignment {
+
+  static func top(offset: CGFloat) -> Alignment {
+    .init { size, frame in
+      CGRect(
+        x: frame.minX,
+        y: frame.minY + offset,
+        width: frame.width,
+        height: size.height
+      )
     }
-    
-    return containerView
+  }
+
+  static func centerY(_ view: UIView) -> Alignment {
+    .init { [weak view] size, frame in
+      let viewHeight = view?.frame.height ?? 0
+
+      return CGRect(
+        origin: .init(
+          x: frame.origin.x,
+          y: frame.origin.y + 0.5 * (viewHeight - size.height)
+        ),
+        size: size
+      )
+    }
   }
 }

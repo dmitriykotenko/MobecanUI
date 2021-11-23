@@ -1,38 +1,35 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxSwift
 import SnapKit
 import UIKit
 
 
-public class TranslationView: UIView {
+public class TranslationView: LayoutableView {
 
   @RxUiInput(.zero) public var translation: AnyObserver<CGPoint>
-
-  private var contentLeft: Constraint?
-  private var contentTop: Constraint?
   
   private let disposeBag = DisposeBag()
   
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init(_ contentView: UIView) {
-    super.init(frame: .zero)
-    
-    addSubview(contentView)
-    
-    contentView.snp.makeConstraints {
-      $0.width.height.equalToSuperview()
+    super.init()
 
-      contentLeft = $0.left.equalToSuperview().constraint
-      contentTop = $0.top.equalToSuperview().constraint
+    self.layout = contentView.asLayout.withInsets(.zero)
+
+    disposeBag {
+      _translation ==> { [weak self] in
+        self?.layout = contentView.asLayout.withInsets(
+          .init(
+            top: $0.y,
+            left: $0.x,
+            bottom: -$0.y,
+            right: -$0.x
+          )
+        )
+      }
     }
-    
-    _translation
-      .subscribe(onNext: { [weak self] in
-        self?.contentLeft?.update(offset: $0.x)
-        self?.contentTop?.update(offset: $0.y)
-      })
-      .disposed(by: disposeBag)
   }
 }

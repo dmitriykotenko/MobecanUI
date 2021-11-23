@@ -29,7 +29,7 @@ public enum ActionsViewStructs {
     
     public enum Vertical {
       case center
-      case contentViewFirstBaseline(offset: CGFloat)
+      case top(offset: CGFloat)
     }
     
     public let horizontal: Horizontal
