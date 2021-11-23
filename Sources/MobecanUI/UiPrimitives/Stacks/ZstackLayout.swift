@@ -53,7 +53,7 @@ open class ZstackLayout: BaseLayout<UIView>, Layout {
 private extension Array where Element == Layout {
 
   func minimumFlexibility(_ axis: Axis) -> Flexibility.Flex? {
-    let leastFlexibleLayout = self.min { $0.isMoreFlexible(than: $1, axis: axis) }
+    let leastFlexibleLayout = self.min { $0.isLessFlexible(than: $1, axis: axis) }
     return leastFlexibleLayout?.flexibility.flex(axis)
   }
 }
