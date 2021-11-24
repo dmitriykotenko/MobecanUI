@@ -48,9 +48,6 @@ open class ActionsViewSwiper<ContentView: DataView & EventfulView>: ActionsViewI
       trailingViewWidth: buttonWidths.values.reduce(0, +),
       animationDuration: animationDuration
     )
-
-    containerView.layoutSubviews()
-    newContainerView.layoutSubviews()
     
     let valueSetter = BehaviorSubject<Value?>(value: nil)
     

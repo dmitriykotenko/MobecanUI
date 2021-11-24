@@ -106,8 +106,4 @@ private class ErrorContainer: LayoutableView {
 
     setNeedsLayout()
   }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-  }
 }
