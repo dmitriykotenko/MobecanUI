@@ -63,10 +63,10 @@ private extension Array where Element == LayoutMeasurement {
 
   func sizeThatFits(_ maxSize: CGSize) -> CGSize {
     let horizontallyLeastFlexible =
-      self.min { $0.isMoreFlexible(than: $1, axis: .horizontal) }
+      self.min { $0.isLessFlexible(than: $1, axis: .horizontal) }
 
     let verticallyLeastFlexible =
-      self.min { $0.isMoreFlexible(than: $1, axis: .vertical) }
+      self.min { $0.isLessFlexible(than: $1, axis: .vertical) }
 
     return CGSize(
       width: horizontallyLeastFlexible?.size.width ?? maxSize.width,
