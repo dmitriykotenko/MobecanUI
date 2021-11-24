@@ -38,7 +38,8 @@ open class LayoutableView: UIView {
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    layout.measurement(within: size).size
+    print("view---size-that-fits")
+    return layout.measurement(within: size).size
   }
 
   override open func layoutSubviews() {
