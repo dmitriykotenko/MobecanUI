@@ -38,13 +38,10 @@ open class LayoutableControl: UIControl {
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    print("control---size-that-fits")
     return layout.measurement(within: size).size
   }
 
   override open func layoutSubviews() {
-    print("layoutable-control---layout-subviews")
-
     layout.measurement(within: bounds.size).arrangement(within: bounds).makeViews(in: self)
   }
 
