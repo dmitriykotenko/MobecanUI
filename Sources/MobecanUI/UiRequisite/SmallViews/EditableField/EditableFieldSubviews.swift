@@ -8,7 +8,7 @@ import UIKit
 public struct EditableFieldSubviews {
     
   public let valueEditor: UIView
-  public let background: EditableFieldBackground
+  public let background: EditableFieldBackgroundProtocol
   public let titleLabel: UILabel
   public let hintLabel: UILabel
   public let errorLabel: UILabel
@@ -24,7 +24,7 @@ public struct EditableFieldSubviews {
   }
 
   public init(valueEditor: UIView,
-              background: EditableFieldBackground,
+              background: EditableFieldBackgroundProtocol,
               titleLabel: UILabel,
               hintLabel: UILabel,
               errorLabel: UILabel) {

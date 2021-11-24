@@ -8,8 +8,8 @@ import UIKit
 public extension EditableField where RawValue == String? {
   
   convenience init(textView: UITextView,
-                   backgroundView: EditableFieldBackground,
-                   initSubviews: @escaping (UIView, EditableFieldBackground) -> EditableFieldSubviews,
+                   backgroundView: EditableFieldBackgroundProtocol,
+                   initSubviews: @escaping (UIView, EditableFieldBackgroundProtocol) -> EditableFieldSubviews,
                    layout: EditableFieldLayout,
                    validator: @escaping (String?) -> Result<ValidatedValue, ValidationError>) {
     self.init(
@@ -26,8 +26,8 @@ public extension EditableField where RawValue == String? {
 public extension EditableField where RawValue == String?, ValidatedValue == String? {
   
   convenience init(textView: UITextView,
-                   backgroundView: EditableFieldBackground,
-                   initSubviews: @escaping (UIView, EditableFieldBackground) -> EditableFieldSubviews,
+                   backgroundView: EditableFieldBackgroundProtocol,
+                   initSubviews: @escaping (UIView, EditableFieldBackgroundProtocol) -> EditableFieldSubviews,
                    layout: EditableFieldLayout) {
     self.init(
       subviews: initSubviews(textView, backgroundView),

@@ -44,7 +44,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
   private let titleLabel: UILabel
   private let hintLabel: UILabel
   private let errorLabel: UILabel
-  private let backgroundView: EditableFieldBackground
+  private let backgroundView: EditableFieldBackgroundProtocol
   private let valueEditor: UIView
   
   open var formatError: (ValidationError) -> String? = { "\($0.localizedDescription)" }
@@ -138,7 +138,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
     disposeBag {
       backgroundView.state <==
         .combineLatest(rxIsEnabled, rxIsFocused.asObservable(), errorToShow) {
-          EditableFieldBackground.State(
+          EditableFieldBackgroundState(
             isEnabled: $0,
             isFocused: $1,
             error: $2
