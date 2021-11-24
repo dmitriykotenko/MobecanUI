@@ -12,6 +12,7 @@ open class LayoutableControl: UIControl {
     didSet {
       removeAllSubviews()
       updateContentHuggingPriority()
+      if window != nil { setNeedsLayout() }
     }
   }
 
@@ -44,8 +45,6 @@ open class LayoutableControl: UIControl {
     print("layoutable-control---layout-subviews")
 
     layout.measurement(within: bounds.size).arrangement(within: bounds).makeViews(in: self)
-
-    subviews.forEach { $0.setNeedsLayout() }
   }
 
   override open func hitTest(_ point: CGPoint,
