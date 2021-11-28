@@ -6,7 +6,7 @@ import RxSwift
 import UIKit
 
 
-open class SizableImageView: UIImageView, SizableView {
+open class SizableTextView: UITextView, SizableView {
 
   open var sizer = ViewSizer()
 

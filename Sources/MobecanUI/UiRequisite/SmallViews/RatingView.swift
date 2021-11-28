@@ -62,8 +62,8 @@ public class RatingView: LayoutableView {
     let actualSpacing = spacing ?? 0.2 * actualIconSize.width
 
     let button = DiverseButton()
-    button.fixedWidth = actualIconSize.width + actualSpacing
-    button.fixedHeight = actualIconSize.height
+      .fixWidth(actualIconSize.width + actualSpacing)
+      .fixHeight(actualIconSize.height)
     
     _ = button.imageView?.contentMode(.scaleAspectFit)
     _ = button.image(icon.image.withRenderingMode(.alwaysTemplate))

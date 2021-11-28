@@ -11,7 +11,9 @@ import UIKit
 /// and the user sees a phone number +7 900 816-04-28 on the screen,
 /// .text property will contain the value "79008160428".
 /// Spaces, dashes and plus sign are not visible outside.
-public class MaskedTextField: UITextField {
+public class MaskedTextField: UITextField, SizableView {
+
+  public let sizer = ViewSizer()
   
   public override var delegate: UITextFieldDelegate? {
     set {
@@ -196,5 +198,11 @@ public class MaskedTextField: UITextField {
   
   public override func paste(_ sender: Any?) {
     copyPaster?.paste()
+  }
+
+  public override func sizeThatFits(_ size: CGSize) -> CGSize {
+    sizer.apply(
+      to: super.sizeThatFits(size)
+    )
   }
 }

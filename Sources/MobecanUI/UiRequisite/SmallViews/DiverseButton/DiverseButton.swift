@@ -3,7 +3,7 @@
 import UIKit
 
 
-open class DiverseButton: UIButton {
+open class DiverseButton: UIButton, SizableView {
   
   /// If non-zero, extends tap area outside button's frame (usually used for small buttons).
   open var tapInsets: UIEdgeInsets = .zero
@@ -30,8 +30,7 @@ open class DiverseButton: UIButton {
 
   open var titleTransformer: (String?) -> (String?) = { $0 }
 
-  open var fixedWidth: CGFloat?
-  open var fixedHeight: CGFloat?
+  open var sizer = ViewSizer()
 
   override open func setTitle(_ title: String?,
                               for state: UIControl.State) {
@@ -88,23 +87,8 @@ open class DiverseButton: UIButton {
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    var result = super.sizeThatFits(size)
-
-    fixedWidth.map { result.width = $0 }
-    fixedHeight.map { result.height = $0 }
-
-    return result
-  }
-
-  @discardableResult
-  func fixedWidth(_ width: CGFloat?) -> Self {
-    self.fixedWidth = width
-    return self
-  }
-
-  @discardableResult
-  func fixedHeight(_ height: CGFloat?) -> Self {
-    self.fixedHeight = height
-    return self
+    sizer.apply(
+      to: super.sizeThatFits(size)
+    )
   }
 }

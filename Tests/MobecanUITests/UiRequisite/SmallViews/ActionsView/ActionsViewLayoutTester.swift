@@ -235,8 +235,8 @@ private extension DiverseButton {
   static func delete(width: CGFloat,
                      height: CGFloat? = nil) -> DiverseButton {
     DiverseButton()
-      .fixedWidth(width)
-      .fixedHeight(height)
+      .fixWidth(width)
+      .fixHeight(height)
       .fitToContent(axis: [.horizontal])
   }
 }

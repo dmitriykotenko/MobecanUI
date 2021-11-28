@@ -5,7 +5,13 @@ import RxSwift
 import UIKit
 
 
-public class DiverseLabel: UILabel {
+public class DiverseLabel: UILabel, SizableView {
+
+  open var sizer = ViewSizer()
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    sizer.apply(to: super.sizeThatFits(size))
+  }
 
   public override var text: String? {
     didSet { updatePlainText() }
