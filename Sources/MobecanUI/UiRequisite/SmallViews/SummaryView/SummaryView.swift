@@ -7,7 +7,7 @@ import RxSwift
 import UIKit
 
 
-open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataView {
+open class SummaryView<Value, Labels: LabelsGrid>: LayoutableView, EventfulView, DataView {
   
   public typealias ViewEvent = Tap<Value>
   
@@ -57,12 +57,12 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   ///
   /// To avoid these kinds of crashes, we require that every subclass of SummaryView
   /// has explicitly declared parameterless init().
-  public required init() {
+  override public required init() {
     self.iconContainer = .init(imageView: .init(), containerView: .init())
     self.labels = .empty
     self.backgroundView = nil
 
-    super.init(frame: .zero)
+    super.init()
   }
   
   public init(iconContainer: ImageViewContainer,
@@ -74,34 +74,32 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
     self.labels = labels
     self.backgroundView = backgroundView
     
-    super.init(frame: .zero)
+    super.init()
     
-    addSubviews(spacing: spacing, insets: insets)
+    setupLayout(spacing: spacing, insets: insets)
     bindToInputs()
     highlightOnTaps(disposeBag: disposeBag)
   }
 
-  private func addSubviews(spacing: CGFloat,
+  private func setupLayout(spacing: CGFloat,
                            insets: UIEdgeInsets) {
-    backgroundView.map { putSubview($0) }
-    
-    putSubview(
-      .autolayoutHstack(
-        alignment: .fill,
-        spacing: spacing,
+    layout = .fromView(
+      .zstack(
         [
-          iconContainer.containerView,
-            .autolayoutVstack([
-                labels.view(),
-                .autolayoutStretchableSpacer()
-            ])
-        ],
-        insets: insets
+//          backgroundView,
+          .hstack(
+            alignment: .fill,
+            spacing: spacing,
+            [
+              iconContainer.containerView,
+              labels.view()
+            ],
+            insets: insets
+          )
+        ]
+        .filterNil()
       )
     )
-
-    /// Align image to labels if necessary.
-    iconContainer.alignImage(inside: self)
   }
   
   private func bindToInputs() {
@@ -127,8 +125,4 @@ open class SummaryView<Value, Labels: LabelsGrid>: UIView, EventfulView, DataVie
   
   override open var forFirstBaselineLayout: UIView { labels.firstBaselineLabel }
   override open var forLastBaselineLayout: UIView { labels.lastBaselineLabel }
-
-  override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    systemLayoutSizeFitting(size)
-  }
 }

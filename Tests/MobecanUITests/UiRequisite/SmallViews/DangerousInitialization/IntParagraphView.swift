@@ -24,11 +24,14 @@ class FirstSummaryView: SummaryView<String, ThreeLinesLabelsGrid> {
         containerView: .init()
       ),
       labels: .init(
-        topLabel: topLabel,
-        topRightLabel: .init(),
-        middleLabel: .init(),
-        bottomLabel: .init(),
-        spacing: .zero
+        subviews: .init(
+          topLabel: topLabel,
+          topRightLabel: .init(),
+          middleLabel: .init(),
+          bottomLabel: .init()
+        ),
+        spacing: .zero,
+        topRightLabelInsets: .zero
       ),
       spacing: 0,
       insets: .zero

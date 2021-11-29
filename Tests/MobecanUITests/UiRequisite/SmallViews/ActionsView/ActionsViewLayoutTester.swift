@@ -164,7 +164,6 @@ class ActionsViewLayoutTester: XCTestCase {
     var viewEvents: Observable<Void> { .never() }
   }
 
-
   class TestableContainerView: UIView {
 
     init(size: CGSize) {

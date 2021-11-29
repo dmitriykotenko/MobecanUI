@@ -37,57 +37,13 @@ extension SwitchView.SwitchPlacement {
   var asAlignment: LayoutKit.Alignment {
     switch self {
     case .top(let inset):
-      return Alignment { size, frame in
-        CGRect.from(
-          y: frame.minY + inset,
-          size: size,
-          centerHorizontallyIn: frame
-        )
-      }
+      return .top(inset: inset)
     case .center(let offset):
-      return Alignment { size, frame in
-        CGRect.from(
-          y: frame.midY - (size.height / 2.0) + offset,
-          size: size,
-          centerHorizontallyIn: frame
-        )
-      }
+      return .centerVertically(offset: offset)
     case .bottom(let inset):
-      return Alignment { size, frame in
-        CGRect.from(
-          y: frame.maxY - size.height - inset,
-          size: size,
-          centerHorizontallyIn: frame
-        )
-      }
+      return .bottom(inset: inset)
     case .centerOrTop(let thresholdHeight):
-      return Alignment { size, frame in
-        let y = (frame.height < thresholdHeight) ?
-        frame.midY - (size.height / 2.0) :
-        frame.minY + (thresholdHeight / 2.0) - (size.height / 2.0)
-
-        return CGRect.from(
-          y: y,
-          size: size,
-          centerHorizontallyIn: frame
-        )
-      }
+      return .centerOrTop(thresholdHeight: thresholdHeight)
     }
-  }
-}
-
-
-private extension CGRect {
-
-  static func from(y: CGFloat,
-                   size: CGSize,
-                   centerHorizontallyIn frame: CGRect) -> CGRect {
-    let (x, width) = Alignment.Horizontal.center.align(
-      length: size.width,
-      availableLength: frame.width,
-      offset: frame.origin.x
-    )
-
-    return CGRect(x: x, y: y, width: width, height: size.height)
   }
 }

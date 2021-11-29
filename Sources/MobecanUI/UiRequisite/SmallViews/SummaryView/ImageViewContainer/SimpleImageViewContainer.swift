@@ -23,7 +23,6 @@ open class SimpleImageViewContainer: ImageViewContainer {
     case center
     case top(CGFloat)
     case bottom(CGFloat)
-    case firstBaseline(CGFloat)
   }
   
   public let placeholder: UIImage?
@@ -47,39 +46,18 @@ open class SimpleImageViewContainer: ImageViewContainer {
   private static func containerView(_ imageView: UIImageView,
                                     verticalPlacement: VerticalPlacement) -> UIView {
     switch verticalPlacement {
-    case .top(let offset):
-      return .autolayoutVstack(
-        [imageView, .autolayoutStretchableSpacer()],
-        insets: .top(offset)
+    case .top(let inset):
+      return LayoutableView(
+        layout: imageView.withAlignment(.topFill).withInsets(.top(inset))
       )
-    case .bottom(let offset):
-      return .autolayoutVstack(
-        [.autolayoutStretchableSpacer(), imageView],
-        insets: .bottom(offset)
+    case .bottom(let inset):
+      return LayoutableView(
+        layout: imageView.withAlignment(.bottomFill).withInsets(.bottom(inset))
       )
     case .center:
-      let topSpacer = UIView.autolayoutStretchableSpacer()
-      let bottomSpacer = UIView.autolayoutStretchableSpacer()
-      let containerView = UIView.autolayoutVstack([topSpacer, imageView, bottomSpacer])
-      
-      topSpacer.snp.makeConstraints { $0.height.equalTo(bottomSpacer) }
-      
-      return containerView
-    case .firstBaseline:
-      return .autolayoutVstack([
-        .autolayoutStretchableSpacer(),
-        imageView,
-        .autolayoutStretchableSpacer()
-      ])
-    }
-  }
-  
-  override open func alignImage(inside superview: UIView) {
-    switch verticalPlacement {
-    case .firstBaseline(let offset):
-      imageView.snp.makeConstraints { $0.bottom.equalTo(superview.snp.firstBaseline).offset(offset) }
-    default:
-      break
+      return LayoutableView(
+        layout: imageView.withAlignment(.centerFill)
+      )
     }
   }
   

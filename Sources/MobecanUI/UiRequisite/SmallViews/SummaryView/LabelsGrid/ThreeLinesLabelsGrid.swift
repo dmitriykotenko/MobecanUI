@@ -4,7 +4,25 @@ import UIKit
 
 
 public struct ThreeLinesLabelsGrid: LabelsGrid {
-  
+
+  public struct Subviews {
+
+    let topLabel: UILabel
+    let topRightLabel: UILabel
+    let middleLabel: UILabel
+    let bottomLabel: UILabel
+
+    public init(topLabel: UILabel,
+                topRightLabel: UILabel,
+                middleLabel: UILabel,
+                bottomLabel: UILabel) {
+      self.topLabel = topLabel
+      self.topRightLabel = topRightLabel
+      self.middleLabel = middleLabel
+      self.bottomLabel = bottomLabel
+    }
+  }
+
   public struct Spacing {
     
     public let vertical: CGFloat
@@ -42,39 +60,45 @@ public struct ThreeLinesLabelsGrid: LabelsGrid {
    let bottomLabel: UILabel
   
   private let spacing: Spacing
+  private let topRightLabelInsets: UIEdgeInsets
   
-  public init(topLabel: UILabel,
-              topRightLabel: UILabel,
-              middleLabel: UILabel,
-              bottomLabel: UILabel,
-              spacing: Spacing) {
-    self.topLabel = topLabel
-    self.topRightLabel = topRightLabel
-    self.middleLabel = middleLabel
-    self.bottomLabel = bottomLabel
+  public init(subviews: Subviews,
+              spacing: Spacing,
+              topRightLabelInsets: UIEdgeInsets) {
+    self.topLabel = subviews.topLabel
+    self.topRightLabel = subviews.topRightLabel
+    self.middleLabel = subviews.middleLabel
+    self.bottomLabel = subviews.bottomLabel
     
     self.spacing = spacing
+    self.topRightLabelInsets = topRightLabelInsets
   }
   
   public static var empty = ThreeLinesLabelsGrid(
-    topLabel: UILabel(),
-    topRightLabel: UILabel(),
-    middleLabel: UILabel(),
-    bottomLabel: UILabel(),
-    spacing: .zero
+    subviews: .init(
+      topLabel: UILabel(),
+      topRightLabel: UILabel(),
+      middleLabel: UILabel(),
+      bottomLabel: UILabel()
+    ),
+    spacing: .zero,
+    topRightLabelInsets: .zero
   )
   
   public func view() -> UIView {
-    _ = topRightLabel.fitToContent(axis: [.horizontal])
-    
-    return .autolayoutVstack(
+    .vstack(
       spacing: spacing.vertical,
       [
-        .autolayoutHstack(
-          alignment: .firstBaseline,
+        .hstack(
+          alignment: .top,
           distribution: .fill,
           spacing: spacing.horizontal,
-          [topLabel, topRightLabel]
+          [
+            topLabel,
+            topRightLabel
+              .fitToContent(axis: [.horizontal])
+              .withInsets(topRightLabelInsets)
+          ]
         ),
         middleLabel,
         bottomLabel
