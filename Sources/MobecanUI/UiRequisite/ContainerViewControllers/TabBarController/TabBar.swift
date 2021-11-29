@@ -71,6 +71,6 @@ public class TabBar: LayoutableView {
 
     setNeedsLayout()
 
-    superview?.subviewLayoutInvalidated(subview: self)
+    superview?.subviewNeedsToLayout(subview: self)
   }
 }
