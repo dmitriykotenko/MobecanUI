@@ -72,10 +72,6 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   Interactor.OutputValue == OutputValue,
   Interactor.SomeError == SomeError {
 
-    interactor.initialValue
-      .bind(to: _initialValue)
-      .disposed(by: disposeBag)
-
     let validValue = _value.asObservable().filterSuccess()
 
     let save = _saveButtonTap
@@ -85,28 +81,30 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
 
     let savingFailed = interactor.valueSaved.filterFailure().share()
 
-    save.bind(to: interactor.save).disposed(by: disposeBag)
+    disposeBag {
+      interactor.initialValue ==> _initialValue
 
-    Observable
-      .merge(
+      save ==> interactor.save
+
+      _isSaving <== .merge(
         save.map { _ in true },
         // After value is successfully saved, the module must be immediately closed,
         // so we don't need to send `.success` to view controller.
         savingFailed.map { _ in false }
       )
-      .bind(to: _isSaving)
-      .disposed(by: disposeBag)
 
-    savingFailed
-      .flatMap { [weak self] error -> Observable<SomeError?> in
+      _error <== savingFailed.flatMap { [weak self] savingError in
         Observable.concat(
-          .just(error),
+          .just(savingError),
           // Hide error message after value has been changed by user.
-          self?._value.skip(1).take(1).map { _ in nil } ?? .never()
+          (self?.valueDidChange() ?? .never()).map { nil }
           // FIXME: should we use .doNotDisturbMode instead of resetting error?
         )
       }
-      .bind(to: _error)
-      .disposed(by: disposeBag)
+    }
+  }
+
+  private func valueDidChange() -> Observable<Void> {
+    _value.skip(1).take(1).mapToVoid()
   }
 }

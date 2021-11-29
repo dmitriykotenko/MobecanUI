@@ -28,16 +28,16 @@ public class EditorInteractor<InputValue, OutputValue, SomeError: Error>: Editor
   private let disposeBag = DisposeBag()
 
   public init() {
-    _save
-      .withLatestFrom(_saver.filterNil()) { (value: $0, saver: $1) }
-      .flatMap { $0.saver.save($0.value) }
-      .bind(to: _valueSaved)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _save
+        .withLatestFrom(_saver.filterNil()) { (value: $0, saver: $1) }
+        .flatMap { $0.saver.save($0.value) } ==> _valueSaved
+    }
   }
   
   func with(initialValue: Observable<InputValue?>) {
-    initialValue
-      .bind(to: _initialValue)
-      .disposed(by: disposeBag)    
+    disposeBag {
+      initialValue ==> _initialValue
+    }
   }
 }

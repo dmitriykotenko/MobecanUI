@@ -51,11 +51,10 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     
     super.init(nibName: nil, bundle: nil)
 
-    [
-      _isSaving.bind(to: saveButtonContainer.isLoading),
-      _isSaving.bind(to: view.rx.isUserInteractionDisabled)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      _isSaving ==> saveButtonContainer.isLoading
+      _isSaving ==> view.rx.isUserInteractionDisabled
+    }
   }
   
   override open func viewDidLoad() {
@@ -73,25 +72,22 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   Presenter.InputValue == InputValue,
   Presenter.OutputValue == OutputValue,
   Presenter.SomeError == SomeError {
-    [
-      presenter.initialValue.drive(valueSetter),
+    disposeBag {
+      presenter.initialValue ==> valueSetter
+      presenter.isSaveButtonEnabled ==> saveButtonContainer.isEnabled
+      presenter.isSaving ==> isSaving
+      presenter.doNotDisturbMode ==> doNotDisturbModeSetter
+      presenter.hint ==> saveButtonContainer.hint
 
-      presenter.isSaveButtonEnabled.drive(saveButtonContainer.isEnabled),
-      presenter.isSaving.drive(isSaving),
-
-      presenter.doNotDisturbMode.drive(doNotDisturbModeSetter),
-      presenter.hint.drive(saveButtonContainer.hint),
       // TODO: hide error message after raw value has been changed
-      presenter.errorText.drive(saveButtonContainer.errorText),
+      presenter.errorText ==> saveButtonContainer.errorText
 
       Observable
         .combineLatest(valueGetter, _externalValidator)
-        .flatMap { $0.validate(via: $1) }
-        .bind(to: presenter.value),
+        .flatMap { $0.validate(via: $1) } ==> presenter.value
 
-      saveButtonContainer.buttonTap.bind(to: presenter.saveButtonTap)
-    ]
-    .disposed(by: disposeBag)
+      saveButtonContainer.buttonTap ==> presenter.saveButtonTap
+    }
   }
 }
 
