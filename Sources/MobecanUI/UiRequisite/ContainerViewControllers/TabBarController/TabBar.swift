@@ -20,6 +20,7 @@ public class TabBar: LayoutableView {
   private let backgroundView: UIView
   
   public let contentHeight: CGFloat
+  public var safeAreaInsetsProvider: UIView? { didSet { updateLayout() } }
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
@@ -36,18 +37,40 @@ public class TabBar: LayoutableView {
     )
 
     super.init()
-    
-    setupLayout(contentHeight: contentHeight)
+
+    updateLayout()
+
+    fitToContent(axis: [.vertical])
   }
-  
-  private func setupLayout(contentHeight: CGFloat) {
-    layout =
-      .fromView(
-        .zstack([
-          backgroundView,
-          .top(radioButton)
-        ])
-      )
-      .with(height: contentHeight)
+
+  override open func safeAreaInsetsDidChange() {
+    super.safeAreaInsetsDidChange()
+
+    updateLayout()
+  }
+
+  override open func didMoveToWindow() {
+    super.didMoveToWindow()
+
+    updateLayout()
+  }
+
+  private func updateLayout() {
+    layout = ZstackLayout(
+      sublayouts: [
+        backgroundView.asLayout,
+        InsetLayout(
+          insets: safeAreaInsetsProvider?.safeAreaInsets.with(top: 0) ?? .zero,
+          sublayout: SizeLayout(
+            height: contentHeight,
+            sublayout: radioButton.asLayout
+          )
+        )
+      ]
+    )
+
+    setNeedsLayout()
+
+    superview?.subviewLayoutInvalidated(subview: self)
   }
 }

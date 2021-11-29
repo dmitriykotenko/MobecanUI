@@ -8,8 +8,8 @@ open class ZstackLayout: BaseLayout<UIView>, Layout {
 
   private let sublayouts: [Layout]
 
-  init(sublayouts: [Layout],
-       flexibility: Flexibility? = nil) {
+  init(flexibility: Flexibility? = nil,
+       sublayouts: [Layout]) {
     self.sublayouts = sublayouts
 
     super.init(
