@@ -5,20 +5,25 @@ import RxSwift
 import UIKit
 
 
-public class DiverseLabel: UILabel, SizableView {
+open class DiverseLabel: UILabel, SizableView {
 
+  open var isLayoutInvalidationEnabled: Bool = true
   open var sizer = ViewSizer()
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
     sizer.apply(to: super.sizeThatFits(size))
   }
 
-  public override var text: String? {
-    didSet { updatePlainText() }
+  override open var font: UIFont! {
+    didSet { invalidateLayoutIfNecessary() }
   }
 
-  public override var attributedText: NSAttributedString? {
-    didSet { updateAttributedText() }
+  override open var text: String? {
+    didSet { updatePlainText(); invalidateLayoutIfNecessary() }
+  }
+
+  override open var attributedText: NSAttributedString? {
+    didSet { updateAttributedText(); invalidateLayoutIfNecessary() }
   }
 
   open var textTransformer: StringTransformer? = nil
@@ -54,4 +59,27 @@ public class DiverseLabel: UILabel, SizableView {
       super.attributedText = attributedText.flatMap(transform)
     }
   }
+}
+
+
+extension DiverseLabel {
+
+  private func invalidateLayoutIfNecessary() {
+    if isLayoutInvalidationEnabled {
+      superview?.subviewNeedsToLayout(subview: self)
+    }
+  }
+
+  @discardableResult
+  open func enableLayoutInvalidation() -> Self {
+    isLayoutInvalidationEnabled = true
+    return self
+  }
+
+  @discardableResult
+  open func disableLayoutInvalidation() -> Self {
+    isLayoutInvalidationEnabled = false
+    return self
+  }
+
 }
