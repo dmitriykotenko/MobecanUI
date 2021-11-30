@@ -11,8 +11,8 @@ import UIKit
 /// depending on content, safe area insets and keyboard frame.
 public class ScrollableView: UIView, UIScrollViewDelegate {
 
-  override open var frame: CGRect { didSet { middleman.frame.size.width = frame.width } }
-  override open var bounds: CGRect { didSet { middleman.frame.size.width = bounds.width } }
+  override open var frame: CGRect { didSet { updateMiddlemanWidth() } }
+  override open var bounds: CGRect { didSet { updateMiddlemanWidth() } }
 
   public let scrollView: UIScrollView
 
@@ -89,6 +89,13 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
     }
   }
 
+  /// Updates middleman's frame to trigger layout update.
+  private func updateMiddlemanWidth() {
+    let insets = contentSizeAndInsets.insets
+
+    middleman.frame.size.width = frame.width - (insets.left + insets.right)
+  }
+
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
     CGSize(
       width: contentSizeAndInsets.totalWidth,
@@ -109,8 +116,8 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
     scrollView.contentInset = contentInsets
 
     middleman.frame = .init(
-      x: contentInsets.left,
-      y: contentInsets.top,
+      x: 0,
+      y: 0,
       width: contentSize.width,
       height: contentSize.height
     )

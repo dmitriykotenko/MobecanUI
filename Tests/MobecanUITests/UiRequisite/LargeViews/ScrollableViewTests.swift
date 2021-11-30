@@ -56,10 +56,7 @@ class ScrollableViewTests: XCTestCase {
     assertRectsAreEqual(
       actual: actualContentFrame,
       expected: .init(
-        origin: .init(
-          x: windowSafeAreaInsets.top,
-          y: windowSafeAreaInsets.left
-        ),
+        origin: .zero,
         size: test.expectedContentSize
       )
     )
