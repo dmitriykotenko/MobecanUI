@@ -38,6 +38,8 @@ open class PseudoButton<Value>: LayoutableView, SizableView, DataView {
   }
 
   private func setupLayout(_ subview: UIView) {
+    inheritContentHuggingPriority(from: subview)
+
     updateLayout(subview: subview)
 
     disposeBag {
