@@ -86,7 +86,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: LayoutableView, EventfulView,
     layout = .fromSingleSubview(
       .zstack(
         [
-//          backgroundView,
+          backgroundView,
           .hstack(
             alignment: .fill,
             spacing: spacing,

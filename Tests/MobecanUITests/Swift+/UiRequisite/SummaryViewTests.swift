@@ -124,7 +124,7 @@ final class SummaryViewTests: XCTestCase {
           placement: placement
         ),
         labels: labels,
-        backgroundView: UIView(),
+        backgroundView: .spacer(),
         spacing: spacing,
         insets: insets
       )
