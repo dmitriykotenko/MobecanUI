@@ -38,9 +38,10 @@ public class MultiButton<Value: Equatable, Button: UIButton, Action: Equatable>:
   }
   
   private func setupLayout(insets: UIEdgeInsets) {
-    layout =
-      .fromView(.hstack(buttons.map(\.1)))
-        .withInsets(insets)
+    layout = .fromSingleSubview(
+      .hstack(buttons.map(\.1)),
+      insets: insets
+    )
   }
   
   private func setupButtonVisibilities() {

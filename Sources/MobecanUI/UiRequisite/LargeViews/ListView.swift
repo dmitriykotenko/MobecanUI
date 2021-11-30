@@ -61,7 +61,7 @@ open class ListView<Element, View: EventfulView>: LayoutableView, DataView, Even
       }
     }
 
-    layout = .fromView(.vstack(elementViews))
+    layout = .fromSingleSubview(.vstack(elementViews))
   }
 
   @discardableResult

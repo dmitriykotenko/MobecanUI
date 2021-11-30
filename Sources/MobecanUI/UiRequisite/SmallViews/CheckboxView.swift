@@ -49,10 +49,10 @@ public class CheckboxView<NestedValue>: LayoutableView, DataView, EventfulView {
                            insets: UIEdgeInsets) {
 
     layout =
-      .fromView(
-        .hstack(alignment: .top, [checkmark, label])
+      .fromSingleSubview(
+        .hstack(alignment: .top, [checkmark, label]),
+        insets: insets
       )
-      .withInsets(insets)
       .with(height: height)
   }
   

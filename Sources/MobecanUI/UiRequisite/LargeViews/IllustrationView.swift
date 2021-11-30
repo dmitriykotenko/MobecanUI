@@ -29,7 +29,9 @@ open class IllustrationView: LayoutableView {
     
     super.init()
 
-    self.layout = .fromView(layout.mainSubview(subviews: subviews))
+    self.layout = .fromSingleSubview(
+      layout.mainSubview(subviews: subviews)
+    )
 
     illustration.map { self.illustration.onNext($0) }
     title.map { self.title.onNext($0) }

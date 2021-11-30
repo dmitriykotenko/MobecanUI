@@ -13,6 +13,17 @@ public extension Layout where Self == BoilerplateLayout {
 }
 
 
+public extension Layout where Self == InsetLayout<UIView> {
+
+  static func fromSingleSubview(_ subview: UIView,
+                                alignment: Alignment = .fill,
+                                insets: UIEdgeInsets = .zero) -> Layout {
+    .fromView(subview, alignment: alignment)
+      .withInsets(insets)
+  }
+}
+
+
 public extension UIView {
 
   var asLayout: Layout { .fromView(self) }

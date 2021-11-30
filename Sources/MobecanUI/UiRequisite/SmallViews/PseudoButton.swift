@@ -6,15 +6,19 @@ import RxSwift
 import UIKit
 
 
-open class PseudoButton<Value>: LayoutableView, DataView {
+open class PseudoButton<Value>: LayoutableView, SizableView, DataView {
   
   public typealias ViewEvent = Tap<Void>
   
-  @RxUiInput(nil) public var value: AnyObserver<Value?>
+  @RxUiInput(nil) open var value: AnyObserver<Value?>
 
-  @RxDriverOutput(nil) public var valueGetter: Driver<Value?>
+  @RxDriverOutput(nil) open var valueGetter: Driver<Value?>
   
-  public private(set) var tap: Observable<Void> = .never()
+  open private(set) var tap: Observable<Void> = .never()
+
+  open var sizer = ViewSizer()
+
+  private let insets: UIEdgeInsets
   
   private let disposeBag = DisposeBag()
   
@@ -24,16 +28,27 @@ open class PseudoButton<Value>: LayoutableView, DataView {
               insets: UIEdgeInsets = .zero,
               valueSetter: AnyObserver<Value?>,
               tap: Observable<Void>? = nil) {
+    self.insets = insets
+
     super.init()
 
-    setupLayout(subview, insets: insets)
+    setupLayout(subview)
     setupTaps(tap: tap)
     setupValue(setter: valueSetter)
   }
 
-  private func setupLayout(_ subview: UIView,
-                           insets: UIEdgeInsets) {
-    self.layout = subview.asLayout.withInsets(insets)
+  private func setupLayout(_ subview: UIView) {
+    updateLayout(subview: subview)
+
+    disposeBag {
+      sizer.didChange ==> { [weak self] in self?.updateLayout(subview: subview) }
+    }
+  }
+
+  private func updateLayout(subview: UIView) {
+    layout = sizer.layout(
+      sublayout: .fromSingleSubview(subview, insets: insets)
+    )
   }
 
   private func setupTaps(tap: Observable<Void>?) {

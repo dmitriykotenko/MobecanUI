@@ -93,7 +93,7 @@ open class TabBarController: UIViewController {
     
     selectedViewController?.willMove(toParent: nil)
     addChild(viewController)
-    contentView.layout = .fromView(viewController.view)
+    contentView.layout = .fromSingleSubview(viewController.view)
 
     selectedViewController?.view.removeFromSuperview()    
     viewController.didMove(toParent: self)
@@ -105,7 +105,7 @@ open class TabBarController: UIViewController {
   
   open func addFloatingViewController(_ floatingViewController: UIViewController) {
     floatingViewController.willMove(toParent: self)
-    floatingView.layout = .fromView(floatingViewController.view)
+    floatingView.layout = .fromSingleSubview(floatingViewController.view)
     addChild(floatingViewController)
     view.setNeedsLayout()
   }

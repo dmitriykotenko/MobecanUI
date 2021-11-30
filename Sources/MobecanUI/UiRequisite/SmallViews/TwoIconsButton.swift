@@ -81,16 +81,14 @@ public class TwoIconsButton: LayoutableView {
   
   private func setupLayout(height: CGFloat,
                            spacing: CGFloat) {
-    layout = SizeLayout(
-      height: height,
-      sublayout: .fromView(
+    layout = .fromSingleSubview(
         .hstack(distribution: .fill, spacing: spacing, [
           leadingIconView,
           titleLabel,
           .zstack([trailingIconView, .centered(loadingIndicator)])
         ])
       )
-    )
+      .with(height: height)
   }
   
   private func displayIconsAndText(foreground: Foreground) {
