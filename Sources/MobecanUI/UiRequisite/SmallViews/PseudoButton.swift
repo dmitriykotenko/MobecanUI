@@ -46,11 +46,11 @@ open class PseudoButton<Value>: LayoutableView, SizableView, DataView {
   }
 
   private func updateLayout(subview: UIView) {
-    addSubview(subview)
-
     layout = sizer.layout(
       sublayout: .fromSingleSubview(subview, insets: insets)
     )
+
+    addSubview(subview)
   }
 
   private func setupTaps(tap: Observable<Void>?) {
