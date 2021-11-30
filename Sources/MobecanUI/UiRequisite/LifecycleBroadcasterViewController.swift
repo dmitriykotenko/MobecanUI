@@ -42,10 +42,14 @@ open class LifecycleBroadcasterViewController: UIViewController {
     super.viewDidLoad()
 
     addChild(child)
-    view.putSingleSubview(child.view)
+    view.addSubview(child.view)
     child.didMove(toParent: self)
 
     _rxViewDidLoad.onNext(())
+  }
+
+  override open func viewWillLayoutSubviews() {
+    view.subviews.forEach { $0.frame = view.bounds }
   }
 
   override open func viewWillAppear(_ animated: Bool) {
