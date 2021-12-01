@@ -4,11 +4,13 @@ import RxSwift
 import UIKit
 
 
-public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareView {
+open class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareView {
 
-  public var initLabel: () -> UILabel = { UILabel() }
-  public var labelInsets: UIEdgeInsets = .zero
-  public var textFromHeader: (SimpleTableViewHeader) -> String = { "\($0)" }
+  open var initLabel: () -> UILabel = { UILabel() }
+  open var labelInsets: UIEdgeInsets = .zero
+  open var textFromHeader: (SimpleTableViewHeader) -> String = { "\($0)" }
+
+  private var mainSubview: UIView?
 
   private var label: UILabel?
 
@@ -20,12 +22,12 @@ public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareVie
     super.init(reuseIdentifier: reuseIdentifier)
   }
   
-  public func displayValue(_ value: SimpleTableViewHeader??) {
+  open func displayValue(_ value: SimpleTableViewHeader??) {
     initIfNeeded()
     
     // 'value' is double optional.
-    // We need nested flatMap to transform it to single optional.
-    let header = value.flatMap { $0 }
+    // We need .flatten() to transform it to single optional.
+    let header = value.flatten()
       
     label?.text = header.map(textFromHeader)
   }
@@ -42,22 +44,30 @@ public class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareVie
     // Set transparent background.
     backgroundView = UIView()
     
-    let mainSubview = UIView.zstack([label], insets: labelInsets)
+    mainSubview = UIView.zstack([label], insets: labelInsets)
     
-    contentView.addSubview(mainSubview)
-    
-    mainSubview.snp.makeConstraints {
-      // Use .high priority to suppress autolayout warnings.
-      //
-      // Warnings appear because of contentView's encapsulated layout height constraint.
-      // We can not use contentView.translatesAutoresizingMaskIntoConstraints = false,
-      // because it will break UITableViewHeaderFooterView's layout.
-      $0.edges.equalToSuperview().priority(.high)
-    }
+    mainSubview.map(contentView.addSubview)
   }
-  
-  public func heightFor(value: SimpleTableViewHeader?,
-                        width: CGFloat) -> CGFloat {
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    initIfNeeded()
+
+    return mainSubview?.sizeThatFits(size) ?? frame.size
+  }
+
+  override open func layoutSubviews() {
+    initIfNeeded()
+
+    super.layoutSubviews()
+
+    mainSubview?.frame = contentView.bounds
+
+    mainSubview?.setNeedsLayout()
+    mainSubview?.layoutIfNeeded()
+  }
+
+  open func heightFor(value: SimpleTableViewHeader?,
+                      width: CGFloat) -> CGFloat {
     initIfNeeded()
     
     let headerText = value.map(textFromHeader)

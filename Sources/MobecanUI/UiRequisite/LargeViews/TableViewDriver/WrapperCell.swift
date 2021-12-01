@@ -3,18 +3,19 @@
 import RxSwift
 import SwiftDateTime
 import UIKit
+import CoreGraphics
 
 
 /// Wraps any UIView, so it can be used inside UITableView.
-public class WrapperCell<Value, MainSubview: EventfulView & DataView>: UITableViewCell
+open class WrapperCell<Value, MainSubview: EventfulView & DataView>: UITableViewCell
 where MainSubview.Value == Value {
   
-  public var viewEvents: Observable<MainSubview.ViewEvent> { mainSubview?.viewEvents ?? .never() }
+  open var viewEvents: Observable<MainSubview.ViewEvent> { mainSubview?.viewEvents ?? .never() }
   
-  @RxUiInput(.empty) public var relativePosition: AnyObserver<RowRelativePosition>
+  @RxUiInput(.empty) open var relativePosition: AnyObserver<RowRelativePosition>
   
-  public var initMainSubview: () -> MainSubview = { MainSubview() }
-  public var mainSubviewInsets: UIEdgeInsets = .zero
+  open var initMainSubview: () -> MainSubview = { MainSubview() }
+  open var mainSubviewInsets: UIEdgeInsets = .zero
 
   private var mainSubview: MainSubview?
   
@@ -45,13 +46,9 @@ where MainSubview.Value == Value {
     mainSubview = initMainSubview()
         
     mainSubview.map(contentView.addSubview)
-    
-    mainSubview?.snp.makeConstraints {
-      $0.edges.equalToSuperview().inset(mainSubviewInsets)
-    }
   }
   
-  public func displayValue(_ value: Value?) {
+  open func displayValue(_ value: Value?) {
     initIfNeeded()
     
     mainSubview?.value.onNext(value)
@@ -62,25 +59,40 @@ where MainSubview.Value == Value {
   }
 
   private func setupBottomShadow(_ bottomShadow: UIView) {
-    let bottomShadowContainer = ClickThroughView().clipsToBounds(true)
+    contentView.addSubview(bottomShadow)
 
-    bottomShadowContainer.addSubview(bottomShadow)
-    
-    bottomShadow.snp.makeConstraints {
-      $0.leading.trailing.equalToSuperview()
-      $0.top.equalTo(bottomShadowContainer.snp.bottom)
+    disposeBag {
+      bottomShadow.rx.isVisible <== _relativePosition.map { $0.isLastRow && !$0.isLastSection }
+    }
+  }
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    initIfNeeded()
+
+    return mainSubview?
+      .sizeThatFits(size.insetBy(mainSubviewInsets))
+      .insetBy(mainSubviewInsets.negated)
+      ?? frame.size
+  }
+
+  override open func layoutSubviews() {
+    initIfNeeded()
+
+    super.layoutSubviews()
+
+    mainSubview?.frame = contentView.bounds.inset(by: mainSubviewInsets)
+
+    bottomShadow.map {
+      $0.frame = .init(
+        x: 0,
+        y: contentView.frame.height,
+        width: contentView.frame.width,
+        height: $0.frame.height
+      )
     }
 
-    contentView.addSubview(bottomShadowContainer)
-    
-    bottomShadowContainer.snp.makeConstraints {
-      $0.edges.equalToSuperview()
-    }
-    
-    _relativePosition
-      .map { $0.isLastSection || !$0.isLastRow }
-      .bind(to: bottomShadow.rx.isHidden)
-      .disposed(by: disposeBag)
+    mainSubview?.setNeedsLayout()
+    mainSubview?.layoutIfNeeded()
   }
 }
 
