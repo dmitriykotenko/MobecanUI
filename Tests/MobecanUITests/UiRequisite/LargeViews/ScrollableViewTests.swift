@@ -123,14 +123,17 @@ class ScrollableViewTests: XCTestCase {
 
       self.contentView = contentView
 
+      let expectedContentWidth =
+        screenSize.width - (screenSafeAreaInsets.left + screenSafeAreaInsets.right)
+
       self.expectedContentSize = CGSize(
-        width: screenSize.width,
+        width: expectedContentWidth,
         height:
           contentView
-          .sizeThatFits(
-            .init(width: screenSize.width, height: .greatestFiniteMagnitude)
-          )
-          .height
+            .sizeThatFits(
+              .init(width: expectedContentWidth, height: .greatestFiniteMagnitude)
+            )
+            .height
       )
 
       self.scrollView = scrollView

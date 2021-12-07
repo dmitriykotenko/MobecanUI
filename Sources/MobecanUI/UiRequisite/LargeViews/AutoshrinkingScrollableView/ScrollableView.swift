@@ -5,6 +5,7 @@ import RxKeyboard
 import RxSwift
 import SnapKit
 import UIKit
+import CoreGraphics
 
 
 /// Scrollable view which automatically changes its height
@@ -98,7 +99,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
     CGSize(
-      width: contentSizeAndInsets.totalWidth,
+      width: size.width,
       height: min(size.height, contentSizeAndInsets.totalHeight)
     )
   }
@@ -106,8 +107,12 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   override open func layoutSubviews() {
     addSubview(scrollView)
 
-    let contentSize = contentSizeAndInsets.size
     let contentInsets = contentSizeAndInsets.insets
+
+    let contentSize = CGSize(
+      width: bounds.width - (contentInsets.left + contentInsets.right),
+      height: contentSizeAndInsets.size.height
+    )
 
     scrollView.frame = self.bounds
 
