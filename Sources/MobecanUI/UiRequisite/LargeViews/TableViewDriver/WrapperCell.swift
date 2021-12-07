@@ -69,8 +69,13 @@ where MainSubview.Value == Value {
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
     initIfNeeded()
 
+    var fixedSize = size
+    // If the table view uses .automaticDimension constant for its cells height, size.height becomes zero.
+    // This means that we must manually determine most preferred height.
+    if size.height <= 0 { fixedSize.height = .greatestFiniteMagnitude }
+
     return mainSubview?
-      .sizeThatFits(size.insetBy(mainSubviewInsets))
+      .sizeThatFits(fixedSize.insetBy(mainSubviewInsets))
       .insetBy(mainSubviewInsets.negated)
       ?? frame.size
   }
