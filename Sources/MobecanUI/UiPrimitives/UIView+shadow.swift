@@ -12,7 +12,6 @@ public extension UIView {
                      backgroundColor: UIColor,
                      cornerRadius: CGFloat = 0) -> UIView {
     UIView()
-      .translatesAutoresizingMaskIntoConstraints(false)
       .backgroundColor(backgroundColor)
       .cornerRadius(cornerRadius)
       .withShadow(shadow)

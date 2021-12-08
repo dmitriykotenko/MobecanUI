@@ -46,8 +46,6 @@ open class RadioButton<Element: Equatable>: LayoutableView {
 
     super.init()
 
-    translatesAutoresizingMaskIntoConstraints = false
-
     setupHorizontalStack(distribution: distribution, spacing: spacing, insets: insets)
     setupVisibleElements(createButton: createButton)
 

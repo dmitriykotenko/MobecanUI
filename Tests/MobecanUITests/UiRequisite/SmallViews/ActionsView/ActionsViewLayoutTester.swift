@@ -119,7 +119,6 @@ class ActionsViewLayoutTester: XCTestCase {
 
       contentView = DataLabel()
         .multilined()
-        .translatesAutoresizingMaskIntoConstraints(false)
         .text(contentViewText)
 
       actionsView = ActionsView(

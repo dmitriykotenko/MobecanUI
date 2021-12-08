@@ -80,7 +80,6 @@ class ZstackFlexibilityTests: XCTestCase {
   func subviews(contentHuggingPriorities: [(horizontal: UILayoutPriority, vertical: UILayoutPriority)]) -> [UIView] {
     contentHuggingPriorities.map {
       UIView()
-        .translatesAutoresizingMaskIntoConstraints(false)
         .contentHuggingPriority($0, axis: [.horizontal])
         .contentHuggingPriority($1, axis: [.vertical])
     }

@@ -73,8 +73,6 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
     
     super.init()
 
-    translatesAutoresizingMaskIntoConstraints = false
-
     setupLayout(subviews: subviews, layout: layout)
     
     setupTitle()

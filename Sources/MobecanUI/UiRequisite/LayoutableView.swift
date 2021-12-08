@@ -22,8 +22,6 @@ open class LayoutableView: UIView {
     self.layout = EmptyLayout()
 
     super.init(frame: .zero)
-
-    translatesAutoresizingMaskIntoConstraints = false
   }
 
   public convenience init(layout: Layout) {

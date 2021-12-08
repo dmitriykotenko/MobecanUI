@@ -28,9 +28,7 @@ open class EmptyLayout: Layout {
 
   open var needsView: Bool { false }
 
-  open func makeView() -> UIView {
-    UIView().translatesAutoresizingMaskIntoConstraints(false)
-  }
+  open func makeView() -> UIView { UIView() }
 
   open func configure(baseTypeView: UIView) {}
 

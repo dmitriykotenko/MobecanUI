@@ -33,8 +33,6 @@ public class PictogramLabel: LayoutableView {
     self.alignment = alignment
     
     super.init()
-    
-    translatesAutoresizingMaskIntoConstraints = false
 
     setupLayout()
     listenForText()
