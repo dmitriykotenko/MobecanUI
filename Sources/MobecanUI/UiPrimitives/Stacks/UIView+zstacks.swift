@@ -8,11 +8,9 @@ public extension UIView {
 
   static func zstack(_ subviews: [UIView],
                      insets: UIEdgeInsets = .zero) -> LayoutableView {
-    LayoutableView(
-      layout: ZstackLayout(
-          sublayouts: subviews.map(\.asLayout)
-        )
-        .withInsets(insets)
+    ZstackView(
+      subviews: subviews,
+      insets: insets
     )
   }
 
@@ -22,6 +20,24 @@ public extension UIView {
       subviews: subviews,
       insets: insets
     )
+  }
+}
+
+
+private class ZstackView: LayoutableView {
+
+  required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
+
+  init(subviews: [UIView],
+       insets: UIEdgeInsets = .zero) {
+    super.init()
+
+    layout = ZstackLayout(
+      sublayouts: subviews.map(\.asLayout)
+    )
+    .withInsets(insets)
+
+    subviews.forEach { addSubview($0) }
   }
 }
 
@@ -42,5 +58,7 @@ private class SafeAreaZstackView: LayoutableView {
         )
         .withInsets(insets)
     )
+
+    subviews.forEach { addSubview($0) }
   }
 }

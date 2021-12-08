@@ -9,7 +9,7 @@ extension UIView {
 
   func insideAlignedLayout(alignment: Alignment,
                            insets: UIEdgeInsets) -> LayoutableView {
-    LayoutableView(
+    let container = LayoutableView(
       layout: InsetLayout<UIView>(
         insets: insets,
         sublayout: AlignedLayout(
@@ -18,5 +18,9 @@ extension UIView {
         )
       )
     )
+
+    container.addSubview(self)
+
+    return container
   }
 }
