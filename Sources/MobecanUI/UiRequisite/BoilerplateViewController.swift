@@ -18,5 +18,7 @@ open class BoilerplateViewController: UIViewController {
     
   override open func loadView() {
     view = contentView
+      // FIXME: temporary hack to completely avoid autolayout constraints creation
+      .translatesAutoresizingMaskIntoConstraints(true)
   }
 }
