@@ -52,6 +52,9 @@ public class UiKitDemonstrator: Demonstrator {
       animating: animating ?? self.animating
     )
 
+    // FIXME: temporary hack to completely avoid autolayout constraints creation
+    demonstration.containerViewController.enableFullScreenPresentation()
+
     return parentViewController.rx.present(
       demonstration.containerViewController,
       animated: animating ?? self.animating
