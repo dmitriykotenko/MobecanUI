@@ -20,7 +20,12 @@ public class TabBar: LayoutableView {
   private let backgroundView: UIView
   
   public let contentHeight: CGFloat
-  public var safeAreaInsetsProvider: UIView? { didSet { updateLayout() } }
+
+  public var safeAreaInsetsProvider: UIView? {
+    willSet {
+      if newValue != safeAreaInsetsProvider { updateLayout() }
+    }
+  }
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
@@ -68,9 +73,5 @@ public class TabBar: LayoutableView {
         )
       ]
     )
-
-    setNeedsLayout()
-
-    superview?.subviewNeedsToLayout(subview: self)
   }
 }

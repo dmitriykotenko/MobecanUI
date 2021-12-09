@@ -104,6 +104,6 @@ private class ErrorContainer: LayoutableView {
     errorLabel.isVisible = !errorIsNil
     backgroundColor = stateToDisplay.backgroundColor
 
-    setNeedsLayout()
+    setNeedsLayoutAndPropagate()
   }
 }

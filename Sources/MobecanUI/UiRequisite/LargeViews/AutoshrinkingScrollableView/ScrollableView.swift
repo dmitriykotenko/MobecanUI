@@ -138,8 +138,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
       insets: desiredInsets
     )
 
-    setNeedsLayout()
-    superview?.subviewNeedsToLayout(subview: self)
+    setNeedsLayoutAndPropagate()
   }
 
   // MARK: - Scroll View Delegate

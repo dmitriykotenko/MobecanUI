@@ -85,7 +85,6 @@ open class TabBarController: UIViewController {
   
   open func setTabs(_ tabs: [Tab]) {
     tabBar.visibleTabs.onNext(tabs)
-    view.setNeedsLayout()
   }
   
   open func select(viewController: UIViewController) {

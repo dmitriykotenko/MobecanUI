@@ -138,7 +138,7 @@ private class TestableWindow: UIWindow {
 private extension UIView {
 
   func forceLayoutSubviews() {
-    layoutSubviews()
+    layoutIfNeeded()
     subviews.forEach { $0.forceLayoutSubviews() }
   }
 }

@@ -95,7 +95,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
       .forEach { button, element in bindButton(button, to: element) }
 
     invalidateIntrinsicContentSize()
-    setNeedsLayout()
+    setNeedsLayoutAndPropagate()
   }
   
   private func bindButton(_ button: UIButton,

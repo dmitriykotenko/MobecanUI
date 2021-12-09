@@ -12,7 +12,7 @@ open class LayoutableView: UIView {
     didSet {
       removeAllSubviews()
       updateContentHuggingPriority()
-      if window != nil { setNeedsLayout() }
+      if window != nil { setNeedsLayoutAndPropagate() }
     }
   }
 
