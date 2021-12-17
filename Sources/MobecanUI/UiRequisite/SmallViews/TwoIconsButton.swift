@@ -6,7 +6,7 @@ import RxSwift
 import UIKit
 
 
-public class TwoIconsButton: UIView {
+open class TwoIconsButton: UIView {
   
   public struct Subviews {
 
@@ -41,9 +41,12 @@ public class TwoIconsButton: UIView {
     }
   }
   
-  public var tap: Observable<Void> { tapGesture.when(.recognized).mapToVoid() }
+  open var tap: Observable<Void> { tapGesture.when(.recognized).mapToVoid() }
 
-  @RxUiInput(false) public var isLoading: AnyObserver<Bool>
+  /// If non-zero, extends tap area outside button's frame (usually used for small buttons).
+  open var tapInsets: UIEdgeInsets = .zero
+
+  @RxUiInput(false) open var isLoading: AnyObserver<Bool>
 
   private let leadingIconView: UIImageView
   private let titleLabel: UILabel
@@ -106,14 +109,14 @@ public class TwoIconsButton: UIView {
     }
   }
   
-  public func foreground(_ foreground: Foreground) -> Self {
+  open func foreground(_ foreground: Foreground) -> Self {
     displayIconsAndText(foreground: foreground)
     return self
   }
   
-  public func tintColors(leadingIcon leadingIconColor: UIColor? = nil,
-                         title titleColor: UIColor? = nil,
-                         trailingIcon trailingIconColor: UIColor? = nil) -> Self {
+  open func tintColors(leadingIcon leadingIconColor: UIColor? = nil,
+                       title titleColor: UIColor? = nil,
+                       trailingIcon trailingIconColor: UIColor? = nil) -> Self {
     leadingIconColor.map { leadingIconView.tintColor = $0 }
     titleColor.map { titleLabel.textColor = $0 }
     trailingIconColor.map { trailingIconView.tintColor = $0 }
@@ -121,6 +124,12 @@ public class TwoIconsButton: UIView {
     trailingIconColor.map { _ = loadingIndicator.color($0) }
 
     return self
+  }
+
+  override open func point(inside point: CGPoint,
+                           with event: UIEvent?) -> Bool {
+    let extendedBounds = bounds.inset(by: tapInsets)
+    return extendedBounds.contains(point)
   }
 
   override open var forFirstBaselineLayout: UIView {
