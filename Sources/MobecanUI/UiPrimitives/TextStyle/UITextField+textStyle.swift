@@ -17,5 +17,9 @@ public extension UITextField {
     if let alignment = textStyle.alignment {
       textAlignment = alignment
     }
+
+    if let lineHeight = textStyle.lineHeight {
+      (self as? LineHeightable)?.lineHeight = lineHeight
+    }
   }
 }

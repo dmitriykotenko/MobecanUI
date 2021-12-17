@@ -19,5 +19,9 @@ public extension UIButton {
     if let alignment = textStyle.alignment {
       titleLabel.textAlignment = alignment
     }
+
+    if let lineHeight = textStyle.lineHeight {
+      (self as? LineHeightable)?.lineHeight = lineHeight
+    }
   }
 }
