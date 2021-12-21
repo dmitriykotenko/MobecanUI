@@ -15,20 +15,20 @@ open class ActionsViewSwiper<
   public typealias State = [SideAction]
   public typealias Event = (SideAction, ContentView.Value)
   
-  private let possibleButtonsAndActions: [SideAction: UIButton]
+  private let possibleButtonsAndActions: [(SideAction, UIButton)]
   private let buttons: [UIButton]
   private let trailingView: UIView
 
   private let spacing: CGFloat
   private let animationDuration: Duration
 
-  public init(possibleButtonsAndActions: [SideAction: UIButton],
+  public init(possibleButtonsAndActions: [(SideAction, UIButton)],
               trailingView: ([UIButton]) -> UIView,
               spacing: CGFloat = 0,
               animationDuration: Duration) {
     self.possibleButtonsAndActions = possibleButtonsAndActions
 
-    self.buttons = Array(possibleButtonsAndActions.values)
+    self.buttons = Array(possibleButtonsAndActions.map(\.1))
     self.trailingView = trailingView(buttons)
     self.trailingView.setNeedsLayout()
     self.trailingView.layoutIfNeeded()

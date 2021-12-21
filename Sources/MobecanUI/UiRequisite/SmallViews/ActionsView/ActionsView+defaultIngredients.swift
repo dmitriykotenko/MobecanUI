@@ -42,7 +42,7 @@ public extension ActionsViewSwiper {
 
   static func defaultSwiper() -> ActionsViewSwiper {
     .init(
-      possibleButtonsAndActions: [:],
+      possibleButtonsAndActions: [],
       trailingView: { _ in .spacer(width: 0) },
       animationDuration: 250.milliseconds
     )
