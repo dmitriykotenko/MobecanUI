@@ -75,7 +75,9 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
       contentView: contentView,
       checkmarkView: checkmarkView
     )
-    
+
+    container.cornerRadius(contentView.layer.cornerRadius)
+
     return container
   }
 

@@ -90,6 +90,8 @@ private class ErrorContainer: UIView {
         containerView
       ])
     )
+
+    _ = cornerRadius(contentView.layer.cornerRadius)
   }
   
   private func pinContentViewToErrorLabel() {
