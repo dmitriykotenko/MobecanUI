@@ -7,10 +7,11 @@ import SwiftDateTime
 import UIKit
 
 
-open class ActionsViewSwiper<ContentView: DataView & EventfulView>: ActionsViewIngredientMixer {
-  
-  public typealias SideAction = ActionsViewStructs.SideAction
-  
+open class ActionsViewSwiper<
+  ContentView: DataView & EventfulView,
+    SideAction: Hashable
+>: ActionsViewIngredientMixer {
+
   public typealias State = [SideAction]
   public typealias Event = (SideAction, ContentView.Value)
   

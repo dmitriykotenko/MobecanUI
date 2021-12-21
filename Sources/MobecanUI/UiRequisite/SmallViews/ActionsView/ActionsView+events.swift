@@ -8,9 +8,9 @@ import UIKit
 
 public extension ActionsView {
   
-  var deleteEvents: Observable<Value> {
+  func sideEvents(_ action: SideAction) -> Observable<Value> {
     viewEvents.compactMap {
-      if case .delete(let value) = $0 { return value } else { return nil }
+      if case .sideAction(action, let value) = $0 { return value } else { return nil }
     }
   }
   

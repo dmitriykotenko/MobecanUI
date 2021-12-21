@@ -11,8 +11,6 @@ public enum ActionsViewStructs {
   
   public enum SelectionState { case notSelectable, isSelected(Bool) }
 
-  public enum SideAction { case delete }
-
   public struct Ingredient<Value, State, Event> {
     let containerView: UIView
     let value: AnyObserver<Value?>
@@ -42,7 +40,7 @@ public enum ActionsViewStructs {
     }
   }
 
-  public struct IngredientsState {
+  public struct IngredientsState<SideAction> {
     
     public let selectionState: SelectionState
     public let errorText: String?

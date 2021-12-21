@@ -6,21 +6,23 @@ import SnapKit
 import UIKit
 
 
-public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView, EventfulView {
+public class ActionsView<
+  ContentView: DataView & EventfulView,
+  SideAction: Hashable
+>: UIView, DataView, EventfulView {
 
   public typealias Structs = ActionsViewStructs
   
   public typealias CheckmarkPlacement = Structs.CheckmarkPlacement
   public typealias SelectionState = Structs.SelectionState
-  public typealias SideAction = Structs.SideAction
-  public typealias IngredientsState = Structs.IngredientsState
+  public typealias IngredientsState = Structs.IngredientsState<SideAction>
   
   public typealias Value = ContentView.Value
 
   public enum ViewEvent {
     case select(Value)
     case deselect(Value)
-    case delete(Value)
+    case sideAction(SideAction, value: Value)
     
     case nestedEvent(ContentView.ViewEvent)
   }
@@ -39,7 +41,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
 
   private let errorDisplayer: ActionsViewErrorDisplayer<ContentView>
   private let checkboxer: ActionsViewCheckboxer<ContentView>
-  private let swiper: ActionsViewSwiper<ContentView>
+  private let swiper: ActionsViewSwiper<ContentView, SideAction>
   
   private let disposeBag = DisposeBag()
 
@@ -49,7 +51,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
               insets: UIEdgeInsets = .zero,
               errorDisplayer: ActionsViewErrorDisplayer<ContentView>,
               checkboxer: ActionsViewCheckboxer<ContentView>,
-              swiper: ActionsViewSwiper<ContentView>) {
+              swiper: ActionsViewSwiper<ContentView, SideAction>) {
     self.contentView = contentView
     self.contentViewInsets = insets
     
@@ -92,10 +94,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: UIView, DataView
         },
         swiperIngredient.events.map {
           let (event, value) = $0
-          switch event {
-          case .delete:
-            return .delete(value)
-          }
+          return .sideAction(event, value: value)
         }
       )
       .bind(to: _viewEvents)
