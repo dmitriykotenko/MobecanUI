@@ -126,14 +126,21 @@ private class SwipableView: UIView {
     
     self.bouncer = bouncer
     
-    [
-      _trailingViewWidth.map { $0 == 0 ? [0] : [0, $0] }.bind(to: bouncer.attractors),
-      _trailingViewWidth.bind(to: bouncer.attractor)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      _trailingViewWidth
+        .map { $0 == 0 ? [0] : [0, $0 + spacing] }
+        ==> bouncer.attractors
+
+      _trailingViewWidth
+        .map { $0 == 0 ? 0 : $0 + spacing }
+        ==> bouncer.attractor
+    }
 
     mainSubviewTrailing.map {
-      _trailingViewWidth.map { -($0 + spacing) }.bind(to: $0.rx.inset).disposed(by: disposeBag)
+      _trailingViewWidth
+        .map { -($0 + spacing) }
+        .bind(to: $0.rx.inset)
+        .disposed(by: disposeBag)
     }
     
     self.trailingViewWidth.onNext(trailingViewWidth)
