@@ -50,9 +50,9 @@ public class ActionsView<
   
   public init(contentView: ContentView,
               insets: Insets = .init(overall: .zero, contentView: .zero),
-              errorDisplayer: ActionsViewErrorDisplayer<ContentView>,
-              checkboxer: ActionsViewCheckboxer<ContentView>,
-              swiper: ActionsViewSwiper<ContentView, SideAction>) {
+              errorDisplayer: ActionsViewErrorDisplayer<ContentView> = .defaultErrorDisplayer(),
+              checkboxer: ActionsViewCheckboxer<ContentView> = .defaultCheckboxer(),
+              swiper: ActionsViewSwiper<ContentView, SideAction> = .defaultSwiper()) {
     self.contentView = contentView
     self.insets = insets
     
