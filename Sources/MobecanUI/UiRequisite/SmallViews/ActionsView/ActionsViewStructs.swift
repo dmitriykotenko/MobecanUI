@@ -8,6 +8,18 @@ import UIKit
 
 // swiftlint:disable nesting
 public enum ActionsViewStructs {
+
+  public struct Insets: Lensable {
+
+    public var overall: UIEdgeInsets
+    public var contentView: UIEdgeInsets
+
+    public init(overall: UIEdgeInsets = .zero,
+                contentView: UIEdgeInsets = .zero) {
+      self.overall = overall
+      self.contentView = contentView
+    }
+  }
   
   public enum SelectionState { case notSelectable, isSelected(Bool) }
 

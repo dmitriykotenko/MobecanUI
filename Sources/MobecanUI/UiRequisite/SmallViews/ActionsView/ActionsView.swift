@@ -13,6 +13,7 @@ public class ActionsView<
 
   public typealias Structs = ActionsViewStructs
   
+  public typealias Insets = Structs.Insets
   public typealias CheckmarkPlacement = Structs.CheckmarkPlacement
   public typealias SelectionState = Structs.SelectionState
   public typealias IngredientsState = Structs.IngredientsState<SideAction>
@@ -37,7 +38,7 @@ public class ActionsView<
   }
 
   private let contentView: ContentView
-  private let contentViewInsets: UIEdgeInsets
+  private let insets: Insets
 
   private let errorDisplayer: ActionsViewErrorDisplayer<ContentView>
   private let checkboxer: ActionsViewCheckboxer<ContentView>
@@ -48,12 +49,12 @@ public class ActionsView<
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init(contentView: ContentView,
-              insets: UIEdgeInsets = .zero,
+              insets: Insets = .init(overall: .zero, contentView: .zero),
               errorDisplayer: ActionsViewErrorDisplayer<ContentView>,
               checkboxer: ActionsViewCheckboxer<ContentView>,
               swiper: ActionsViewSwiper<ContentView, SideAction>) {
     self.contentView = contentView
-    self.contentViewInsets = insets
+    self.insets = insets
     
     self.errorDisplayer = errorDisplayer
     self.checkboxer = checkboxer
@@ -67,7 +68,7 @@ public class ActionsView<
   private func addSubviews() {
     let checkboxIngredient = checkboxer.setup(
       contentView: contentView,
-      containerView: .zstack([contentView], insets: contentViewInsets)
+      containerView: .zstack([contentView], insets: insets.contentView)
     )
     
     let errorIngredient = errorDisplayer.setup(
@@ -80,7 +81,7 @@ public class ActionsView<
       containerView: errorIngredient.containerView
     )
     
-    putSubview(swiperIngredient.containerView)
+    putSubview(swiperIngredient.containerView, insets: insets.overall)
     
     Observable
       .merge(
