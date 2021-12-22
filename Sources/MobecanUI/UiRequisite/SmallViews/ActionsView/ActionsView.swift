@@ -82,9 +82,10 @@ public class ActionsView<
     )
     
     putSubview(swiperIngredient.containerView, insets: insets.overall)
-    
-    Observable
-      .merge(
+
+    disposeBag {
+      _viewEvents <== .merge(
+        nestedViewEvents.map { .nestedEvent($0) },
         checkboxIngredient.events.map {
           switch $0 {
           case .select(let value):
@@ -98,9 +99,8 @@ public class ActionsView<
           return .sideAction(event, value: value)
         }
       )
-      .bind(to: _viewEvents)
-      .disposed(by: disposeBag)
-    
+    }
+
     displayEverything(
       valueObservers: [contentView.value, checkboxIngredient.value, errorIngredient.value, swiperIngredient.value],
       selectionState: checkboxIngredient.state,
@@ -117,11 +117,10 @@ public class ActionsView<
       .map { _value.bind(to: $0) }
       .disposed(by: disposeBag)
 
-    [
-      _ingredientsState.compactMap { $0?.selectionState }.bind(to: selectionState),
-      _ingredientsState.map { $0?.errorText }.bind(to: errorText),
-      _ingredientsState.compactMap { $0?.sideActions }.bind(to: sideActions)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      _ingredientsState.compactMap(\.?.selectionState) ==> selectionState
+      _ingredientsState.map(\.?.errorText) ==> errorText
+      _ingredientsState.compactMap(\.?.sideActions) ==> sideActions
+    }
   }
 }
