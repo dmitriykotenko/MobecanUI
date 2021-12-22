@@ -39,19 +39,20 @@ open class ActionsViewSwiper<
 
   open func setup(contentView: ContentView,
                   containerView: UIView) -> ActionsViewStructs.Ingredient<ContentView.Value, State, Event> {
-    
-    let newContainerView = SwipableView(
+
+    let valueSetter = BehaviorSubject<Value?>(value: nil)
+
+    let newContainerView = SwipableView<Value>(
       contentView: containerView,
       trailingView: trailingView,
       spacing: spacing,
       trailingViewWidth: trailingView.frame.width,
       animationDuration: animationDuration
     )
+    .reset(when: valueSetter.mapToVoid()) // reset swipe offset every time the value changes
     .cornerRadius(contentView.layer.cornerRadius)
     .clipsToBounds(true)
-    
-    let valueSetter = BehaviorSubject<Value?>(value: nil)
-    
+
     let events = Observable.merge(
         possibleButtonsAndActions.map { action, button in button.rx.tap.map { action } }
       )
@@ -76,12 +77,13 @@ open class ActionsViewSwiper<
 }
 
 
-private class SwipableView: UIView {
+private class SwipableView<Value>: UIView {
 
   @RxUiInput(0) var trailingViewWidth: AnyObserver<CGFloat>
   
   private var mainSubviewTrailing: Constraint?
   private var bouncer: Bouncer?
+  private let spacing: CGFloat
   
   private let disposeBag = DisposeBag()
   
@@ -92,6 +94,8 @@ private class SwipableView: UIView {
        spacing: CGFloat,
        trailingViewWidth: CGFloat,
        animationDuration: Duration) {
+    self.spacing = spacing
+
     super.init(frame: .zero)
 
     let mainSubview = TranslationView(
@@ -144,6 +148,21 @@ private class SwipableView: UIView {
     }
     
     self.trailingViewWidth.onNext(trailingViewWidth)
+  }
+
+  func reset(when: Observable<Void>) -> Self {
+    bouncer.map { reset(bouncer: $0, when: when) }
+    return self
+  }
+
+  private func reset(bouncer: Bouncer,
+                     when: Observable<Void>) {
+    disposeBag { [spacing] in
+      when
+        .withLatestFrom(_trailingViewWidth)
+        .map { $0 == 0 ? 0 : $0 + spacing }
+        ==> bouncer.attractor
+    }
   }
 }
 
