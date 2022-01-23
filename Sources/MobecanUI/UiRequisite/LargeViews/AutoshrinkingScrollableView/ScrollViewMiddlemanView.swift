@@ -8,15 +8,7 @@ import UIKit
 import LayoutKit
 
 
-class ScrollViewMiddlemanView: UIView, LayoutInvalidationPropagator {
-
-  override var frame: CGRect { didSet { _widthChanged.onNext(frame.width) } }
-  override var bounds: CGRect { didSet { _widthChanged.onNext(bounds.width) } }
-
-  @RxOutput(.zero) var desiredContentSize: Observable<CGSize>
-
-  @RxOutput private var contentLayoutChanged: Observable<Void>
-  @RxOutput private var widthChanged: Observable<CGFloat>
+class ScrollViewMiddlemanView: UIView {
 
   private let contentView: UIView
 
@@ -30,25 +22,18 @@ class ScrollViewMiddlemanView: UIView, LayoutInvalidationPropagator {
     super.init(frame: .zero)
 
     addSubview(contentView)
+  }
 
-    disposeBag {
-      _desiredContentSize <==
-        Observable
-        .combineLatest(contentLayoutChanged.startWith(()), widthChanged.distinctUntilChanged())
-          .compactMap { [weak contentView] _, width in
-            contentView?.sizeThatFits(
-              .init(width: width, height: CGFloat.greatestFiniteMagnitude)
-            )[\.width, width]
-          }
-          .debug("middleman-desired-content-size")
-    }
+  override func sizeThatFits(_ size: CGSize) -> CGSize {
+    let contentSize = contentView.sizeThatFits(size)
+
+    return CGSize(
+      width: size.width,
+      height: contentSize.height
+    )
   }
 
   override func layoutSubviews() {
     contentView.frame = self.bounds
-  }
-
-  func subviewDidInvalidateLayout(subview: UIView) {
-    _contentLayoutChanged.onNext(())
   }
 }

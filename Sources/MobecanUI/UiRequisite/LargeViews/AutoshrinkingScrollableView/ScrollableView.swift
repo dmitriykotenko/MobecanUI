@@ -12,9 +12,6 @@ import CoreGraphics
 /// depending on content, safe area insets and keyboard frame.
 public class ScrollableView: UIView, UIScrollViewDelegate {
 
-  override open var frame: CGRect { didSet { updateMiddlemanWidth() } }
-  override open var bounds: CGRect { didSet { updateMiddlemanWidth() } }
-
   public let scrollView: UIScrollView
 
   /// Bottom-right counterpart of UIScrollView.contentOffset property.
@@ -34,7 +31,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   private let middleman: ScrollViewMiddlemanView
   private let insetsCalculator: ScrollViewContentInsetsCalculator
 
-  private var contentSizeAndInsets: ContentSizeAndInsets = .zero
+  private var contentInsets: UIEdgeInsets = .zero
 
   private let disposeBag = DisposeBag()
 
@@ -81,37 +78,44 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
 
   private func setupLayout() {
     disposeBag {
-      Observable.combineLatest(
-        middleman.desiredContentSize,
-        insetsCalculator.contentInsets.asObservable()
-      ) ==> { [weak self] in
-        self?.updateLayout(desiredContentSize: $0, desiredInsets: $1)
+      insetsCalculator.contentInsets ==> { [weak self] in
+        self?.updateContentInsets(desiredInsets: $0)
       }
     }
   }
 
-  /// Updates middleman's frame to trigger layout update.
-  private func updateMiddlemanWidth() {
-    let insets = contentSizeAndInsets.insets
+  private func updateContentInsets(desiredInsets: UIEdgeInsets) {
+    print(">>> contentInsets: \(desiredInsets)")
 
-    middleman.frame.size.width = frame.width - (insets.left + insets.right)
+    contentInsets = desiredInsets
+
+    setNeedsLayoutAndPropagate()
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    CGSize(
+    let middlemanSize = middleman.sizeThatFits(
+      .init(
+        width: size.width - (contentInsets.left + contentInsets.right),
+        height: CGFloat.greatestFiniteMagnitude
+      )
+    )
+
+    let totalHeight = middlemanSize.height + (contentInsets.top + contentInsets.bottom)
+
+    return CGSize(
       width: size.width,
-      height: min(size.height, contentSizeAndInsets.totalHeight)
+      height: min(size.height, totalHeight)
     )
   }
 
   override open func layoutSubviews() {
     addSubview(scrollView)
 
-    let contentInsets = contentSizeAndInsets.insets
-
-    let contentSize = CGSize(
-      width: bounds.width - (contentInsets.left + contentInsets.right),
-      height: contentSizeAndInsets.size.height
+    let contentSize = middleman.sizeThatFits(
+      .init(
+        width: bounds.width - (contentInsets.left + contentInsets.right),
+        height: CGFloat.greatestFiniteMagnitude
+      )
     )
 
     scrollView.frame = self.bounds
@@ -128,37 +132,9 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
     )
   }
 
-  private func updateLayout(desiredContentSize: CGSize,
-                            desiredInsets: UIEdgeInsets) {
-    print(">>> contentSize: \(desiredContentSize)")
-    print(">>> contentInsets: \(desiredInsets)")
-
-    contentSizeAndInsets = .init(
-      size: desiredContentSize,
-      insets: desiredInsets
-    )
-
-    setNeedsLayoutAndPropagate()
-  }
-
   // MARK: - Scroll View Delegate
 
   open func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
     _adjustedContentInsetDidChange.onNext(())
   }
-}
-
-
-private struct ContentSizeAndInsets {
-
-  var size: CGSize
-  var insets: UIEdgeInsets
-
-  static let zero = ContentSizeAndInsets(
-    size: .zero,
-    insets: .zero
-  )
-
-  var totalWidth: CGFloat { size.width + insets.left + insets.right }
-  var totalHeight: CGFloat { size.height + insets.top + insets.bottom }
 }
