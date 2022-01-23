@@ -30,6 +30,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   private let contentView: UIView
   private let middleman: ScrollViewMiddlemanView
   private let insetsCalculator: ScrollViewContentInsetsCalculator
+  private let isVerticalHuggingEnabled: Bool
 
   private var contentInsets: UIEdgeInsets = .zero
 
@@ -38,12 +39,14 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
   public init(contentView: UIView,
-              scrollView: () -> UIScrollView) {
+              scrollView: () -> UIScrollView,
+              isVerticalHuggingEnabled: Bool = false) {
     self.contentView = contentView
     self.scrollView = scrollView()
 
     self.middleman = .init(contentView: contentView)
     self.insetsCalculator = .init(scrollView: scrollView())
+    self.isVerticalHuggingEnabled = isVerticalHuggingEnabled
 
     super.init(frame: .zero)
 
@@ -93,6 +96,8 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    guard isVerticalHuggingEnabled else { return size }
+
     let middlemanSize = middleman.sizeThatFits(
       .init(
         width: size.width - (contentInsets.left + contentInsets.right),
