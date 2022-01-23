@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
@@ -7,21 +8,21 @@ import UIKit
 
 open class EditorViewControllerLayout {
 
-  private let privateSetup: (UIView, EditorViewControllerSubviews) -> Void
+  private let privateSetup: (LayoutableView, EditorViewControllerSubviews) -> Void
 
-  public init(_ setup: @escaping (UIView, EditorViewControllerSubviews) -> Void) {
+  public init(_ setup: @escaping (LayoutableView, EditorViewControllerSubviews) -> Void) {
     self.privateSetup = setup
   }
 
-  open func setup(parentView: UIView,
+  open func setup(parentView: LayoutableView,
                   subviews: EditorViewControllerSubviews) {
     privateSetup(parentView, subviews)
   }
   
   public static func saveButtonAtBottom(spacing: CGFloat) -> EditorViewControllerLayout {
     .init { parentView, subviews in
-      parentView.putSingleSubview(
-        AutoshrinkingScrollableView(
+      parentView.layout = InsetLayout<UIView>.fromSingleSubview(
+        ScrollableView(
           contentView: .vstack(spacing: spacing, [
             subviews.editorView,
             subviews.saveButtonContainer
@@ -38,9 +39,9 @@ open class EditorViewControllerLayout {
       let saveButtonContainer = subviews.saveButtonContainer
       let initScrollView = subviews.initScrollView
       
-      parentView.putSingleSubview(
+      parentView.layout = InsetLayout<UIView>.fromSingleSubview(
         .zstack([
-          AutoshrinkingScrollableView(
+          ScrollableView(
             contentView: .vstack([
               .rxSpacer(saveButtonContainer),
               contentView

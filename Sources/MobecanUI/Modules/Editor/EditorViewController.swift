@@ -57,13 +57,9 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     }
   }
   
-  override open func viewDidLoad() {
-    super.viewDidLoad()
-    
-    buildInterface()
-  }
-  
-  private func buildInterface() {
+  override open func loadView() {
+    let view = LayoutableView()
+    self.view = view
     layout.setup(parentView: view, subviews: subviews)
   }
   
