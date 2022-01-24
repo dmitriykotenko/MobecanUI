@@ -14,9 +14,9 @@ open class DiverseLabel: UILabel, SizableView {
     sizer.apply(to: super.sizeThatFits(size))
   }
 
-  override open var font: UIFont! {
-    didSet { invalidateLayoutIfNecessary() }
-  }
+  override open var font: UIFont! { didSet { invalidateLayoutIfNecessary() } }
+  override open var numberOfLines: Int { didSet { invalidateLayoutIfNecessary() } }
+  override open var lineBreakMode: NSLineBreakMode { didSet { invalidateLayoutIfNecessary() } }
 
   override open var text: String? {
     didSet { updatePlainText(); invalidateLayoutIfNecessary() }
