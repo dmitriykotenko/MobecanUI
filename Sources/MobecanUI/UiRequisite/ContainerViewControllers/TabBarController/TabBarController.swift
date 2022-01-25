@@ -8,7 +8,9 @@ import UIKit
 
 open class TabBarController: UIViewController {
 
+  open var visibleTabs: AnyObserver<[Tab]> { tabBar.visibleTabs }
   @RxUiInput open var selectTab: AnyObserver<Tab>
+
   open var selectedTab: Driver<Tab> { tabBar.selectedTab.filterNil() }
   open var tabTap: Observable<Tab> { tabBar.tabTap.asObservable() }
 
