@@ -29,7 +29,7 @@ open class IllustrationView: LayoutableView {
     
     super.init()
 
-    self.layout = .fromSingleSubview(
+    self.layout = InsetLayout<UIView>.fromSingleSubview(
       layout.mainSubview(subviews: subviews)
     )
 

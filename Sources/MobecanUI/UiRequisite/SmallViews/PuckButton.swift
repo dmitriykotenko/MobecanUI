@@ -36,7 +36,9 @@ public class PuckButton: LayoutableControl {
     
     super.init()
 
-    layout = .fromSingleSubview(.zstack([backgroundView, iconView]))
+    layout = InsetLayout<UIView>.fromSingleSubview(
+      .zstack([backgroundView, iconView])
+    )
 
     highlightOnTaps(disposeBag: disposeBag)
   }

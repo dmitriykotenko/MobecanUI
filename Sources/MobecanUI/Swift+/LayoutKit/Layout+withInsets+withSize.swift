@@ -6,7 +6,7 @@ import UIKit
 
 public extension Layout {
 
-  func withInsets(_ insets: UIEdgeInsets) -> Layout {
+  func withInsets(_ insets: UIEdgeInsets) -> InsetLayout<UIView> {
     InsetLayout(
       insets: insets,
       sublayout: self
@@ -14,7 +14,7 @@ public extension Layout {
   }
 
   func with(width: CGFloat? = nil,
-            height: CGFloat? = nil) -> Layout {
+            height: CGFloat? = nil) -> SizeLayout<UIView> {
     SizeLayout<UIView>(
       minWidth: width,
       maxWidth: width,
@@ -24,7 +24,7 @@ public extension Layout {
     )
   }
 
-  func with(size: CGSize) -> Layout {
+  func with(size: CGSize) -> SizeLayout<UIView> {
     SizeLayout<UIView>(
       size: size,
       sublayout: self
@@ -32,7 +32,7 @@ public extension Layout {
   }
 
   func with(minimumWidth: CGFloat? = nil,
-            minimumHeight: CGFloat? = nil) -> Layout {
+            minimumHeight: CGFloat? = nil) -> SizeLayout<UIView> {
     SizeLayout<UIView>(
       minWidth: minimumWidth,
       minHeight: minimumHeight,
@@ -40,7 +40,7 @@ public extension Layout {
     )
   }
 
-  func with(minimumSize: CGSize) -> Layout {
+  func with(minimumSize: CGSize) -> SizeLayout<UIView> {
     SizeLayout<UIView>(
       minSize: minimumSize,
       sublayout: self
@@ -48,7 +48,7 @@ public extension Layout {
   }
 
   func with(maximumWidth: CGFloat? = nil,
-            maximumHeight: CGFloat? = nil) -> Layout {
+            maximumHeight: CGFloat? = nil) -> SizeLayout<UIView> {
     SizeLayout<UIView>(
       maxWidth: maximumWidth,
       maxHeight: maximumHeight,
@@ -56,7 +56,7 @@ public extension Layout {
     )
   }
 
-  func with(maximumSize: CGSize) -> Layout {
+  func with(maximumSize: CGSize) -> SizeLayout<UIView> {
     SizeLayout<UIView>(
       maxSize: maximumSize,
       sublayout: self

@@ -1,5 +1,6 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
+import LayoutKit
 import RxCocoa
 import RxSwift
 import SwiftDateTime
@@ -94,7 +95,7 @@ open class TabBarController: UIViewController {
     
     selectedViewController?.willMove(toParent: nil)
     addChild(viewController)
-    contentView.layout = .fromSingleSubview(viewController.view)
+    contentView.layout = InsetLayout<UIView>.fromSingleSubview(viewController.view)
 
     selectedViewController?.view.removeFromSuperview()    
     viewController.didMove(toParent: self)
@@ -106,7 +107,9 @@ open class TabBarController: UIViewController {
   
   open func addFloatingViewController(_ floatingViewController: UIViewController) {
     floatingViewController.willMove(toParent: self)
-    floatingView.layout = .fromSingleSubview(floatingViewController.view)
+
+    floatingView.layout = InsetLayout<UIView>.fromSingleSubview(floatingViewController.view)
+    
     addChild(floatingViewController)
     view.setNeedsLayout()
   }

@@ -1,6 +1,5 @@
 //  Copyright © 2020 Mobecan. All rights reserved.
 
-
 import LayoutKit
 import RxCocoa
 import RxSwift
@@ -38,7 +37,7 @@ public class MultiButton<Value: Equatable, Button: UIButton, Action: Equatable>:
   }
   
   private func setupLayout(insets: UIEdgeInsets) {
-    layout = .fromSingleSubview(
+    layout = InsetLayout<UIView>.fromSingleSubview(
       .hstack(buttons.map(\.1)),
       insets: insets
     )

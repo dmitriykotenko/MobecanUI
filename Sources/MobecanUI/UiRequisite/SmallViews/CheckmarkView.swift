@@ -47,7 +47,7 @@ public class CheckmarkView: LayoutableView {
                            verticalInset: CGFloat?) {
     let mainSubview = mainSubview(verticalInset: verticalInset)
 
-    layout = .fromSingleSubview(
+    layout = InsetLayout<UIView>.fromSingleSubview(
       mainSubview,
       insets: .horizontal(horizontalInset)
     )

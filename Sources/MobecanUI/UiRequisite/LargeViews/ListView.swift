@@ -61,7 +61,9 @@ open class ListView<Element, View: EventfulView>: LayoutableView, DataView, Even
       }
     }
 
-    layout = .fromSingleSubview(.vstack(elementViews))
+    layout = InsetLayout<UIView>.fromSingleSubview(
+      .vstack(elementViews)
+    )
   }
 
   @discardableResult

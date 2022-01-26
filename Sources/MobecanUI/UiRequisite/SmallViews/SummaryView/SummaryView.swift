@@ -83,7 +83,7 @@ open class SummaryView<Value, Labels: LabelsGrid>: LayoutableView, EventfulView,
 
   private func setupLayout(spacing: CGFloat,
                            insets: UIEdgeInsets) {
-    layout = .fromSingleSubview(
+    layout = InsetLayout<UIView>.fromSingleSubview(
       .zstack(
         [
           backgroundView,
