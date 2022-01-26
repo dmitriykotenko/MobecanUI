@@ -1,4 +1,4 @@
-//  Copyright © 2020 Mobecan. All rights reserved.
+// Copyright © 2020 Mobecan. All rights reserved.
 
 
 extension Loadable: Codable where Value: Codable, SomeError: Codable {

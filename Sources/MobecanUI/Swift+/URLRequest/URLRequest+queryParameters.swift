@@ -1,4 +1,4 @@
-//  Copyright © 2021 Mobecan. All rights reserved.
+// Copyright © 2021 Mobecan. All rights reserved.
 
 import Foundation
 

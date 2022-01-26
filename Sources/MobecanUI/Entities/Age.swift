@@ -1,4 +1,4 @@
-//  Copyright © 2020 Mobecan. All rights reserved.
+// Copyright © 2020 Mobecan. All rights reserved.
 
 
 public struct Age: Equatable, Hashable, Codable, Comparable, Lensable, CustomStringConvertible {

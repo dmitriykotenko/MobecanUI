@@ -1,4 +1,4 @@
-//  Copyright © 2020 Mobecan. All rights reserved.
+// Copyright © 2020 Mobecan. All rights reserved.
 
 
 /// Object that can be displayed in table view.

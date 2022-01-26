@@ -124,8 +124,9 @@ class TabBarControllerLayoutTests: XCTestCase {
     }
   }
 
-//  static var allTests = [
-//  ]
+  static var allTests = [
+    ("Test TabBar layout", testTabBarLayout)
+  ]
 }
 
 

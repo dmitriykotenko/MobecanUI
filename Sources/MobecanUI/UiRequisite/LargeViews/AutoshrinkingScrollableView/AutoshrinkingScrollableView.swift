@@ -1,4 +1,4 @@
-//  Copyright © 2020 Mobecan. All rights reserved.
+// Copyright © 2020 Mobecan. All rights reserved.
 
 import RxCocoa
 import RxKeyboard
@@ -44,9 +44,6 @@ public class AutoshrinkingScrollableView: WindowListeningView, UIScrollViewDeleg
     self.scrollView = scrollView(contentView)
 
     super.init(frame: .zero)
-//
-//    // Set low-priority width to suppress autolayout warning.
-//    _ = width(0, priority: .minimum)
 
     self.scrollView.contentInsetAdjustmentBehavior = .never
     self.scrollView.alwaysBounceVertical = false

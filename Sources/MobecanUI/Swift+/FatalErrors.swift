@@ -1,4 +1,4 @@
-//  Copyright © 2020 Mobecan. All rights reserved.
+// Copyright © 2020 Mobecan. All rights reserved.
 
 
 public func interfaceBuilderNotSupportedError(file: StaticString = #file, line: UInt = #line) -> Never {
