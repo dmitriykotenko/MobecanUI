@@ -52,6 +52,8 @@ where MainSubview.Value == Value {
     initIfNeeded()
     
     mainSubview?.value.onNext(value)
+
+    layoutIfNeeded()
   }
   
   private func setupBottomShadow() {
