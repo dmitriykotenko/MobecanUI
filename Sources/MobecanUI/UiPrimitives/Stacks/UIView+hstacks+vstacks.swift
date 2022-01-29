@@ -100,7 +100,7 @@ public extension UIView {
       spacing: spacing ?? 0,
       distribution: distribution?.asLayoutKitDistribution ?? .fillFlexing,
       contentInsets: insets,
-      childrenAlignment: alignment.asLayoutKitAlignment,
+      childrenAlignment: alignment.asLayoutKitAlignment(axis: axis),
       intrinsicWidth: intrinsicWidth,
       intrinsicHeight: intrinsicHeight
     )

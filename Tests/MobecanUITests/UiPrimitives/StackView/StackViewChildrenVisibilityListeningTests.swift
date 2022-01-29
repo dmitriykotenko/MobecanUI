@@ -6,6 +6,7 @@ import RxCocoaRuntime
 import RxSwift
 import RxTest
 import SnapKit
+import UIKit
 
 @testable import MobecanUI
 
@@ -37,5 +38,20 @@ class StackViewChildrenVisibilityListeningTests: XCTestCase {
     stackViewContainer.layoutIfNeeded()
 
     XCTAssertEqual(stackView.frame.height, 50)
+  }
+}
+
+
+private extension UIImageView {
+
+  static func circleImageView(radius: CGFloat) -> SizableImageView {
+    let diameter = radius * 2
+
+    return SizableImageView()
+      .fixWidth(diameter)
+      .fixHeight(diameter)
+      .cornerRadius(radius)
+      .contentMode(.scaleAspectFill)
+      .clipsToBounds(true)
   }
 }
