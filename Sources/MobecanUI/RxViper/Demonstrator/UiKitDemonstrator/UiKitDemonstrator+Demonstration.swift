@@ -15,6 +15,13 @@ extension UiKitDemonstrator {
     init(module: Module) {
       self.module = module
       self.containerViewController = .init(child: module.viewController)
+
+      setupPresentationStyle()
+    }
+
+    private func setupPresentationStyle() {
+      containerViewController.modalPresentationStyle = module.viewController.modalPresentationStyle
+      containerViewController.modalTransitionStyle = module.viewController.modalTransitionStyle
     }
 
     var canBeFinished: Single<Void> {
