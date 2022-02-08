@@ -20,10 +20,6 @@ open class ColoredEditableFieldBackground: LayoutableView, EditableFieldBackgrou
     self.tintColors = tintColors
 
     super.init()
-
-    self
-      .backgroundColor(.lightGray)
-      .cornerRadius(10)
   }
 
   open func updateTintColor(_ tintColor: UIColor) {
