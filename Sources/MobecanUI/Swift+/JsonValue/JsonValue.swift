@@ -2,7 +2,7 @@
 
 
 /// Implementation is stolen from Swagger Swift template (https://swagger.io/tools/swagger-codegen)
-public enum JsonValue: Equatable, Codable {
+public enum JsonValue: Equatable, Hashable, Codable {
 
   case string(String)
   case int(Int)
