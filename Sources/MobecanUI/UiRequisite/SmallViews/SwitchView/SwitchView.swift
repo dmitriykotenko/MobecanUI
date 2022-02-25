@@ -7,13 +7,13 @@ import SnapKit
 import UIKit
 
 
-public class SwitchView: LayoutableView {
+open class SwitchView: LayoutableView {
 
-  @RxUiInput(false) public var initialIsOn: AnyObserver<Bool>
-  @RxOutput(false) public var isOn: Observable<Bool>
+  @RxUiInput(false) open var initialIsOn: AnyObserver<Bool>
+  @RxOutput(false) open var isOn: Observable<Bool>
 
   // Emits current value of uiSwitch every time the user toggles uiSwitch.
-  var userDidChangeIsOn: Signal<Bool> {
+  open var userDidChangeIsOn: Signal<Bool> {
     uiSwitch.rx.isOn.asSignal(onErrorJustReturn: false)
   }
 
@@ -73,7 +73,7 @@ public class SwitchView: LayoutableView {
     }
   }
 
-  public func title(_ title: String?) -> Self {
+  open func title(_ title: String?) -> Self {
     label.text = title
     return self
   }
