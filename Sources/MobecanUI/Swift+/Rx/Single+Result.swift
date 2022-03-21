@@ -13,7 +13,7 @@ public extension Single {
     }
   }
 
-  func flatMapSuccess<A, B, SomeError: Error & Equatable>(transform: @escaping (A) -> Single<Result<B, SomeError>>)
+  func flatMapSuccess<A, B, SomeError: Error & Equatable>(_ transform: @escaping (A) -> Single<Result<B, SomeError>>)
   -> Single<Result<B, SomeError>>
   where Element == Result<A, SomeError>, Trait == SingleTrait {
     flatMap {
