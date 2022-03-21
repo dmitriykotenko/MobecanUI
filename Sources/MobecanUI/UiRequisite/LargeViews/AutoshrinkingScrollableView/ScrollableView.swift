@@ -128,7 +128,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
     scrollView.frame = self.bounds
 
     scrollView.contentSize = contentSize
-    scrollView.scrollIndicatorInsets = contentInsets
+    scrollView.scrollIndicatorInsets = .zero
     scrollView.contentInset = contentInsets
 
     middleman.frame = .init(
