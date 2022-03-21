@@ -63,8 +63,10 @@ class PseudoButtonTests: XCTestCase {
     let listener = scheduler.createObserver(Value?.self)
     let disposeBag = DisposeBag()
 
-    inputObservable.bind(to: pseudoButton.value).disposed(by: disposeBag)
-    pseudoButton.valueGetter.drive(listener).disposed(by: disposeBag)
+    disposeBag {
+      inputObservable ==> pseudoButton.value
+      pseudoButton.valueGetter ==> listener
+    }
 
     scheduler.start()
 

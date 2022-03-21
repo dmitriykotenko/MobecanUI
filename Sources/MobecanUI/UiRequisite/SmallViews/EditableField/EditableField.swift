@@ -127,8 +127,8 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
       .compactMap { $0 as? MandatorinessListener }
       .map { $0.isMandatory }
 
-    listeners.forEach {
-      _isMandatory.bind(to: $0).disposed(by: disposeBag)
+    listeners.forEach { listener in
+      disposeBag { _isMandatory ==> listener }
     }
   }
   

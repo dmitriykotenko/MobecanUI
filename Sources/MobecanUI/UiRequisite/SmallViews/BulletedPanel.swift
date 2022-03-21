@@ -51,13 +51,12 @@ public class BulletedPanel: UIView {
   }
   
   private func displayText() {
-    _text
-      .bind(to: label.rx.text)
-      .disposed(by: disposeBag)
-    
-    _text
-      .withLatestFrom(_hidesWhenEmpty) { $0.isNilOrEmpty && $1 }
-      .bind(to: rx.isHidden)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _text ==> label.rx.text
+
+      _text
+        .withLatestFrom(_hidesWhenEmpty) { $0.isNilOrEmpty && $1 }
+        ==> rx.isHidden
+    }
   }
 }

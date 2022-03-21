@@ -22,18 +22,16 @@ open class FullScreenOperation<Input, Output> {
     
     let moduleAndOutput =
       when.observe(on: MainScheduler.instance).map { initModule($0) }.share()
-    
-    moduleAndOutput
-      .flatMap { $0.output }
-      .bind(to: resultObserver)
-      .disposed(by: disposeBag)
-    
-    moduleAndOutput
-      .flatMapLatest {
-        demonstrator()?.demonstrate(module: $0.module, animating: animating)
-        ?? .just(())
-      }
-      .subscribe()
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      moduleAndOutput.flatMap(\.output) ==> resultObserver
+
+      moduleAndOutput
+        .flatMapLatest {
+          demonstrator()?.demonstrate(module: $0.module, animating: animating)
+          ?? .just(())
+        }
+        .subscribe()
+    }
   }
 }

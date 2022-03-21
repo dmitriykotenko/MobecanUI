@@ -88,16 +88,17 @@ class RxScrollViewOppositeContentOffsetTests: XCTestCase {
     let scheduler = TestScheduler(initialClock: 0)
     let disposeBag = DisposeBag()
 
-    scheduler.createHotObservable(events)
-      .subscribe(onNext: { listener($0, testMembers) })
-      .disposed(by: disposeBag)
+    disposeBag {
+      scheduler.createHotObservable(events) ==> { listener($0, testMembers) }
+    }
 
     let oppositeOffsetListener = scheduler.createObserver(CGPoint.self)
 
-    oppositeOffset.value
-      .debug("opposite-offset")
-      .bind(to: oppositeOffsetListener)
-      .disposed(by: disposeBag)
+    disposeBag {
+      oppositeOffset.value
+        .debug("opposite-offset")
+        ==> oppositeOffsetListener
+    }
 
     scheduler.start()
 

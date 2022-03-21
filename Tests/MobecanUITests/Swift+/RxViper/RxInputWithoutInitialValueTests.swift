@@ -16,8 +16,10 @@ final class RxInputWithoutInitialValueTests: XCTestCase {
     
     let listener = scheduler.createObserver(String.self)
     let disposeBag = DisposeBag()
-    
-    rxInput.bind(to: listener).disposed(by: disposeBag)
+
+    disposeBag {
+      rxInput ==> listener
+    }
     
     scheduler.start()
     
@@ -35,8 +37,10 @@ final class RxInputWithoutInitialValueTests: XCTestCase {
     
     let listener = scheduler.createObserver(String.self)
     let disposeBag = DisposeBag()
-    
-    rxInput.bind(to: listener).disposed(by: disposeBag)
+
+    disposeBag {
+      rxInput ==> listener
+    }
     
     scheduler.start()
     
@@ -56,10 +60,12 @@ final class RxInputWithoutInitialValueTests: XCTestCase {
     let firstListener = scheduler.createObserver(String.self)
     let secondListener = scheduler.createObserver(String.self)
     let disposeBag = DisposeBag()
-    
-    notifier.bind(to: rxInput.wrappedValue).disposed(by: disposeBag)
-    rxInput.bind(to: firstListener).disposed(by: disposeBag)
-    rxInput.bind(to: secondListener).disposed(by: disposeBag)
+
+    disposeBag {
+      notifier ==> rxInput.wrappedValue
+      rxInput ==> firstListener
+      rxInput ==> secondListener
+    }
     
     scheduler.start()
     

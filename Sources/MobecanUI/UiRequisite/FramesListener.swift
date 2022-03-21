@@ -28,6 +28,8 @@ public class FramesListener {
     centerListeners = views
       .map { $0.observe(\.center) { _, _ in relay.accept(()) } }
 
-    relay.bind(to: _framesChanged).disposed(by: disposeBag)
+    disposeBag {
+      relay ==> _framesChanged
+    }
   }
 }

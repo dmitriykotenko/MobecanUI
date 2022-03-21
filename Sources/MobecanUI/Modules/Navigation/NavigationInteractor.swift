@@ -41,60 +41,56 @@ public class NavigationInteractor: NavigationInteractorProtocol {
     setupPops()
     setupPopsTo()
 
-    [
-      _modules.debug("Navigation-Modules").subscribe(),
+    disposeBag {
+      _modules.debug("Navigation-Modules").subscribe()
       _events.debug("Navigation-Event").subscribe()
-    ]
-    .disposed(by: disposeBag)
+    }
   }
   
   private func setupPushes() {
-    _events.asObservable()
-      .pushes
-      .do(onNext: { [weak self] in self?.listen(module: $0) })
-      .withLatestFrom(_modules) { $1 + [$0] }
-      .debug("Navigation-Desired-Modules")
-      .bind(to: _desiredModules)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _events.asObservable()
+        .pushes
+        .do(onNext: { [weak self] in self?.listen(module: $0) })
+        .withLatestFrom(_modules) { $1 + [$0] }
+        .debug("Navigation-Desired-Modules")
+        ==> _desiredModules
+    }
   }
   
   private func setupPops() {
-    _pop
-      .map { .pop }
-      .bind(to: events)
-      .disposed(by: disposeBag)
-    
-    _events.asObservable()
-      .pops
-      .withLatestFrom(_modules)
-      .map { $0.dropLast() }
-      .debug("Navigation-Desired-Modules")
-      .bind(to: _desiredModules)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _pop.map { .pop } ==> events
+
+      _events.asObservable()
+        .pops
+        .withLatestFrom(_modules)
+        .map { $0.dropLast() }
+        .debug("Navigation-Desired-Modules")
+        ==> _desiredModules
+    }
   }
   
   private func setupPopsTo() {
-    _popTo
-      .map { .popTo($0) }
-      .bind(to: events)
-      .disposed(by: disposeBag)
-    
-    _events.asObservable()
-      .popsTo
-      .withLatestFrom(_modules) { moduleType, modules in
-        modules.prefixUpTo(moduleType: moduleType)
-      }
-      .debug("Navigation-Desired-Modules")
-      .bind(to: _desiredModules)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _popTo.map { .popTo($0) } ==> events
+
+      _events.asObservable()
+        .popsTo
+        .withLatestFrom(_modules) { moduleType, modules in
+          modules.prefixUpTo(moduleType: moduleType)
+        }
+        .debug("Navigation-Desired-Modules")
+        ==> _desiredModules
+    }
   }
 
   private func listen(module: Module) {
     let moduleEvents = listeners.lazy.compactMap { $0.segues(module: module) }.first
-    
-    moduleEvents?
-      .bind(to: events)
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      (moduleEvents ?? .empty()) ==> events
+    }
   }
   
   public func setRootModule(_ module: Module) {

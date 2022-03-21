@@ -86,41 +86,40 @@ where
   }
   
   private func setupDataReloading(automaticReloading: Bool) {
-    _sections
-      .subscribe(onNext: { [weak self] in self?.sectionsSnapshot = $0 })
-      .disposed(by: disposeBag)
+    disposeBag {
+      _sections ==> { [weak self] in self?.sectionsSnapshot = $0 }
 
-    _sections
-      .subscribe(onNext: { [weak self] in self?.sectionLengthsSnapshot = $0.map { $0.elements.count } })
-      .disposed(by: disposeBag)
+      _sections ==> { [weak self] in
+        self?.sectionLengthsSnapshot = $0.map { $0.elements.count }
+      }
 
-    _shakes
-      .subscribe(onNext: { [weak self] in self?.shaker.performShakes($0) })
-      .disposed(by: disposeBag)
+      _shakes ==> { [weak self] in self?.shaker.performShakes($0) }
+    }
     
     if automaticReloading {
-      _sections.map { _ in [.reloadData] }
-        .bind(to: shakes)
-        .disposed(by: disposeBag)
+      disposeBag {
+        shakes <== _sections.map { _ in [.reloadData] }
+      }
     }
   }
   
   private func setupInteractionWithKeyboard() {
-    RxKeyboard.instance.visibleHeight
-      .asObservable()
-      .withLatestFrom(_focusedIndexPath) { (keyboardHeight: $0, focusedIndexPath: $1) }
-      .subscribe(onNext: { [weak self] (keyboardHeight, focusedIndexPath) in
-        self.map {
-          // 1. Fix table view's bottom content inset.
-          var newContentInset = $0.tableView.contentInset
-          newContentInset.bottom = keyboardHeight + 35
-          $0.tableView.contentInset = newContentInset
-          
-          // 2. Keep focused element visible.
-          $0.keepFocusedIndexPathVisible(focusedIndexPath: focusedIndexPath)
+    disposeBag {
+      RxKeyboard.instance.visibleHeight
+        .asObservable()
+        .withLatestFrom(_focusedIndexPath) { (keyboardHeight: $0, focusedIndexPath: $1) }
+        ==> { [weak self] (keyboardHeight, focusedIndexPath) in
+          self.map {
+            // 1. Fix table view's bottom content inset.
+            var newContentInset = $0.tableView.contentInset
+            newContentInset.bottom = keyboardHeight + 35
+            $0.tableView.contentInset = newContentInset
+
+            // 2. Keep focused element visible.
+            $0.keepFocusedIndexPathVisible(focusedIndexPath: focusedIndexPath)
+          }
         }
-      })
-      .disposed(by: disposeBag)
+    }
   }
   
   private func keepFocusedIndexPathVisible(focusedIndexPath: IndexPath?) {

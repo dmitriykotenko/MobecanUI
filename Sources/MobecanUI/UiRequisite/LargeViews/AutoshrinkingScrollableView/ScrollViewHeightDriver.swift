@@ -102,14 +102,17 @@ class ScrollViewHeightDriver: NSObject {
       height: 0
     )
 
-    Observable
-      .combineLatest(
-        RxKeyboard.instance.frame.startWith(initialKeyboardFrame).delay(.milliseconds(100)).asObservable(),
-        _scrollViewBottomY
-      )
-      .map { [weak self] in self?.bottomInset(keyboardFrame: $0, scrollViewBottomY: $1) ?? .zero }
-      .bind(to: _keyboardInset)
-      .disposed(by: disposeBag)
+    let keyboardFrame = RxKeyboard.instance.frame
+      .startWith(initialKeyboardFrame)
+      .delay(.milliseconds(100))
+      .asObservable()
+
+    disposeBag {
+      _keyboardInset <==
+        .combineLatest(keyboardFrame, _scrollViewBottomY) { [weak self] in
+          self?.bottomInset(keyboardFrame: $0, scrollViewBottomY: $1) ?? .zero
+        }
+    }
   }
 
   private func bottomInset(keyboardFrame: CGRect,

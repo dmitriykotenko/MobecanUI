@@ -57,13 +57,12 @@ final class CheckmarkViewTests: XCTestCase {
 
     let actualIsSelected = testScheduler.createObserver(Bool.self)
 
-    testScheduler.createHotObservable(setIsSelected)
-      .bind(to: checkmarkView.setIsSelected)
-      .disposed(by: disposeBag)
+    disposeBag {
+      testScheduler.createHotObservable(setIsSelected) ==>
+        checkmarkView.setIsSelected
 
-    checkmarkView.isSelected
-      .bind(to: actualIsSelected)
-      .disposed(by: disposeBag)
+      checkmarkView.isSelected ==> actualIsSelected
+    }
 
     testScheduler.start()
 

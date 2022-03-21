@@ -52,21 +52,20 @@ open class ListViewController<Query, Element, ElementEvent>: UIViewController {
   }
 
   open func setPresenter<Presenter: ListPresenterProtocol>(_ presenter: Presenter)
-    where
-    Presenter.Query == Query,
-    Presenter.Element == Element,
-    Presenter.ElementEvent == ElementEvent {
-      
-      presenter.title.drive(titleLabel.rx.text).disposed(by: disposeBag)
+  where
+  Presenter.Query == Query,
+  Presenter.Element == Element,
+  Presenter.ElementEvent == ElementEvent {
 
-      tableViewDriver.map {
-          presenter.sections
-            .drive($0.sections)
-            .disposed(by: disposeBag)
-        
-          $0.cellEvents
-            .bind(to: presenter.elementEvents)
-            .disposed(by: disposeBag)
+    disposeBag {
+      presenter.title ==> titleLabel.rx.text
+    }
+
+    tableViewDriver.map { driver in
+      disposeBag {
+        presenter.sections ==> driver.sections
+        driver.cellEvents ==> presenter.elementEvents
       }
+    }
   }
 }

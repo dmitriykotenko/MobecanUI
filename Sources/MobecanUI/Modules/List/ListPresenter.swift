@@ -29,26 +29,24 @@ open class ListPresenter<Query, Element, ElementEvent, SomeError: Error>: ListPr
   public init(title: Observable<String>,
               sectionsBuilder: @escaping (Loadable<[Element], SomeError>) -> [SimpleTableViewSection<Element>]) {
     self.sectionsBuilder = sectionsBuilder
-    
-    title.bind(to: _title).disposed(by: disposeBag)
+
+    disposeBag { title ==> _title }
   }
 
   private let disposeBag = DisposeBag()
 
   open func setInteractor<Interactor: ListInteractorProtocol>(_ interactor: Interactor)
-    where
-    Interactor.Query == Query,
-    Interactor.Element == Element,
-    Interactor.ElementEvent == ElementEvent,
-    Interactor.SomeError == SomeError {
+  where
+  Interactor.Query == Query,
+  Interactor.Element == Element,
+  Interactor.ElementEvent == ElementEvent,
+  Interactor.SomeError == SomeError {
 
-      interactor.elements
-        .map { [sectionsBuilder] in sectionsBuilder($0) }
-        .bind(to: _sections)
-        .disposed(by: disposeBag)
-      
-      _elementEvents
-        .bind(to: interactor.elementEvents)
-        .disposed(by: disposeBag)
+    disposeBag {
+      _sections <==
+        interactor.elements.map { [sectionsBuilder] in sectionsBuilder($0) }
+
+      _elementEvents ==> interactor.elementEvents
+    }
   }
 }

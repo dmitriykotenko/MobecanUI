@@ -9,15 +9,15 @@ public extension UIView {
   func setupTouchReaction(onTouchDown: @escaping () -> Void,
                           onTouchUp: @escaping () -> Void,
                           disposeBag: DisposeBag) {
-    rx.touchDownGesture()
-      .when(.began)
-      .subscribe(onNext: { _ in onTouchDown() })
-      .disposed(by: disposeBag)
+    disposeBag {
+      rx.touchDownGesture()
+        .when(.began)
+        ==> { _ in onTouchDown() }
 
-    rx.touchDownGesture()
-      .when(.ended, .failed, .cancelled)
-      .subscribe(onNext: { _ in onTouchUp() })
-      .disposed(by: disposeBag)
+      rx.touchDownGesture()
+        .when(.ended, .failed, .cancelled)
+        ==> { _ in onTouchUp() }
+    }
   }
 
   func highlightOnTaps(disposeBag: DisposeBag) {

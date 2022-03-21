@@ -42,15 +42,14 @@ open class ListInteractor<Query, Element, ElementEvent, SomeError: Error>: ListI
       
       let loadingStarted = _load
       let loadingFinished = _load.flatMapLatest { loader.load($0) }
-      
-      Observable
-        .merge(loadingStarted.map { _ in .isLoading }, loadingFinished.map { .loaded($0) })
-        .bind(to: _elements)
-        .disposed(by: disposeBag)
-      
-      _elementEvents
-        .compactMap { eventHandler($0) ? nil : $0 }
-        .bind(to: _unhandledElementEvents)
-        .disposed(by: disposeBag)
+
+      disposeBag {
+        _elements <== .merge(
+          loadingStarted.map { _ in .isLoading },
+          loadingFinished.map { .loaded($0) }
+        )
+
+        _unhandledElementEvents <== _elementEvents.compactMap { eventHandler($0) ? nil : $0 }
+      }
   }
 }

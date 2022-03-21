@@ -55,13 +55,14 @@ public class AutoshrinkingScrollableView: WindowListeningView, UIScrollViewDeleg
       $0.width.equalTo(self)
     }
 
-    self.windowChanged
-      .delay(0.milliseconds) // wait until superview finishes its layout
-      .filter { [weak self] in self?.window != nil }
-      .do(onNext: { [weak self] in print("scroll-view-driver window = \(String(describing: self?.window))") })
-      .compactMap { [weak self] in self?.longTermBottomY }
-      .emit(to: scrollViewDriver.scrollViewBottomY)
-      .disposed(by: disposeBag)
+    disposeBag {
+      self.windowChanged
+        .delay(0.milliseconds) // wait until superview finishes its layout
+        .filter { [weak self] in self?.window != nil }
+        .do(onNext: { [weak self] in print("scroll-view-driver window = \(String(describing: self?.window))") })
+        .compactMap { [weak self] in self?.longTermBottomY }
+        ==> scrollViewDriver.scrollViewBottomY
+    }
 
     self.scrollView.delegate = self
   }

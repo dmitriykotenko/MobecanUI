@@ -113,9 +113,11 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
                                  selectionState: AnyObserver<SelectionState>,
                                  errorText: AnyObserver<String?>,
                                  sideActions: AnyObserver<[SideAction]>) {
-    valueObservers
-      .map { _value.bind(to: $0) }
-      .disposed(by: disposeBag)
+    valueObservers.forEach { observer in
+      disposeBag {
+        _value ==> observer
+      }
+    }
 
     disposeBag {
       _ingredientsState.compactMap { $0?.selectionState } ==> selectionState

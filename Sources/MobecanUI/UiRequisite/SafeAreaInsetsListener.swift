@@ -20,16 +20,14 @@ class SafeAreaInsetsListener {
        windowChanged: Observable<Void>,
        transform: @escaping () -> UIEdgeInsets) {
     self.view = view
-    
-    windowChanged
-      .startWith(())
-      .subscribe(onNext: { [weak self] in self?.updateAdditionalInsetsListeners() })
-      .disposed(by: disposeBag)
-    
-    insetsChanged
-      .map { transform() }
-      .bind(to: _insets)
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      windowChanged.startWith(()) ==> { [weak self] in
+        self?.updateAdditionalInsetsListeners()
+      }
+
+      insetsChanged.map { transform() } ==> _insets
+    }
   }
   
   private func updateAdditionalInsetsListeners() {

@@ -108,8 +108,10 @@ final class NavigationBarContentListenerTests: XCTestCase {
     )
     
     let disposeBag = DisposeBag()
-    
-    listener.content.asObservable().bind(to: actualContent).disposed(by: disposeBag)
+
+    disposeBag {
+      listener.content.asObservable() ==> actualContent
+    }
     
     testScheduler.start()
     
@@ -153,10 +155,11 @@ private class CustomViewController: UIViewController, NavigationBarContentProvid
   
   init(content: Observable<NavigationBarContent>) {
     super.init(nibName: nil, bundle: nil)
-    
-    _contentSetter.bind(to: _content).disposed(by: disposeBag)
-    
-    content.bind(to: _content).disposed(by: disposeBag)
+
+    disposeBag {
+      _contentSetter ==> _content
+      content ==> _content
+    }
   }
 
   var navigationBarContent: Driver<NavigationBarContent> {

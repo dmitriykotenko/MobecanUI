@@ -19,8 +19,10 @@ class SwitchViewValueTests: XCTestCase {
     let isOn = scheduler.createObserver(Bool.self)
     let disposeBag = DisposeBag()
 
-    initialIsOn.bind(to: switchView.initialIsOn).disposed(by: disposeBag)
-    switchView.isOn.bind(to: isOn).disposed(by: disposeBag)
+    disposeBag {
+      initialIsOn ==> switchView.initialIsOn
+      switchView.isOn ==> isOn
+    }
 
     scheduler.start()
 

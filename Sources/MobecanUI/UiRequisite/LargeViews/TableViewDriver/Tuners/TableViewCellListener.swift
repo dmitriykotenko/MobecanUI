@@ -18,7 +18,9 @@ class TableViewCellListener<Value, Event> {
     guard !listenedCells.contains(cell) else { return }
     
     listenedCells.insert(cell)
-    
-    events.bind(to: _events).disposed(by: disposeBag)
+
+    disposeBag {
+      events ==> _events
+    }
   }
 }

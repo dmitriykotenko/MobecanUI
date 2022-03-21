@@ -56,19 +56,18 @@ public class PictogramInputField: UIView {
     textField.textContentType = textContentType
     
     textField.setValidation(validation)
-    
-    textField.rx.text
-      .bind(to: label.text)
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      textField.rx.text ==> label.text
+    }
   }
 
   private func setupTaps() {
-    rx.tapGesture()
-      .when(.recognized)
-      .subscribe(onNext: { [weak self] _ in
-        self?.textField.becomeFirstResponder()
-      })
-      .disposed(by: disposeBag)
+    disposeBag {
+      rx.tapGesture()
+        .when(.recognized)
+        ==> { [weak self] _ in self?.textField.becomeFirstResponder() }
+    }
   }
 }
 

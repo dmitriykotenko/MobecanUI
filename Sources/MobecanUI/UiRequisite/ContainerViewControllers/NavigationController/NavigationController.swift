@@ -74,25 +74,24 @@ open class NavigationController: UIViewController {
   }
   
   private func setupNavigationBarContent() {
-    navigationBarContentListener
-      .content
-      .drive(customNavigationBar.content)
-      .disposed(by: disposeBag)
-    
-    appearingViewController
-      .map { $0?.view.backgroundColor }
-      .drive(customNavigationBar.screenBackgroundColor)
-      .disposed(by: disposeBag)
+    disposeBag {
+      navigationBarContentListener.content ==> customNavigationBar.content
+
+      appearingViewController
+        .map(\.?.view.backgroundColor)
+        ==> customNavigationBar.screenBackgroundColor
+    }
   }
   
   private func setupSafeArea() {
     if customNavigationBar.affectsSafeArea {
-      navigationBarFrameListener
-        .framesChanged
-        .observe(on: MainScheduler.instance)
-        .compactMap { [weak self] in self?.customNavigationBar.frame.height }
-        .subscribe(onNext: { [weak self] in self?.additionalSafeAreaInsets = .top($0) })
-        .disposed(by: disposeBag)
+      disposeBag {
+        navigationBarFrameListener
+          .framesChanged
+          .observe(on: MainScheduler.instance)
+          .compactMap { [weak self] in self?.customNavigationBar.frame.height }
+          ==> { [weak self] in self?.additionalSafeAreaInsets = .top($0) }
+      }
     } else {
       additionalSafeAreaInsets = .zero
     }
@@ -120,13 +119,14 @@ open class NavigationController: UIViewController {
   
   private func modifyChildren(_ animated: Bool,
                               modificator: @escaping ([UIViewController]) -> [UIViewController]) {
-    Observable.just(modificator)
-      .withLatestFrom(viewControllers) { ChildrenUpdate(old: $1, new: $0($1), animated: animated) }
-      .subscribe(onNext: { [weak self] in
-        self?.updateNavigationBar($0)
-        self?.updateChildren($0)
-      })
-      .disposed(by: disposeBag)
+    disposeBag {
+      Observable.just(modificator)
+        .withLatestFrom(viewControllers) { ChildrenUpdate(old: $1, new: $0($1), animated: animated) }
+        ==> { [weak self] in
+          self?.updateNavigationBar($0)
+          self?.updateChildren($0)
+        }
+    }
   }
   
   private func updateNavigationBar(_ update: ChildrenUpdate) {
@@ -187,24 +187,24 @@ public extension NavigationController {
   
   @discardableResult
   func setPresenter(_ presenter: OldNavigationPresenterProtocol) -> Single<Void> {
-    // .emit() and .drive() methods must be called in main thread
+    // Subscribing to presenter's outputs (usually these are Drivers and Signals)
+    // must be called in main thread
     performInMainThread {
       self.bindTo(presenter)
     }
   }
   
   private func bindTo(_ presenter: OldNavigationPresenterProtocol) {
-    [
-      presenter.push.emit(onNext: { [weak self] in self?.push($0, animated: true) }),
-      presenter.pop.emit(onNext: { [weak self] in self?.pop(animated: true) }),
-      presenter.popTo.emit(onNext: { [weak self] in self?.popTo($0, animated: true) }),
-      presenter.set.emit(onNext: { [weak self] in self?.set(children: $0, animated: true) }),
-      presenter.setInitial.emit(onNext: { [weak self] in self?.set(children: [$0], animated: false) }),
+    disposeBag {
+      presenter.push ==> { [weak self] in self?.push($0, animated: true) }
+      presenter.pop ==> { [weak self] in self?.pop(animated: true) }
+      presenter.popTo ==> { [weak self] in self?.popTo($0, animated: true) }
+      presenter.set ==> { [weak self] in self?.set(children: $0, animated: true) }
+      presenter.setInitial ==> { [weak self] in self?.set(children: [$0], animated: false) }
       
-      presenter.dismiss.emit(onNext: { [weak self] in self?.dismiss(animated: true, completion: nil) }),
+      presenter.dismiss ==> { [weak self] in self?.dismiss(animated: true, completion: nil) }
       
-      backButtonTap.bind(to: presenter.backButtonTap)
-    ]
-    .disposed(by: disposeBag)
+      backButtonTap ==> presenter.backButtonTap
+    }
   }
 }

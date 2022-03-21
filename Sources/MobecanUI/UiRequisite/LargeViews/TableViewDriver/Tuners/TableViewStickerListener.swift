@@ -18,7 +18,9 @@ class TableViewStickerListener<Header, Event> {
     guard !listenedStickers.contains(sticker) else { return }
     
     listenedStickers.insert(sticker)
-    
-    events.bind(to: _events).disposed(by: disposeBag)
+
+    disposeBag {
+      events ==> _events
+    }
   }
 }

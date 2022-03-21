@@ -34,14 +34,10 @@ open class NavigationViewController: UIViewController {
   }
 
   open func setPresenter(_ presenter: NavigationPresenterProtocol) {
-    [
-      presenter.events
-        .emit(onNext: { [weak self] in self?.worker.set(children: $0, animated: $1) }),
-      
-      worker.viewControllers.bind(to: presenter.viewControllers),
-      
-      worker.backButtonTap.bind(to: presenter.backButtonTap)
-    ]
-    .disposed(by: disposeBag)
+    disposeBag {
+      presenter.events ==> { [weak self] in self?.worker.set(children: $0, animated: $1) }
+      worker.viewControllers ==> presenter.viewControllers
+      worker.backButtonTap ==> presenter.backButtonTap
+    }
   }
 }

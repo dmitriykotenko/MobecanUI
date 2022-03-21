@@ -25,9 +25,9 @@ public extension UIViewController {
         .priority(.high)
         .constraint
     }
-    
-    RxKeyboard.instance.visibleHeight
-      .drive(onNext: { [weak self] keyboardHeight in
+
+    disposeBag {
+      RxKeyboard.instance.visibleHeight ==> { [weak self] keyboardHeight in
         UIView.animate(
           withDuration: Duration.keyboardAnimation.toTimeInterval,
           delay: 0,
@@ -35,11 +35,11 @@ public extension UIViewController {
           animations: {
             bottomConstraint?.update(inset: keyboardHeight + spacing)
             self?.view.layoutIfNeeded()
-        },
+          },
           completion: nil
         )
-      })
-      .disposed(by: disposeBag)
+      }
+    }
   }
 }
 

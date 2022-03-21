@@ -65,10 +65,11 @@ public class UiKitDemonstrator: Demonstrator {
                                    animating: Bool) -> Demonstration {
     let demonstration = Demonstration(module: module)
 
-    demonstration.needsToBeFinished
-      .weakFlatMap(self) { $1.finishCurrentDemonstrationImmediately(animating: animating) }
-      .subscribe()
-      .disposed(by: disposeBag)
+    disposeBag {
+      demonstration.needsToBeFinished
+        .weakFlatMap(self) { $1.finishCurrentDemonstrationImmediately(animating: animating) }
+        .subscribe()
+    }
 
     currentDemonstration = demonstration
 

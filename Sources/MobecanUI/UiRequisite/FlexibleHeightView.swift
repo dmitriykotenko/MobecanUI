@@ -46,13 +46,14 @@ public class FlexibleHeightView: UIView {
   }
 
   private func setupSwitching() {
-    _visibleSubview
-      .debug("Flexible-Height-View-Visible-Subview")
-      .distinctUntilChanged()
-      .filterNil()
-      .withLatestFrom(_areAnimationsEnabled) { (subview: $0, animated: $1) }
-      .subscribe(onNext: { [weak self] in self?.show(subview: $0.subview, animated: $0.animated) })
-      .disposed(by: disposeBag)
+    disposeBag {
+      _visibleSubview
+        .debug("Flexible-Height-View-Visible-Subview")
+        .distinctUntilChanged()
+        .filterNil()
+        .withLatestFrom(_areAnimationsEnabled) { (subview: $0, animated: $1) }
+        ==> { [weak self] in self?.show(subview: $0.subview, animated: $0.animated) }
+    }
   }
   
   private func show(subview: UIView,

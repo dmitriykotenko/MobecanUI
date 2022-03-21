@@ -77,7 +77,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
         .whenNotEqual(to: nil)
         .do(onNext: { [weak self] in print("scroll-view-driver window = \(String(describing: self?.window))") })
         .compactMap { [weak self] in self?.longTermBottomY }
-        .bind(to: insetsCalculator.scrollViewBottomY)
+        ==> insetsCalculator.scrollViewBottomY
     }
   }
 

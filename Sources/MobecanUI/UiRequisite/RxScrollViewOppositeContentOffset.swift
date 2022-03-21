@@ -30,15 +30,15 @@ public class RxScrollViewOppositeContentOffset {
       contentSizeChanged.accept(())
     }
 
-    Observable
-      .combineLatest(
-        scrollView.rx.didScroll.startWith(()),
-        contentSizeChanged.startWith(()),
-        adjustedContentInsetDidChange.startWith(())
-      )
-      .compactMap { [weak self] _, _, _ in self?.scrollView?.oppositeContentOffset }
-      .distinctUntilChanged()
-      .bind(to: _value)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _value <== Observable
+        .combineLatest(
+          scrollView.rx.didScroll.startWith(()),
+          contentSizeChanged.startWith(()),
+          adjustedContentInsetDidChange.startWith(())
+        )
+        .compactMap { [weak self] _, _, _ in self?.scrollView?.oppositeContentOffset }
+        .distinctUntilChanged()
+    }
   }
 }

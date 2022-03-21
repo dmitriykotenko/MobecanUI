@@ -28,26 +28,24 @@ public class NavigationPresenter: NavigationPresenterProtocol {
   public init() {}
 
   public func setInteractor(_ interactor: NavigationInteractorProtocol) {
-    interactor.desiredModules
-      .do(onNext: { [weak self] in self?.makeSnapshot($0) })
-      .map { modules in (modules.map { $0.viewController }, true) }
-      .bind(to: _events)
-      .disposed(by: disposeBag)
+    disposeBag {
+      interactor.desiredModules
+        .do(onNext: { [weak self] in self?.makeSnapshot($0) })
+        .map { modules in (modules.map { $0.viewController }, true) }
+        ==> _events
 
-    _viewControllers
-      .map { [weak self] viewControllers in viewControllers.compactMap { self?.modulesSnapshot[$0] } }
-      .bind(to: interactor.modules)
-      .disposed(by: disposeBag)
-    
-    _backButtonTap
-      .filterWith(_viewControllers.map { $0.count > 1 })
-      .bind(to: interactor.pop)
-      .disposed(by: disposeBag)
-    
-    _backButtonTap
-      .filterWith(_viewControllers.map { $0.count <= 1 })
-      .bind(to: interactor.userWantsToCloseNavigationController)
-      .disposed(by: disposeBag)
+      _viewControllers
+        .map { [weak self] viewControllers in viewControllers.compactMap { self?.modulesSnapshot[$0] } }
+        ==> interactor.modules
+
+      _backButtonTap
+        .filterWith(_viewControllers.map { $0.count > 1 })
+        ==> interactor.pop
+
+      _backButtonTap
+        .filterWith(_viewControllers.map { $0.count <= 1 })
+        ==> interactor.userWantsToCloseNavigationController
+    }
   }
   
   private func makeSnapshot(_ newModules: [Module]) {

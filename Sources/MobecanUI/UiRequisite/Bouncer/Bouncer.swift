@@ -77,24 +77,28 @@ public class Bouncer {
       .filterWithLatestFrom(currentAttractor) { $0 != $1 }
       .filterWithNot(pan.isInProgress)
 
-    attractorChanged.bind(to: _nextAttractor).disposed(by: disposeBag)
+    disposeBag {
+      attractorChanged ==> _nextAttractor
+    }
   }
   
   private func changeAttractorWhenPanEnded() {
-    pan.when(.ended)
-      .withLatestFrom(currentState)
-      .map { [weak self] in self?.selectNextAttractor(currentState: $0) ?? 0 }
-      .bind(to: _nextAttractor)
-      .disposed(by: disposeBag)
+    disposeBag {
+      pan.when(.ended)
+        .withLatestFrom(currentState)
+        .map { [weak self] in self?.selectNextAttractor(currentState: $0) ?? 0 }
+        ==> _nextAttractor
+    }
   }
   
   private func changeAttractorWhenAttractorsListChanged() {
-    _attractors
-      .distinctUntilChanged()
-      .withLatestFrom(currentState)
-      .map { [weak self] in self?.selectNextAttractor(currentState: $0) ?? 0 }
-      .bind(to: _nextAttractor)
-      .disposed(by: disposeBag)
+    disposeBag {
+      _attractors
+        .distinctUntilChanged()
+        .withLatestFrom(currentState)
+        .map { [weak self] in self?.selectNextAttractor(currentState: $0) ?? 0 }
+        ==> _nextAttractor
+    }
   }
   
   private func selectNextAttractor(currentState: CurrentState) -> CGFloat {
@@ -116,16 +120,17 @@ public class Bouncer {
       .withLatestFrom(_areAnimationsEnabled) {
         AttractorChange(currentState: $0.current, nextAttractor: $0.next, animating: $1)
       }
-    
-    attractorChange
-      .do(onNext: { [weak self] _ in self?.animation?.abort() })
-      .flatMapLatest { [weak self] change in
-        (self?.offsetChange(attractorChange: change) ?? .never())
-          .do(onCompleted: { self?._currentAttractor.onNext(change.nextAttractor) })
-      }
-      .clippedWith(bounds: panBounds)
-      .bind(to: _offset)
-      .disposed(by: disposeBag)
+
+    disposeBag {
+      attractorChange
+        .do(onNext: { [weak self] _ in self?.animation?.abort() })
+        .flatMapLatest { [weak self] change in
+          (self?.offsetChange(attractorChange: change) ?? .never())
+            .do(onCompleted: { self?._currentAttractor.onNext(change.nextAttractor) })
+        }
+        .clippedWith(bounds: panBounds)
+        ==> _offset
+    }
   }
   
   private func offsetChange(attractorChange change: AttractorChange) -> Observable<CGFloat> {
@@ -155,11 +160,12 @@ public class Bouncer {
   }
 
   private func setupScrolling() {
-    // FIXME: how to clip offset once panBounds changed?
-    pan.when(.began, .changed)
-      .offset(in: panContainer, axis: axis, attractor: currentAttractor, bounds: panBounds)
-      .bind(to: _offset)
-      .disposed(by: disposeBag)
+    disposeBag {
+      // FIXME: how to clip offset once panBounds changed?
+      pan.when(.began, .changed)
+        .offset(in: panContainer, axis: axis, attractor: currentAttractor, bounds: panBounds)
+        ==> _offset
+    }
   }
 }
 
