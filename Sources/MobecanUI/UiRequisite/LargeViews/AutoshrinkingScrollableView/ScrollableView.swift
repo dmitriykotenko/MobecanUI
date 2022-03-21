@@ -39,13 +39,15 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
   public init(contentView: UIView,
-              scrollView: () -> UIScrollView,
+              scrollView initScrollView: () -> UIScrollView,
               isVerticalHuggingEnabled: Bool = false) {
+    let scrollView = initScrollView()
+
     self.contentView = contentView
-    self.scrollView = scrollView()
+    self.scrollView = scrollView
 
     self.middleman = .init(contentView: contentView)
-    self.insetsCalculator = .init(scrollView: scrollView())
+    self.insetsCalculator = .init(scrollView: scrollView)
     self.isVerticalHuggingEnabled = isVerticalHuggingEnabled
 
     super.init(frame: .zero)
