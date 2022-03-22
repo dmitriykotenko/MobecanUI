@@ -17,6 +17,13 @@ public struct OptionalEdgeInsets: Equatable, Hashable, Codable, Lensable {
     right: nil
   )
 
+  public static let zero = OptionalEdgeInsets(
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+  )
+
   public init(top: CGFloat? = nil,
               left: CGFloat? = nil,
               bottom: CGFloat? = nil,
