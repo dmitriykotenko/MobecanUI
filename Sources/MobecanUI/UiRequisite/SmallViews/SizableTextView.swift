@@ -12,12 +12,29 @@ open class SizableTextView: UITextView, SizableView {
   open var sizer = ViewSizer()
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    sizer.apply(to: super.sizeThatFits(size))
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
+    )
   }
 
   override open var text: String! { didSet { invalidateLayoutIfNecessary() } }
   override open var attributedText: NSAttributedString! { didSet { invalidateLayoutIfNecessary() } }
   override open var font: UIFont? { didSet { invalidateLayoutIfNecessary() } }
+
+  public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
+
+  public convenience init() { self.init(frame: .zero) }
+
+  public convenience init(frame: CGRect) {
+    self.init(frame: frame, textContainer: nil)
+  }
+
+  override public init(frame: CGRect,
+                       textContainer: NSTextContainer?) {
+    super.init(frame: frame, textContainer: textContainer)
+    withStretchableSize()
+  }
 
   private func invalidateLayoutIfNecessary() {
     if isLayoutInvalidationEnabled {

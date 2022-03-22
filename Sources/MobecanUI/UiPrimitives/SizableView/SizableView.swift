@@ -55,13 +55,13 @@ public extension SizableView {
 
   @discardableResult
   func fixMaximumWidth(_ width: CGFloat?) -> Self {
-    sizer.minimumWidth = width
+    sizer.maximumWidth = width
     return self
   }
 
   @discardableResult
   func fixMaximumHeight(_ height: CGFloat?) -> Self {
-    sizer.minimumHeight = height
+    sizer.maximumHeight = height
     return self
   }
 
@@ -70,5 +70,43 @@ public extension SizableView {
     self
       .fixMaximumWidth(size?.width)
       .fixMaximumHeight(size?.height)
+  }
+
+  @discardableResult
+  func withStretchableWidth() -> Self {
+    sizer.mustStretchHorizontally = true
+    return self
+  }
+
+  @discardableResult
+  func withStretchableHeight() -> Self {
+    sizer.mustStretchVertically = true
+    return self
+  }
+
+  @discardableResult
+  func withStretchableSize() -> Self {
+    self
+      .withStretchableWidth()
+      .withStretchableHeight()
+  }
+
+  @discardableResult
+  func withoutStretchableWidth() -> Self {
+    sizer.mustStretchHorizontally = false
+    return self
+  }
+
+  @discardableResult
+  func withoutStretchableHeight() -> Self {
+    sizer.mustStretchVertically = false
+    return self
+  }
+
+  @discardableResult
+  func withoutStretchableSize() -> Self {
+    self
+      .withoutStretchableWidth()
+      .withoutStretchableHeight()
   }
 }

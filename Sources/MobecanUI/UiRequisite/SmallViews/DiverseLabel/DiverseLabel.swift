@@ -11,7 +11,10 @@ open class DiverseLabel: UILabel, SizableView {
   open var sizer = ViewSizer()
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    sizer.apply(to: super.sizeThatFits(size))
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
+    )
   }
 
   override open var font: UIFont! { didSet { invalidateLayoutIfNecessary() } }

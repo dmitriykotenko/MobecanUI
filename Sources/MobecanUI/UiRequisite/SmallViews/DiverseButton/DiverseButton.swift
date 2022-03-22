@@ -87,8 +87,9 @@ open class DiverseButton: UIButton, SizableView {
   }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    sizer.apply(
-      to: super.sizeThatFits(size)
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
     )
   }
 }

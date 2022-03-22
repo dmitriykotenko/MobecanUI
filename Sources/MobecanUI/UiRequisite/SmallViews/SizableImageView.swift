@@ -14,7 +14,10 @@ open class SizableImageView: UIImageView, SizableView {
   override open var image: UIImage? { didSet { invalidateLayoutIfNecessary() } }
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
-    sizer.apply(to: super.sizeThatFits(size))
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
+    )
   }
 
   private func invalidateLayoutIfNecessary() {

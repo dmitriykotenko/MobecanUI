@@ -104,6 +104,8 @@ public class MaskedTextField: UITextField, SizableView {
     setDecoration(decoration)
     setSanitization(sanitization)
     setValidation(validation)
+
+    withStretchableWidth()
     
     text = ""
   }
@@ -201,8 +203,9 @@ public class MaskedTextField: UITextField, SizableView {
   }
 
   public override func sizeThatFits(_ size: CGSize) -> CGSize {
-    sizer.apply(
-      to: super.sizeThatFits(size)
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
     )
   }
 }
