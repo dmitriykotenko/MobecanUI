@@ -5,13 +5,15 @@ import RxSwift
 import UIKit
 
 
-open class ParagraphView<Value>: LayoutableView {
+open class ParagraphView<Value, ViewEvent>: LayoutableView, EventfulView {
   
-  @RxUiInput(nil) public var title: AnyObserver<String?>
-  @RxUiInput(nil) public var attributedTitle: AnyObserver<NSAttributedString?>
+  @RxUiInput(nil) open var title: AnyObserver<String?>
+  @RxUiInput(nil) open var attributedTitle: AnyObserver<NSAttributedString?>
   
-  @RxUiInput(nil) public var body: AnyObserver<Value?>
-  @RxUiInput(.never()) public var hidesWhenBodyIs: AnyObserver<Predicate<Value?>>
+  @RxUiInput(nil) open var body: AnyObserver<Value?>
+  @RxUiInput(.never()) open var hidesWhenBodyIs: AnyObserver<Predicate<Value?>>
+
+  @RxOutput open var viewEvents: Observable<ViewEvent>
 
   private let titleLabel: UILabel
   
@@ -44,7 +46,7 @@ open class ParagraphView<Value>: LayoutableView {
   }
 
   public init(titleLabel: UILabel,
-              content: ParagraphViewContent<Value>,
+              content: ParagraphViewContent<Value, ViewEvent>,
               spacing: CGFloat,
               titleInsets: UIEdgeInsets = .zero,
               contentInsets: UIEdgeInsets = .zero,
@@ -67,10 +69,12 @@ open class ParagraphView<Value>: LayoutableView {
 
     displayTitle()
     displayValue(body: content.body)
+
+    disposeBag { content.bodyEvents ==> _viewEvents }
   }
 
   public convenience init(titleLabel: UILabel,
-                          content: ParagraphViewContent<Value>,
+                          content: ParagraphViewContent<Value, ViewEvent>,
                           spacing: CGFloat,
                           insets: UIEdgeInsets,
                           hidesWhenBodyIs: Predicate<Value?> = .never()) {
@@ -100,8 +104,8 @@ open class ParagraphView<Value>: LayoutableView {
       rx.isHidden <== .combineLatest(_hidesWhenBodyIs, _body) { $0($1) }
     }
   }
-  
-  override open var forFirstBaselineLayout: UIView { titleLabel }  
+
+  override open var forFirstBaselineLayout: UIView { titleLabel }
 }
 
 
