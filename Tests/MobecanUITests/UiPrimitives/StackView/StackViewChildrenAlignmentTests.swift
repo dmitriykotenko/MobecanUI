@@ -144,6 +144,8 @@ class StackViewChildrenAlignmentTests: XCTestCase {
       return .hstack(alignment: alignment, subviews)
     case .vertical:
       return .vstack(alignment: alignment, subviews)
+    @unknown default:
+      fatalError("NSLayoutConstraint.Axis \(axis) is not yet supported")
     }
   }
 }

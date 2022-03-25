@@ -117,8 +117,8 @@ class SizableViewTester: XCTestCase {
       """
       Test:
         Native size: \(nativeSize)
-        Width limit: \(widthRestrictions.min)...\(widthRestrictions.max)
-        Height limit: \(heightRestrictions.min)...\(heightRestrictions.max)
+        Width limit: \(widthRestrictions)
+        Height limit: \(heightRestrictions)
         Must stretch horizontally: \(mustStretchHorizontally)
         Must stretch vertically: \(mustStretchVertically)
         Size to fit: \(sizeToFit)
@@ -160,10 +160,17 @@ extension CGFloat {
 }
 
 
-struct OptionalRange {
+struct OptionalRange: CustomStringConvertible {
 
   var min: CGFloat?
   var max: CGFloat?
+
+  var description: String {
+    let minString = min.map { "\($0) "} ?? "nil"
+    let maxString = max.map { "\($0) "} ?? "nil"
+
+    return "\(minString)...\(maxString)"
+  }
 
   static func random() -> OptionalRange {
     let first = Bool.random() ? nil : CGFloat.randomUiDimension()

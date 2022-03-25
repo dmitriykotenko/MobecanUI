@@ -9,7 +9,7 @@ import RxTest
 class ParagraphViewDangerousInitializationTests: XCTestCase {
 
   func testThatParameterlessInitializerDoesNotCrash() {
-    let _: ParagraphView<String> = dangerousInit()
+    let _: ParagraphView<String, Never> = dangerousInit()
   }
 
   func testThatSubclassParameterlessInitializerDoesNotCrash() {

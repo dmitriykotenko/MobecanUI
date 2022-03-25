@@ -33,14 +33,14 @@ public struct ParagraphViewContent<Value, ViewEvent> {
 
 public extension ParagraphViewContent where ViewEvent == Never {
 
-  public init(bodyView: UIView,
-              body: AnyObserver<Value?>) {
+  init(bodyView: UIView,
+       body: AnyObserver<Value?>) {
     self.bodyView = bodyView
     self.body = body
     self.bodyEvents = .never()
   }
 
-  public static func dataView<BodyView: DataView>(_ bodyView: BodyView) -> ParagraphViewContent<Value, Never>
+  static func dataView<BodyView: DataView>(_ bodyView: BodyView) -> ParagraphViewContent<Value, Never>
   where BodyView.Value == Value {
       ParagraphViewContent(
         bodyView: bodyView,
