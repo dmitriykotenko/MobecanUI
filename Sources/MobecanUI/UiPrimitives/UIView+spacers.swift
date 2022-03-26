@@ -19,6 +19,15 @@ public extension UIView {
     )
   }
 
+  static func spacer(size: CGSize,
+                     layoutPriority: ConstraintPriority = .required) -> LayoutableView {
+    spacer(
+      width: size.width,
+      height: size.height,
+      layoutPriority: layoutPriority
+    )
+  }
+
   static func stretchableHorizontalSpacer(minimumWidth: CGFloat = 0,
                                           minimumHeight: CGFloat = 0) -> LayoutableView {
     .init(
@@ -53,28 +62,34 @@ public extension UIView {
   }
 
   static func rxHorizontalSpacer(_ targetView: UIView,
+                                 coverage: ReactiveSpacerView.Coverage = .wholeView,
                                  insets: UIEdgeInsets = .zero) -> UIView {
     ReactiveSpacerView(
       targetView: targetView,
       axis: [.horizontal],
+      coverage: coverage,
       insets: insets
     )
   }
   
   static func rxVerticalSpacer(_ targetView: UIView,
+                               coverage: ReactiveSpacerView.Coverage = .wholeView,
                                insets: UIEdgeInsets = .zero) -> UIView {
     ReactiveSpacerView(
       targetView: targetView,
       axis: [.vertical],
+      coverage: coverage,
       insets: insets
     )
   }
   
   static func rxSpacer(_ targetView: UIView,
+                       coverage: ReactiveSpacerView.Coverage = .wholeView,
                        insets: UIEdgeInsets = .zero) -> UIView {
     ReactiveSpacerView(
       targetView: targetView,
       axis: [.horizontal, .vertical],
+      coverage: coverage,
       insets: insets
     )
   }

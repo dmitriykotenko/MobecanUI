@@ -7,13 +7,26 @@ import SnapKit
 import UIKit
 
 
-public class ReactiveSpacerView: LayoutableView {
+open class ReactiveSpacerView: LayoutableView {
+
+  /// Какую область вьюшки надо учитывать при вычислении размера.
+  public enum Coverage {
+
+    /// При вычислении размера надо учитывать всю вьюшку.
+    case wholeView
+
+    /// При вычислении размера надо учитывать ту часть вьюшки,
+    /// которая лежит внутри safeArea родительского вью-контроллера.
+    case safeArea
+  }
   
   private weak var targetView: UIView?
   private let axis: [NSLayoutConstraint.Axis]
+  private let coverage: Coverage
   private let insets: UIEdgeInsets
 
   private let framesListener: FramesListener
+  private let safeAreaInsetsListener: SafeAreaInsetsListener?
 
   private let disposeBag = DisposeBag()
 
@@ -21,13 +34,26 @@ public class ReactiveSpacerView: LayoutableView {
   
   public init(targetView: UIView,
               axis: [NSLayoutConstraint.Axis],
+              coverage: Coverage,
               insets: UIEdgeInsets) {
     self.targetView = targetView
     self.axis = axis
+    self.coverage = coverage
     self.insets = insets
     
     self.framesListener = FramesListener(views: [targetView])
-    
+
+    switch coverage {
+    case .wholeView:
+      self.safeAreaInsetsListener = nil
+    case .safeArea:
+      self.safeAreaInsetsListener = .init(
+        view: targetView,
+        windowChanged: targetView.rx.windowChanged,
+        transform: { .zero }
+      )
+    }
+
     super.init()
 
     self.layout = EmptyLayout().with(size: .zero)
@@ -37,12 +63,19 @@ public class ReactiveSpacerView: LayoutableView {
 
   private func setupSizeUpdating() {
     disposeBag {
-      framesListener.framesChanged
-        .compactMap { [weak self] in self?.targetView?.frame.size }
+      needToUpdateSize
+        .compactMap { [weak targetView, coverage] in targetView?.coveredSize(coverage: coverage) }
         .startWith(.zero)
         .distinctUntilChanged { [axis] in $0.isEqual(to: $1, in: axis) }
         ==> { [weak self] in self?.updateSize($0) }
     }
+  }
+
+  private var needToUpdateSize: Observable<Void> {
+    .merge(
+      framesListener.framesChanged,
+      safeAreaInsetsListener?.insets.asObservable().mapToVoid() ?? .empty()
+    )
   }
 
   private func updateSize(_ targetViewSize: CGSize) {
@@ -51,6 +84,19 @@ public class ReactiveSpacerView: LayoutableView {
     )
 
     invalidateIntrinsicContentSize()
+  }
+}
+
+
+private extension UIView {
+
+  func coveredSize(coverage: ReactiveSpacerView.Coverage) -> CGSize {
+    switch coverage {
+    case .wholeView:
+      return frame.size
+    case .safeArea:
+      return frame.size.insetBy(safeAreaInsets)
+    }
   }
 }
 
