@@ -1,6 +1,7 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 import UIKit
+import LayoutKit
 
 
 public extension ImageViewContainer {
@@ -52,17 +53,11 @@ open class SimpleImageViewContainer: ImageViewContainer {
                                     verticalPlacement: VerticalPlacement) -> UIView {
     switch verticalPlacement {
     case .top(let inset):
-      return LayoutableView(
-        layout: imageView.withAlignment(.topFill).withInsets(.top(inset))
-      )
+      return imageView.insideAutohidingContainer(alignment: .topFill, insets: .top(inset))
     case .bottom(let inset):
-      return LayoutableView(
-        layout: imageView.withAlignment(.bottomFill).withInsets(.bottom(inset))
-      )
+      return imageView.insideAutohidingContainer(alignment: .bottomFill, insets: .bottom(inset))
     case .center:
-      return LayoutableView(
-        layout: imageView.withAlignment(.centerFill)
-      )
+      return imageView.insideAutohidingContainer(alignment: .centerFill, insets: .zero)
     }
   }
   
@@ -80,5 +75,21 @@ open class SimpleImageViewContainer: ImageViewContainer {
     case nil:
       imageView.image = placeholder
     }
+  }
+}
+
+
+private extension UIView {
+
+  func insideAutohidingContainer(alignment: LayoutKit.Alignment,
+                                 insets: UIEdgeInsets) -> UIView {
+    AutohidingContainerView(
+      self,
+      layout: {
+        LayoutableView(
+          layout: $0.withAlignment(alignment).withInsets(insets)
+        )
+      }
+    )
   }
 }
