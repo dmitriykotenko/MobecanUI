@@ -7,10 +7,12 @@ public extension ImageViewContainer {
   
   static func simple(imageView: UIImageView,
                      placeholder: UIImage? = nil,
+                     hideIfImageIsNil: Bool = false,
                      placement: SimpleImageViewContainer.VerticalPlacement) -> ImageViewContainer {
     SimpleImageViewContainer(
       imageView: imageView,
       placeholder: placeholder,
+      hideIfImageIsNil: hideIfImageIsNil,
       verticalPlacement: placement
     )
   }
@@ -26,12 +28,15 @@ open class SimpleImageViewContainer: ImageViewContainer {
   }
   
   public let placeholder: UIImage?
+  public let hideIfImageIsNil: Bool
   public let verticalPlacement: VerticalPlacement
   
   public init(imageView: UIImageView,
               placeholder: UIImage? = nil,
+              hideIfImageIsNil: Bool,
               verticalPlacement: VerticalPlacement) {
     self.placeholder = placeholder
+    self.hideIfImageIsNil = hideIfImageIsNil
     self.verticalPlacement = verticalPlacement
     
     super.init(
@@ -62,6 +67,8 @@ open class SimpleImageViewContainer: ImageViewContainer {
   }
   
   override open func display(image: Image?) {
+    imageView.isHidden = (image == nil && hideIfImageIsNil)
+
     switch image {
     case .image(let image):
       imageView.image = image
