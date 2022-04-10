@@ -4,16 +4,40 @@ import UIKit
 
 
 public extension UIColor {
-  
+
+  struct RGBA {
+
+    public var red: CGFloat = 0
+    public var green: CGFloat = 0
+    public var blue: CGFloat = 0
+    public var alpha: CGFloat = 0
+
+    public init(red: CGFloat = 0,
+                green: CGFloat = 0,
+                blue: CGFloat = 0,
+                alpha: CGFloat = 0) {
+      self.red = red
+      self.green = green
+      self.blue = blue
+      self.alpha = alpha
+    }
+
+    init(_ color: UIColor) {
+      _ = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+    }
+  }
+
+  var rbga: RGBA { .init(self) }
+
   func mixed(with anotherColor: UIColor) -> UIColor {
-    let thisRgb = RGB(self)
-    let thatRgb = RGB(anotherColor)
+    let thisRgba = RGB(self)
+    let thatRgba = RGB(anotherColor)
     
     return UIColor(
-      displayP3Red: (thisRgb.red + thatRgb.red) / 2,
-      green: (thisRgb.green + thatRgb.green) / 2,
-      blue: (thisRgb.blue + thatRgb.blue) / 2,
-      alpha: (thisRgb.alpha + thatRgb.alpha) / 2
+      displayP3Red: (thisRgba.red + thatRgba.red) / 2,
+      green: (thisRgba.green + thatRgba.green) / 2,
+      blue: (thisRgba.blue + thatRgba.blue) / 2,
+      alpha: (thisRgba.alpha + thatRgba.alpha) / 2
     )
   }
   
@@ -46,18 +70,5 @@ private struct HSB {
   
   init(_ color: UIColor) {
     _ = color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-  }
-}
-
-
-private struct RGB {
-
-  var red: CGFloat = 0
-  var green: CGFloat = 0
-  var blue: CGFloat = 0
-  var alpha: CGFloat = 0
-  
-  init(_ color: UIColor) {
-    _ = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
   }
 }
