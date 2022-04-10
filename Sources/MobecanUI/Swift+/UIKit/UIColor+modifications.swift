@@ -30,8 +30,8 @@ public extension UIColor {
   var rbga: RGBA { .init(self) }
 
   func mixed(with anotherColor: UIColor) -> UIColor {
-    let thisRgba = RGB(self)
-    let thatRgba = RGB(anotherColor)
+    let thisRgba = RGBA(self)
+    let thatRgba = RGBA(anotherColor)
     
     return UIColor(
       displayP3Red: (thisRgba.red + thatRgba.red) / 2,
