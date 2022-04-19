@@ -19,6 +19,7 @@ public extension UIViewController {
   }
 
   /// When presenting the view controller on iPad, place at the center of presenting view controller.
+  @discardableResult
   func presentedAtTheCenter(of sourceView: UIView) -> Self {
     // Hide Popover's arrow on iPad.
     popoverPresentationController?.permittedArrowDirections = []

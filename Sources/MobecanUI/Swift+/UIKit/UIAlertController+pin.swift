@@ -22,6 +22,7 @@ public extension UIAlertController {
   /// https://stackoverflow.com/questions/31577140/uialertcontroller-is-crashed-ipad
   ///
   /// On iPhone, pinning has no effect.
+  @discardableResult
   func pinned(to view: UIView?) -> Self {
     pin(to: view)
     return self

@@ -108,11 +108,13 @@ public class TwoIconsButton: LayoutableView {
     }
   }
   
+  @discardableResult
   public func foreground(_ foreground: Foreground) -> Self {
     displayIconsAndText(foreground: foreground)
     return self
   }
   
+  @discardableResult
   public func tintColors(leadingIcon leadingIconColor: UIColor? = nil,
                          title titleColor: UIColor? = nil,
                          trailingIcon trailingIconColor: UIColor? = nil) -> Self {

@@ -73,6 +73,7 @@ open class SwitchView: LayoutableView {
     }
   }
 
+  @discardableResult
   open func title(_ title: String?) -> Self {
     label.text = title
     return self

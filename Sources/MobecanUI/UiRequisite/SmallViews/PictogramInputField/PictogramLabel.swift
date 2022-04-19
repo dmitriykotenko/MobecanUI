@@ -69,7 +69,8 @@ public class PictogramLabel: LayoutableView {
     
     return sampleLabel.frame.size
   }
-  
+
+  @discardableResult
   public func text(_ text: String?) -> Self {
     self.text.onNext(text)
     return self

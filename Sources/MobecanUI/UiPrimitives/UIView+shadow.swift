@@ -16,7 +16,8 @@ public extension UIView {
       .cornerRadius(cornerRadius)
       .withShadow(shadow)
   }
-  
+
+  @discardableResult
   func withShadow(_ shadow: Shadow) -> Self {
     layer.shadowColor = shadow.color.cgColor
     layer.shadowOpacity = shadow.opacity

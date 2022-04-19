@@ -13,6 +13,7 @@ public protocol TemporalView: UIView {
 
 public extension TemporalView {
 
+  @discardableResult
   func with(clock: Clock) -> Self {
     self.clock.onNext(clock)
     return self
