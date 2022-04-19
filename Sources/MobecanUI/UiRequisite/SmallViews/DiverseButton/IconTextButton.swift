@@ -4,15 +4,13 @@ import UIKit
 
 
 open class IconTextButton: DiverseButton {
-  
-  override open var contentEdgeInsets: UIEdgeInsets {
-    set {
-      super.contentEdgeInsets = newValue.with(right: newValue.right + spacing)
-    }
-    get {
-      let superInsets = super.contentEdgeInsets
-      return superInsets.with(right: superInsets.right - spacing)
-    }
+
+  /// Внешние отступы, учитывающие ``spacing`` (расстояние между иконкой и текстом).
+  ///
+  /// Используйте это свойство для задания отступов вместо стандартного свойства ``contentEdgeInsets``.
+  open var spacingAwareContentEdgeInsets: UIEdgeInsets {
+    get { contentEdgeInsets.with(right: contentEdgeInsets.right - spacing) }
+    set { contentEdgeInsets = newValue.with(right: newValue.right + spacing) }
   }
   
   private let spacing: CGFloat
