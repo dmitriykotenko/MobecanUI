@@ -26,6 +26,6 @@ open class IconTextButton: DiverseButton {
     
     titleEdgeInsets = .init(left: spacing, right: -spacing)
     
-    contentEdgeInsets = .zero
+    spacingAwareContentEdgeInsets = .zero
   }
 }
