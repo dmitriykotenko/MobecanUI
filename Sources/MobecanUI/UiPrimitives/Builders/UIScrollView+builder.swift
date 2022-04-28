@@ -18,6 +18,12 @@ public extension UIScrollView {
   }
 
   @discardableResult
+  func bounces(_ bounces: Bool) -> Self {
+    self.bounces = bounces
+    return self
+  }
+
+  @discardableResult
   func alwaysBounceHorizontal(_ alwaysBounceHorizontal: Bool) -> Self {
     self.alwaysBounceHorizontal = alwaysBounceHorizontal
     return self
