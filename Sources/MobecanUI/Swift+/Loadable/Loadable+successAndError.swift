@@ -12,6 +12,15 @@ public extension Loadable {
     }
   }
 
+  var asResult: Result<Value, SomeError>? {
+    switch self {
+    case .loaded(let result):
+      return result
+    default:
+      return nil
+    }
+  }
+
   var asSuccess: Value? {
     switch self {
     case .loaded(.success(let value)):
