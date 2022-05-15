@@ -82,7 +82,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
       _isSaving <== interactor.savingStatus
         // After value is successfully saved, the module must be immediately closed,
         // so we don't need to send `.success` to view controller.
-        .filter { $0?.asSuccess != nil }
+        .filter { $0?.asSuccess == nil }
         .map { $0?.isLoading == true }
 
       _error <== savingFailed.flatMap { [weak self] savingError in
