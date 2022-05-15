@@ -74,8 +74,6 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   Interactor.OutputValue == OutputValue,
   Interactor.SomeError == SomeError {
 
-    let savingFailed = interactor.savingStatus.compactMap(\.?.asError).share()
-
     disposeBag {
       _initialValue <== interactor.initialValue
 
@@ -85,14 +83,11 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
         .filter { $0?.asSuccess == nil }
         .map { $0?.isLoading == true }
 
-      _error <== savingFailed.flatMap { [weak self] savingError in
-        Observable.concat(
-          .just(savingError),
-          // Hide error message after value has been changed by user.
-          (self?.valueDidChange() ?? .never()).map { nil }
-          // FIXME: should we use .doNotDisturbMode instead of resetting error?
-        )
-      }
+      _error <== .merge(
+        interactor.savingStatus.map(\.?.asError),
+        // Hide error message after value has been changed by user.
+        valueDidChange().map { nil }
+      )
 
       _saveButtonTap
         .withLatestFrom(_value)
