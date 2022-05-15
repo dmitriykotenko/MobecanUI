@@ -10,28 +10,36 @@ public protocol EditorInteractorProtocol {
   associatedtype SomeError: Error
   
   var initialValue: Observable<InputValue?> { get }
-  var valueSaved: Observable<Result<OutputValue, SomeError>> { get }
+  var savingStatus: Observable<Loadable<OutputValue, SomeError>?> { get }
   
   var save: AnyObserver<OutputValue> { get }
+  var resetSavingStatus: AnyObserver<Void> { get }
 }
 
 
-public class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorInteractorProtocol {
+open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorInteractorProtocol {
   
-  @RxOutput(nil) public var initialValue: Observable<InputValue?>
-  @RxOutput public var valueSaved: Observable<Result<OutputValue, SomeError>>
-  
-  @RxInput public var save: AnyObserver<OutputValue>
+  @RxOutput(nil) open var initialValue: Observable<InputValue?>
+  @RxOutput(nil) open var savingStatus: Observable<Loadable<OutputValue, SomeError>?>
 
-  @RxInput(nil) var saver: AnyObserver<Saver<OutputValue, SomeError>?>
+  @RxInput open var save: AnyObserver<OutputValue>
+  @RxInput open var resetSavingStatus: AnyObserver<Void>
+
+  open var saver: Saver<OutputValue, SomeError>? = nil
+
+  private var saving: LoadingOperation<OutputValue, OutputValue, SomeError>?
   
   private let disposeBag = DisposeBag()
 
   public init() {
+    saving = .init(
+      when: _save.asObservable(),
+      load: { [weak self] in self?.saver?.save($0) ?? .never() },
+      bindResultTo: _savingStatus.mapObserver { $0 }
+    )
+
     disposeBag {
-      _save
-        .withLatestFrom(_saver.filterNil()) { (value: $0, saver: $1) }
-        .flatMap { $0.saver.save($0.value) } ==> _valueSaved
+      _savingStatus <== _resetSavingStatus.map { nil }
     }
   }
   

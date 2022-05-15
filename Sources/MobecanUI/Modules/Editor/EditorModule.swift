@@ -20,9 +20,19 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     }
   }
 
-  open var editingResult: Single<Result<OutputValue, SomeError>> { interactor.valueSaved.take(1).asSingle() }
+  /// Result of first saving.
+  open var editingResult: Single<Result<OutputValue, SomeError>> {
+    interactor.savingStatus.compactMap(\.?.asResult).take(1).asSingle()
+  }
 
-  open var finished: Observable<Void> { interactor.valueSaved.filterSuccess().mapToVoid() }
+  /// Final value produced by first successful saving.
+  open var finalValue: Single<OutputValue> {
+    interactor.savingStatus.compactMap(\.?.asSuccess).take(1).asSingle()
+  }
+
+  open var finished: Observable<Void> {
+    interactor.savingStatus.compactMap(\.?.asSuccess).mapToVoid()
+  }
   
   open var viewController: UIViewController { view }
 
@@ -55,7 +65,7 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   }
   
   open func with(saver: Saver<OutputValue, SomeError>) -> Self {
-    interactor.saver.onNext(saver)
+    interactor.saver = saver
     return self
   }
 

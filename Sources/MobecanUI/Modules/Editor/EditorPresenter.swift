@@ -20,24 +20,26 @@ public protocol EditorPresenterProtocol {
 
   var value: AnyObserver<Result<OutputValue, SomeError>> { get }
   var saveButtonTap: AnyObserver<Void> { get }
+  var resetSavingStatus: AnyObserver<Void> { get }
 }
 
 
 public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorPresenterProtocol {
 
-  @RxDriverOutput(nil) public var initialValue: Driver<InputValue?>
+  @RxDriverOutput(nil) open var initialValue: Driver<InputValue?>
 
-  @RxDriverOutput(true) public var isSaveButtonEnabled: Driver<Bool>
-  @RxDriverOutput(false) public var isSaving: Driver<Bool>
+  @RxDriverOutput(true) open var isSaveButtonEnabled: Driver<Bool>
+  @RxDriverOutput(false) open var isSaving: Driver<Bool>
 
-  @RxDriverOutput(.on) public var doNotDisturbMode: Driver<DoNotDisturbMode>
-  @RxDriverOutput(nil) public var hint: Driver<String?>
-  @RxDriverOutput(nil) public var errorText: Driver<String?>
+  @RxDriverOutput(.on) open var doNotDisturbMode: Driver<DoNotDisturbMode>
+  @RxDriverOutput(nil) open var hint: Driver<String?>
+  @RxDriverOutput(nil) open var errorText: Driver<String?>
 
   @RxOutput(nil) private var error: Observable<SomeError?>
 
-  @RxInput public var value: AnyObserver<Result<OutputValue, SomeError>>
-  @RxInput public var saveButtonTap: AnyObserver<Void>
+  @RxInput open var value: AnyObserver<Result<OutputValue, SomeError>>
+  @RxInput open var saveButtonTap: AnyObserver<Void>
+  @RxInput open var resetSavingStatus: AnyObserver<Void>
 
   private let errorFormatter: (SomeError) -> String?
 
@@ -72,26 +74,16 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   Interactor.OutputValue == OutputValue,
   Interactor.SomeError == SomeError {
 
-    let validValue = _value.asObservable().filterSuccess()
-
-    let save = _saveButtonTap
-      .filterWith(_value.map { $0.isSuccess })
-      .withLatestFrom(validValue)
-      .share(replay: 1, scope: .forever)
-
-    let savingFailed = interactor.valueSaved.filterFailure().share()
+    let savingFailed = interactor.savingStatus.compactMap(\.?.asError).share()
 
     disposeBag {
-      interactor.initialValue ==> _initialValue
+      _initialValue <== interactor.initialValue
 
-      save ==> interactor.save
-
-      _isSaving <== .merge(
-        save.map { _ in true },
+      _isSaving <== interactor.savingStatus
         // After value is successfully saved, the module must be immediately closed,
         // so we don't need to send `.success` to view controller.
-        savingFailed.map { _ in false }
-      )
+        .filter { $0?.asSuccess != nil }
+        .map { $0?.isLoading == true }
 
       _error <== savingFailed.flatMap { [weak self] savingError in
         Observable.concat(
@@ -101,6 +93,13 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
           // FIXME: should we use .doNotDisturbMode instead of resetting error?
         )
       }
+
+      _saveButtonTap
+        .withLatestFrom(_value)
+        .compactMap(\.asSuccess)
+        ==> interactor.save
+
+      _resetSavingStatus ==> interactor.resetSavingStatus
     }
   }
 
