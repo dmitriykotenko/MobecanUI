@@ -1,14 +1,13 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
-import MobecanUI
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class LoadingOperation<Query, Value, SomeError: Error> {
+open class LoadingOperation<Query, Value, SomeError: Error> {
 
-  @RxOutput(nil) public var state: Observable<Loadable<Value, SomeError>?>
+  @RxOutput(nil) open var state: Observable<Loadable<Value, SomeError>?>
 
   private let when: Observable<Query>
 

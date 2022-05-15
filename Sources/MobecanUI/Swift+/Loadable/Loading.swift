@@ -1,6 +1,5 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
-import MobecanUI
 import RxCocoa
 import RxSwift
 import UIKit
