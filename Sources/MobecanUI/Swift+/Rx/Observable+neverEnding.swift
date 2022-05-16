@@ -4,9 +4,9 @@ import RxCocoa
 import RxSwift
 
 
-public extension Observable {
+public extension ObservableType {
   
   func neverEnding() -> Observable<Element> {
-    Observable.concat(self, .never())
+    Observable.concat(self.asObservable(), .never())
   }
 }

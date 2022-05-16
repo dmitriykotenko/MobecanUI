@@ -5,7 +5,7 @@ import RxOptional
 import RxSwift
 
 
-public extension Observable where Element: OptionalType {
+public extension ObservableType where Element: OptionalType {
   
   func nestedMap<T>(_ transform: @escaping (Element.Wrapped) -> T) -> Observable<T?> {
     map {

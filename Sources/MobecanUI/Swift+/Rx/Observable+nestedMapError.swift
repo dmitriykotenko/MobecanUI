@@ -5,7 +5,7 @@ import RxOptional
 import RxSwift
 
 
-public extension Observable {
+public extension ObservableType {
 
   func nestedMapError<Value, SomeError, AnotherError: Error>(_ transform: @escaping (SomeError) -> AnotherError)
   -> Observable<Result<Value, AnotherError>>

@@ -5,7 +5,7 @@ import RxOptional
 import RxSwift
 
 
-public extension Observable {
+public extension ObservableType {
   
   func nestedMap<Value, SomeError, AnotherValue>(_ transform: @escaping (Value) -> AnotherValue)
     -> Observable<Result<AnotherValue, SomeError>>
@@ -36,6 +36,24 @@ public extension PrimitiveSequenceType where Trait == SingleTrait {
   -> Single<Result<AnotherValue, SomeError>>
   where Element == Result<Value, SomeError> {
       
+    map { $0.flatMap(transform) }
+  }
+}
+
+
+public extension SharedSequenceConvertibleType {
+
+  func nestedMap<Value, SomeError, AnotherValue>(_ transform: @escaping (Value) -> AnotherValue)
+  -> SharedSequence<SharingStrategy, Result<AnotherValue, SomeError>>
+  where Element == Result<Value, SomeError> {
+
+    map { $0.map(transform) }
+  }
+
+  func nestedFlatMap<Value, SomeError, AnotherValue>(_ transform: @escaping (Value) -> Result<AnotherValue, SomeError>)
+  -> SharedSequence<SharingStrategy, Result<AnotherValue, SomeError>>
+  where Element == Result<Value, SomeError> {
+
     map { $0.flatMap(transform) }
   }
 }
