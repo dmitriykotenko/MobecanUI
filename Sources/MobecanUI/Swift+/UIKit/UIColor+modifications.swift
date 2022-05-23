@@ -27,7 +27,32 @@ public extension UIColor {
     }
   }
 
-  var rbga: RGBA { .init(self) }
+  struct HSBA {
+
+    public var hue: CGFloat = 0
+    public var saturation: CGFloat = 0
+    public var brightness: CGFloat = 0
+    public var alpha: CGFloat = 0
+
+    public init(hue: CGFloat = 0,
+                saturation: CGFloat = 0,
+                brightness: CGFloat = 0,
+                alpha: CGFloat = 0) {
+      self.hue = hue
+      self.saturation = saturation
+      self.brightness = brightness
+      self.alpha = alpha
+    }
+
+    public init(_ color: UIColor) {
+      _ = color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+    }
+  }
+
+  var rgba: RGBA { .init(self) }
+  var hsba: HSBA { .init(self) }
+
+  var alpha: CGFloat { rgba.alpha }
 
   func mixed(with anotherColor: UIColor) -> UIColor {
     let thisRgba = RGBA(self)
@@ -42,14 +67,14 @@ public extension UIColor {
   }
   
   func withAlphaMultiplied(by multiplier: CGFloat) -> UIColor {
-    let alpha = HSB(self).alpha
+    let alpha = HSBA(self).alpha
     
     return withAlphaComponent(multiplier * alpha)
   }
 
   func withBrightnessMultiplied(by multiplier: CGFloat) -> UIColor {
     
-    let hsb = HSB(self)
+    let hsb = HSBA(self)
     
     return UIColor(
       hue: hsb.hue,
@@ -57,18 +82,5 @@ public extension UIColor {
       brightness: hsb.brightness * multiplier,
       alpha: hsb.alpha
     )
-  }
-}
-
-
-private struct HSB {
-
-  var hue: CGFloat = 0
-  var saturation: CGFloat = 0
-  var brightness: CGFloat = 0
-  var alpha: CGFloat = 0
-  
-  init(_ color: UIColor) {
-    _ = color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
   }
 }
