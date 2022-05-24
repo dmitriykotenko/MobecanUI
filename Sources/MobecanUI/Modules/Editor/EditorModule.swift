@@ -27,11 +27,11 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
 
   /// Final value produced by first successful saving.
   open var finalValue: Single<OutputValue> {
-    interactor.savingStatus.compactMap(\.?.asSuccess).take(1).asSingle()
+    interactor.savingStatus.asSuccess().take(1).asSingle()
   }
 
   open var finished: Observable<Void> {
-    interactor.savingStatus.compactMap(\.?.asSuccess).mapToVoid()
+    interactor.savingStatus.asSuccess().mapToVoid()
   }
   
   open var viewController: UIViewController { view }
@@ -77,5 +77,23 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   open func with(buttonTitle: String?) -> Self {
     view.buttonTitle.onNext(buttonTitle)
     return self
+  }
+}
+
+
+private extension ObservableType {
+
+  func asSuccess<Value, SomeError: Error>() -> Observable<Value> where Element == Loadable<Value, SomeError>? {
+    // We can not use .compactMap(\.?.asSuccess) here because of ambigious optional unwrapping in Swift.
+    //
+    // Ambiguity appears when ``Value`` itself is an Optional.
+    compactMap {
+      switch $0 {
+      case .loaded(.success(let value)):
+        return value
+      default:
+        return nil
+      }
+    }
   }
 }
