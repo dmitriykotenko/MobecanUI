@@ -59,21 +59,25 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     view.setPresenter(presenter)
   }
   
+  @discardableResult
   open func with(initialValue: Observable<InputValue?>) -> Self {
     interactor.with(initialValue: initialValue)
     return self
   }
   
+  @discardableResult
   open func with(saver: Saver<OutputValue, SomeError>) -> Self {
     interactor.saver = saver
     return self
   }
 
+  @discardableResult
   open func with(externalValidator: @escaping AsyncValidator<OutputValue, SomeError>) -> Self {
     view.externalValidator.onNext(externalValidator)
     return self
   }
 
+  @discardableResult
   open func with(buttonTitle: String?) -> Self {
     view.buttonTitle.onNext(buttonTitle)
     return self

@@ -43,9 +43,11 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
     }
   }
   
-  func with(initialValue: Observable<InputValue?>) {
+  @discardableResult
+  func with(initialValue: Observable<InputValue?>) -> Self {
     disposeBag {
       initialValue ==> _initialValue
     }
+    return self
   }
 }
