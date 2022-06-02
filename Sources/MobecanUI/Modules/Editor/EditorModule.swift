@@ -64,7 +64,12 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     interactor.with(initialValue: initialValue)
     return self
   }
-  
+
+  @discardableResult
+  open func with(initialValue: InputValue?) -> Self {
+    with(initialValue: .just(initialValue))
+  }
+
   @discardableResult
   open func with(saver: Saver<OutputValue, SomeError>) -> Self {
     interactor.saver = saver
