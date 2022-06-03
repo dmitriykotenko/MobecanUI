@@ -5,8 +5,8 @@ import RxSwift
 import UIKit
 
 
-/// UITableView, совместимый с LayoutKit.
-open class SizableTableView: UITableView, SizableView {
+/// UIScrollView, совместимый с LayoutKit.
+open class SizableScrollView: UIScrollView, SizableView {
 
   open var sizer = ViewSizer()
 
@@ -20,11 +20,9 @@ open class SizableTableView: UITableView, SizableView {
   required public init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
   public convenience init() { self.init(frame: .zero) }
-  public convenience init(frame: CGRect) { self.init(frame: frame, style: .plain) }
 
-  override public init(frame: CGRect,
-                       style: UITableView.Style) {
-    super.init(frame: frame, style: .plain)
+  override public init(frame: CGRect) {
+    super.init(frame: frame)
     withStretchableSize()
   }
 }
