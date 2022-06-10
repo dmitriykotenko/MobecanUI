@@ -35,6 +35,21 @@ public extension UIStackView.Alignment {
     switch axis {
     case .horizontal:
       switch self {
+      case .leading:
+        return .fillLeading
+      case .trailing:
+        return .fillTrailing
+      case .center:
+        return .fillCenter
+      case .fill:
+        return .fill
+      case .firstBaseline, .lastBaseline:
+        fatalError("UIStackView.Alignment \"\(self)\" is not supported for \(axis) axis")
+      @unknown default:
+        fatalError("UIStackView.Alignment \"\(self)\" is not supported")
+      }
+    case .vertical:
+      switch self {
       case .top:
         return .topFill
       case .bottom:
@@ -51,22 +66,6 @@ public extension UIStackView.Alignment {
         fatalError("UIStackView.Alignment \"\(self)\" is not supported")
       @unknown default:
         fatalError("UIStackView.Alignment \"\(self)\" is not supported for \(axis) axis")
-      }
-
-    case .vertical:
-      switch self {
-      case .leading:
-        return .fillLeading
-      case .trailing:
-        return .fillTrailing
-      case .center:
-        return .fillCenter
-      case .fill:
-        return .fill
-      case .firstBaseline, .lastBaseline:
-        fatalError("UIStackView.Alignment \"\(self)\" is not supported for \(axis) axis")
-      @unknown default:
-        fatalError("UIStackView.Alignment \"\(self)\" is not supported")
       }
     @unknown default:
       fatalError("NSLayoutConstraint.Axis \"\(axis)\" is not supported")

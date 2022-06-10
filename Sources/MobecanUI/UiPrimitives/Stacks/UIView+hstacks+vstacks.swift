@@ -100,7 +100,7 @@ public extension UIView {
       spacing: spacing ?? 0,
       distribution: distribution?.asLayoutKitDistribution ?? .fillFlexing,
       contentInsets: insets,
-      childrenAlignment: alignment.asLayoutKitAlignment(axis: axis),
+      childrenAlignment: alignment.asLayoutKitAlignment(axis: axis.opposite),
       intrinsicWidth: intrinsicWidth,
       intrinsicHeight: intrinsicHeight
     )
@@ -108,5 +108,20 @@ public extension UIView {
     stack.addArrangedSubviews(Array(subviews))
 
     return stack
+  }
+}
+
+
+private extension NSLayoutConstraint.Axis {
+
+  var opposite: NSLayoutConstraint.Axis {
+    switch self {
+    case .horizontal:
+      return .vertical
+    case .vertical:
+      return .horizontal
+    @unknown default:
+      fatalError("NSLayoutConstraint.Axis \(self) is not yet supported")
+    }
   }
 }
