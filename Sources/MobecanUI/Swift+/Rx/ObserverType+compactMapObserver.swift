@@ -20,7 +20,7 @@ public extension ObserverType {
     }
   }
 
-  func filterNil<NestedElement>() -> AnyObserver<NestedElement> where Element == NestedElement? {
+  func filterNil() -> AnyObserver<Element?> {
     compactMapObserver { $0 }
   }
 }
