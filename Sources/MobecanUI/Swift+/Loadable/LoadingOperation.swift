@@ -15,7 +15,7 @@ open class LoadingOperation<Query, Value, SomeError: Error> {
 
   public init(when: Observable<Query>,
               load: @escaping (Query) -> Single<Result<Value, SomeError>>,
-              bindResultTo resultObserver: AnyObserver<Loadable<Value, SomeError>?>) {
+              bindResultTo resultObserver: AnyObserver<Loadable<Value, SomeError>?> = .empty) {
     self.when = when
 
     disposeBag {
