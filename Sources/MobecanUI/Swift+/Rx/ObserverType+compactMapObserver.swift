@@ -19,4 +19,8 @@ public extension ObserverType {
       transform($0).map { self.onNext($0) }
     }
   }
+
+  func filterNil<NestedElement>() -> AnyObserver<NestedElement> where Element == NestedElement? {
+    compactMapObserver { $0 }
+  }
 }
