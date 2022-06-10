@@ -16,7 +16,7 @@ open class FullScreenOperation<Input, Output> {
               show initModule: @escaping (Input) -> ModuleDependency.OneTime<Output>,
               via demonstrator: @escaping () -> Demonstrator?,
               animating: Bool? = nil,
-              bindResultTo resultObserver: AnyObserver<Output>) {
+              bindResultTo resultObserver: AnyObserver<Output> = .empty) {
     
     self.when = when
     
