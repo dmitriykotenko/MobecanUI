@@ -3,11 +3,11 @@
 import UIKit
 
 
-public struct TextStyle {
+public struct TextStyle: Lensable {
   
-  public let fontStyle: FontStyle?
-  public let alignment: NSTextAlignment?
-  public let color: UIColor?
+  public var fontStyle: FontStyle?
+  public var alignment: NSTextAlignment?
+  public var color: UIColor?
   
   public static var left = TextStyle(alignment: .left)
   public static var centered = TextStyle(alignment: .center)
