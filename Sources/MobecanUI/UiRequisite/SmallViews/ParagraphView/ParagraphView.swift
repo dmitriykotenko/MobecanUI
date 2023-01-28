@@ -111,7 +111,7 @@ open class ParagraphView<Value, ViewEvent>: LayoutableView, EventfulView {
 
 extension ParagraphView: MandatorinessListener {
 
-  open var isMandatory: AnyObserver<Bool> {
+  public var isMandatory: AnyObserver<Bool> {
     (titleLabel as? MandatorinessListener)?.isMandatory ?? .empty
   }
 }

@@ -74,13 +74,13 @@ extension DiverseLabel {
   }
 
   @discardableResult
-  open func enableLayoutInvalidation() -> Self {
+  public func enableLayoutInvalidation() -> Self {
     isLayoutInvalidationEnabled = true
     return self
   }
 
   @discardableResult
-  open func disableLayoutInvalidation() -> Self {
+  public func disableLayoutInvalidation() -> Self {
     isLayoutInvalidationEnabled = false
     return self
   }
