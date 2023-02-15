@@ -99,26 +99,27 @@ open class TabBarController: UIViewController {
 
     selectedViewController?.view.removeFromSuperview()    
     viewController.didMove(toParent: self)
-    selectedViewController?.didMove(toParent: nil)
+    selectedViewController?.removeFromParent()
     
     selectedViewController = viewController
     view.setNeedsLayout()
   }
   
   open func addFloatingViewController(_ floatingViewController: UIViewController) {
-    floatingViewController.willMove(toParent: self)
+    addChild(floatingViewController)
 
     floatingView.layout = InsetLayout<UIView>.fromSingleSubview(floatingViewController.view)
     
-    addChild(floatingViewController)
+    floatingViewController.didMove(toParent: self)
     view.setNeedsLayout()
   }
   
   open func removeFloatingViewController(_ floatingViewController: UIViewController) {
     floatingViewController.willMove(toParent: nil)    
     floatingViewController.view.removeFromSuperview()
+    floatingViewController.removeFromParent()
+
     floatingView.layout = EmptyLayout()
-    floatingViewController.didMove(toParent: nil)
     view.setNeedsLayout()
   }
 }

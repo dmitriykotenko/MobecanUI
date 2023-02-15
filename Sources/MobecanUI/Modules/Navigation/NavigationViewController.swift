@@ -26,11 +26,9 @@ open class NavigationViewController: UIViewController {
   }
 
   private func buildInterface() {
-    worker.willMove(toParent: self)
-    
-    view.putSubview(worker.view)
-    
     addChild(worker)
+    view.putSubview(worker.view)
+    worker.didMove(toParent: self)
   }
 
   open func setPresenter(_ presenter: NavigationPresenterProtocol) {

@@ -158,7 +158,7 @@ open class NavigationController: UIViewController {
       to: newViewController,
       completion: { [weak self] in
         oldViewController?.view.removeFromSuperview()
-        oldViewController?.didMove(toParent: nil)
+        oldViewController?.removeFromParent()
         newViewController?.didMove(toParent: self)
         
         self?._viewControllers.onNext(update.new)
