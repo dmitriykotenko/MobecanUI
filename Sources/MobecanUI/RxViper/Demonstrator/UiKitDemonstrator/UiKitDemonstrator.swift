@@ -77,22 +77,14 @@ public class UiKitDemonstrator: Demonstrator {
   }
 
   private func finishCurrentDemonstrationImmediately(animating: Bool = false) -> Single<Void> {
-    guard isDemonstrating else { return .just(()) }
+    let dismission =
+      currentDemonstration?.containerViewController.presentingViewController?.rx.dismiss(animated: animating)
+      ?? .just(()) // do not perform dismission if there is nothing to dismiss.
 
-    return Single.if(
-      // Do not perform dismission if there is nothing to dismiss.
-      // Otherwise, parentViewController can accidentally dismiss itself
-      // (see UIViewController.dismiss(animated:completion:) method reference).
-      currentDemonstration?.containerViewController.isBeingPresented == true,
-      then:
-        currentDemonstration?.containerViewController.presentingViewController?.rx.dismiss(animated: animating)
-        ?? .just(()),
-      else: .just(())
-    )
-    .do(onSuccess: { [weak self] in self?.onDemonstrationFinished() })
+    return dismission.do(onSuccess: { [weak self] in
+      self?.onDemonstrationFinished()
+    })
   }
-
-  private var isDemonstrating: Bool { currentDemonstration != nil }
 
   private func onDemonstrationFinished() {
     currentDemonstration.map {
