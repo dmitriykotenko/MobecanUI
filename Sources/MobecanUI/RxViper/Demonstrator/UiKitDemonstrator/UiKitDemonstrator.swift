@@ -83,8 +83,10 @@ public class UiKitDemonstrator: Demonstrator {
       // Do not perform dismission if there is nothing to dismiss.
       // Otherwise, parentViewController can accidentally dismiss itself
       // (see UIViewController.dismiss(animated:completion:) method reference).
-      parentViewController.presentedViewController != nil,
-      then: parentViewController.rx.dismiss(animated: animating),
+      currentDemonstration?.containerViewController.isBeingPresented == true,
+      then:
+        currentDemonstration?.containerViewController.presentingViewController?.rx.dismiss(animated: animating)
+        ?? .just(()),
       else: .just(())
     )
     .do(onSuccess: { [weak self] in self?.onDemonstrationFinished() })
