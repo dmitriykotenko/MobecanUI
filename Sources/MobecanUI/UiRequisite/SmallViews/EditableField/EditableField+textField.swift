@@ -11,9 +11,9 @@ public extension EditableField where RawValue == String?, ValidatedValue == Stri
                    backgroundView: EditableFieldBackgroundProtocol,
                    initSubviews: @escaping (UIView, EditableFieldBackgroundProtocol) -> EditableFieldSubviews,
                    layout: EditableFieldLayout,
-                   validator: ((RawValue) -> Result<ValidatedValue, ValidationError>)? = nil) {
+                   validator: ((RawValue) -> SoftResult<ValidatedValue, ValidationError>)? = nil) {
     
-    let sampleValidator = { (rawValue: RawValue) -> Result<ValidatedValue, ValidationError> in
+    let sampleValidator = { (rawValue: RawValue) -> SoftResult<ValidatedValue, ValidationError> in
       print("Sample validator for text field.")
       return .success(rawValue)
     }
@@ -35,7 +35,7 @@ public extension EditableField where RawValue == String? {
                    backgroundView: EditableFieldBackgroundProtocol,
                    initSubviews: @escaping (UIView, EditableFieldBackgroundProtocol) -> EditableFieldSubviews,
                    layout: EditableFieldLayout,
-                   validator: @escaping (RawValue) -> Result<ValidatedValue, ValidationError>) {
+                   validator: @escaping (RawValue) -> SoftResult<ValidatedValue, ValidationError>) {
     
     self.init(
       subviews: initSubviews(textField, backgroundView),

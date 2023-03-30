@@ -11,7 +11,7 @@ public extension EditableField where RawValue == String? {
                    backgroundView: EditableFieldBackgroundProtocol,
                    initSubviews: @escaping (UIView, EditableFieldBackgroundProtocol) -> EditableFieldSubviews,
                    layout: EditableFieldLayout,
-                   validator: @escaping (String?) -> Result<ValidatedValue, ValidationError>) {
+                   validator: @escaping (String?) -> SoftResult<ValidatedValue, ValidationError>) {
     self.init(
       subviews: initSubviews(textView, backgroundView),
       layout: layout,

@@ -30,13 +30,11 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
     _externalError,
     _doNotDisturbMode
     ) { validatedValue, externalError, doNotDisturbMode in
-      switch (validatedValue, externalError, doNotDisturbMode) {
-      case (.success, nil, _), (_, _, .on):
+      switch doNotDisturbMode {
+      case .on:
         return nil
-      case (.failure(let internalError), _, .off):
-        return internalError
-      case (_, let externalError?, .off):
-        return externalError
+      case .off:
+        return validatedValue.error ?? externalError
       }
   }
   
@@ -48,7 +46,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
   private let valueEditor: UIView
   
   open var formatError: (ValidationError) -> String? = { "\($0.localizedDescription)" }
-  private let validator: (RawValue) -> Result<ValidatedValue, ValidationError>
+  private let validator: (RawValue) -> SoftResult<ValidatedValue, ValidationError>
   private var firstResponderStatusListener: [NSObjectProtocol] = []
   
   private let disposeBag = DisposeBag()
@@ -59,7 +57,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
               layout: EditableFieldLayout,
               rawValueGetter: Observable<RawValue>,
               rawValueSetter: AnyObserver<RawValue>,
-              validator: @escaping (RawValue) -> Result<ValidatedValue, ValidationError>,
+              validator: @escaping (RawValue) -> SoftResult<ValidatedValue, ValidationError>,
               selectNextField: Observable<Void> = .never()) {
     self.titleLabel = subviews.titleLabel
     self.hintLabel = subviews.hintLabel
