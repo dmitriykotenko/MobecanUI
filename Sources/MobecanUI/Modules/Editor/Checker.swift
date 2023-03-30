@@ -6,9 +6,9 @@ import RxSwift
 
 public struct Checker<InputValue, OutputValue, SomeError: Error> {
   
-  public let isOutputValueValid: (InputValue?, Result<OutputValue, SomeError>) -> Bool
+  public let isOutputValueValid: (InputValue?, SoftResult<OutputValue, SomeError>) -> Bool
   
-  public init(_ isOutputValueValid: @escaping (InputValue?, Result<OutputValue, SomeError>) -> Bool) {
+  public init(_ isOutputValueValid: @escaping (InputValue?, SoftResult<OutputValue, SomeError>) -> Bool) {
     self.isOutputValueValid = isOutputValueValid
   }
   

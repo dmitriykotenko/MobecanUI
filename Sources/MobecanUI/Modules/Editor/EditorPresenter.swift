@@ -18,7 +18,7 @@ public protocol EditorPresenterProtocol {
   var hint: Driver<String?> { get }
   var errorText: Driver<String?> { get }
 
-  var value: AnyObserver<Result<OutputValue, SomeError>> { get }
+  var value: AnyObserver<SoftResult<OutputValue, SomeError>> { get }
   var saveButtonTap: AnyObserver<Void> { get }
   var resetSavingStatus: AnyObserver<Void> { get }
 }
@@ -37,7 +37,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
 
   @RxOutput(nil) private var error: Observable<SomeError?>
 
-  @RxInput open var value: AnyObserver<Result<OutputValue, SomeError>>
+  @RxInput open var value: AnyObserver<SoftResult<OutputValue, SomeError>>
   @RxInput open var saveButtonTap: AnyObserver<Void>
   @RxInput open var resetSavingStatus: AnyObserver<Void>
 
@@ -46,7 +46,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   private let disposeBag = DisposeBag()
   
   public init(checker: Checker<InputValue, OutputValue, SomeError>,
-              hintFormatter: @escaping (Result<OutputValue, SomeError>) -> String? = { _ in nil },
+              hintFormatter: @escaping (SoftResult<OutputValue, SomeError>) -> String? = { _ in nil },
               errorFormatter: @escaping (SomeError) -> String?) {
     self.errorFormatter = errorFormatter
 
@@ -92,6 +92,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
       _saveButtonTap
         .withLatestFrom(_value)
         .compactMap(\.asSuccess)
+        .filterWith(isSaveButtonEnabled)
         ==> interactor.save
 
       _resetSavingStatus ==> interactor.resetSavingStatus
@@ -101,4 +102,10 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   private func valueDidChange() -> Observable<Void> {
     _value.skip(1).take(1).mapToVoid()
   }
+}
+
+
+private extension SoftResult {
+
+  var asSuccess: Success? { try? get() }
 }

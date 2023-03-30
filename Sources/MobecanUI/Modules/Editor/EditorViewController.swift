@@ -21,7 +21,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
       .asDriver(onErrorDriveWith: .never())
   }
   
-  private let valueGetter: Observable<Result<OutputValue, SomeError>>
+  private let valueGetter: Observable<SoftResult<OutputValue, SomeError>>
   private let valueSetter: AnyObserver<InputValue?>
   private let doNotDisturbModeSetter: AnyObserver<DoNotDisturbMode>
 
@@ -36,7 +36,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   
   public init(subviews: EditorViewControllerSubviews,
               layout: EditorViewControllerLayout,
-              valueGetter: Observable<Result<OutputValue, SomeError>>,
+              valueGetter: Observable<SoftResult<OutputValue, SomeError>>,
               valueSetter: AnyObserver<InputValue?>,
               doNotDisturbModeSetter: AnyObserver<DoNotDisturbMode> = .empty) {
     
@@ -88,12 +88,14 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
 }
 
 
-private extension Result {
+private extension SoftResult {
 
   func validate(via validator: AsyncValidator<Success, Failure>) -> Single<Self> {
     switch self {
     case .success(let value):
       return validator(value)
+    case .hybrid(_, let error):
+      return .just(.failure(error))
     case .failure(let error):
       return .just(.failure(error))
     }
@@ -102,8 +104,8 @@ private extension Result {
   func externalError(from validator: @escaping AsyncValidator<Success, Failure>) -> Single<Failure?> {
     switch self {
     case .success(let value):
-      return validator(value).map { $0.asError }
-    case .failure:
+      return validator(value).map { $0.error }
+    default:
       return .just(nil)
     }
   }

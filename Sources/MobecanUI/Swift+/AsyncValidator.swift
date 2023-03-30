@@ -3,4 +3,4 @@
 import RxSwift
 
 
-public typealias AsyncValidator<Value, SomeError: Error> = (Value) -> Single<Result<Value, SomeError>>
+public typealias AsyncValidator<Value, SomeError: Error> = (Value) -> Single<SoftResult<Value, SomeError>>
