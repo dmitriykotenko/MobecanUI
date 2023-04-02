@@ -44,6 +44,10 @@ public enum SoftResult<Success, Failure: Error> {
     }
   }
 
+  public var value: Success? {
+    try? get()
+  }
+
   public var error: Failure? {
     switch self {
     case .success:
@@ -52,6 +56,23 @@ public enum SoftResult<Success, Failure: Error> {
       return error
     case .failure(let error):
       return error
+    }
+  }
+
+  public var hasValue: Bool {
+    value != nil
+  }
+
+  public var hasError: Bool {
+    error != nil
+  }
+
+  public var isSuccess: Bool {
+    switch self {
+    case .success:
+      return true
+    case .hybrid, .failure:
+      return false
     }
   }
 }

@@ -24,4 +24,8 @@ public extension SoftResult {
       return .failure(transform(error))
     }
   }
+
+  func mapToAny() -> SoftResult<Any, Failure> {
+    map { $0 as Any }
+  }
 }
