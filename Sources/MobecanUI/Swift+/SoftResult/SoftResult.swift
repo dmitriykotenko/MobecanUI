@@ -75,6 +75,16 @@ public enum SoftResult<Success, Failure: Error> {
       return false
     }
   }
+
+  public func isNotNilSuccess<Element>(and condition: (Element) -> Bool = { _ in true }) -> Bool
+  where Success == Element? {
+    switch self {
+    case .success(let value?) where condition(value):
+      return true
+    default:
+      return false
+    }
+  }
 }
 
 
