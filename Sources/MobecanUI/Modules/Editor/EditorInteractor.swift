@@ -14,6 +14,7 @@ public protocol EditorInteractorProtocol {
   
   var save: AnyObserver<OutputValue> { get }
   var resetSavingStatus: AnyObserver<Void> { get }
+  var userWantsToCloseModule: AnyObserver<Void> { get }
 }
 
 
@@ -24,8 +25,11 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
 
   @RxInput open var save: AnyObserver<OutputValue>
   @RxInput open var resetSavingStatus: AnyObserver<Void>
+  @RxInput open var userWantsToCloseModule: AnyObserver<Void>
 
   open var saver: Saver<OutputValue, SomeError>? = nil
+
+  open private(set) lazy var close = _userWantsToCloseModule.asObservable()
 
   private var saving: LoadingOperation<OutputValue, OutputValue, SomeError>?
   

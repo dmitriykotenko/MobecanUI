@@ -25,13 +25,36 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     interactor.savingStatus.compactMap(\.?.asResult).take(1).asSingle()
   }
 
+  /// If the user closed the module without saving, returns .cancel.
+  /// Otherwise, returns result of first saving.
+  open var editingResultOrCancel: Single<CancelOr<Result<OutputValue, SomeError>>> {
+    Observable.merge(
+      interactor.close.map { .cancel },
+      interactor.savingStatus.compactMap(\.?.asResult).map { .value($0) }
+    )
+    .take(1).asSingle()
+  }
+
   /// Final value produced by first successful saving.
   open var finalValue: Single<OutputValue> {
     interactor.savingStatus.asSuccess().take(1).asSingle()
   }
 
+  /// If the user closed the module without saving, returns .cancel.
+  /// Otherwise, returns saved value.
+  open var finalValueOrCancel: Single<CancelOr<OutputValue>> {
+    Observable.merge(
+      interactor.close.map { .cancel },
+      interactor.savingStatus.asSuccess().map { .value($0) }
+    )
+    .take(1).asSingle()
+  }
+
   open var finished: Observable<Void> {
-    interactor.savingStatus.asSuccess().mapToVoid()
+    .merge(
+      interactor.close,
+      interactor.savingStatus.asSuccess().mapToVoid()
+    )
   }
   
   open var viewController: UIViewController { view }
