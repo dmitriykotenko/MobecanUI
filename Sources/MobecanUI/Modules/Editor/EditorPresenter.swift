@@ -21,6 +21,8 @@ public protocol EditorPresenterProtocol {
   var value: AnyObserver<SoftResult<OutputValue, SomeError>> { get }
   var finalizeButtonTap: AnyObserver<Void> { get }
   var resetFinalizationStatus: AnyObserver<Void> { get }
+
+  var closeButtonTap: AnyObserver<Void> { get }
 }
 
 
@@ -40,6 +42,8 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   @RxInput open var value: AnyObserver<SoftResult<OutputValue, SomeError>>
   @RxInput open var finalizeButtonTap: AnyObserver<Void>
   @RxInput open var resetFinalizationStatus: AnyObserver<Void>
+
+  @RxInput open var closeButtonTap: AnyObserver<Void>
 
   private let errorFormatter: (SomeError) -> String?
 
@@ -98,6 +102,8 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
         ==> interactor.finalize
 
       _resetFinalizationStatus ==> interactor.resetFinalizationStatus
+
+      _closeButtonTap ==> interactor.userWantsToCloseModule
     }
   }
 

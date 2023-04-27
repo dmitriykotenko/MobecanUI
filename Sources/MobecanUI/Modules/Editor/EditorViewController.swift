@@ -84,6 +84,10 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
 
       finalizeButtonContainer.buttonTap ==> presenter.finalizeButtonTap
     }
+
+    subviews.closeButton?.tap
+      .subscribe(presenter.closeButtonTap)
+      .disposed(by: disposeBag)
   }
 }
 
