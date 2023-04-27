@@ -93,7 +93,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
 
       _finalizeButtonTap
         .withLatestFrom(_value)
-        .compactMap(\.asSuccess)
+        .compactMap { $0.isSuccess ? $0.value : nil }
         .filterWith(isFinalizeButtonEnabled)
         ==> interactor.finalize
 
@@ -104,10 +104,4 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   private func valueDidChange() -> Observable<Void> {
     _value.skip(1).take(1).mapToVoid()
   }
-}
-
-
-private extension SoftResult {
-
-  var asSuccess: Success? { try? get() }
 }

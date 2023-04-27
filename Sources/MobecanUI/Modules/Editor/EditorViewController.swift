@@ -94,8 +94,15 @@ private extension SoftResult {
     switch self {
     case .success(let value):
       return validator(value)
-    case .hybrid(_, let error):
-      return .just(.failure(error))
+    case .hybrid(let value, let error):
+      return validator(value).map {
+        switch $0 {
+        case .success(let validatedValue):
+          return .hybrid(value: validatedValue, error: error)
+        default:
+          return $0
+        }
+      }
     case .failure(let error):
       return .just(.failure(error))
     }
