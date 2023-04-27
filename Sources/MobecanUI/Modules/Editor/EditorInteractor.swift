@@ -12,7 +12,7 @@ public protocol EditorInteractorProtocol {
   var initialValue: Observable<InputValue?> { get }
   var finalizationStatus: Observable<Loadable<OutputValue, SomeError>?> { get }
   
-  var userDidChangeValue: AnyObserver<OutputValue> { get }
+  var userDidChangeValue: AnyObserver<SoftResult<OutputValue, SomeError>> { get }
 
   var finalize: AnyObserver<OutputValue> { get }
   var resetFinalizationStatus: AnyObserver<Void> { get }
@@ -25,19 +25,27 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
   @RxOutput(nil) open var initialValue: Observable<InputValue?>
   @RxOutput(nil) open var finalizationStatus: Observable<Loadable<OutputValue, SomeError>?>
 
-  @RxInput open var userDidChangeValue: AnyObserver<OutputValue>
+  @RxInput open var userDidChangeValue: AnyObserver<SoftResult<OutputValue, SomeError>>
 
   @RxInput open var finalize: AnyObserver<OutputValue>
   @RxInput open var resetFinalizationStatus: AnyObserver<Void>
   @RxInput open var userWantsToCloseModule: AnyObserver<Void>
 
+  /// Правила обработки финального значения.
   open var finalizer: AsyncProcessor<OutputValue, SomeError>? = nil
-  open var intermediateValueProcessor: AsyncProcessor<OutputValue, SomeError>? = nil
+
+  /// Правила обработки промежуточного значения.
+  open var intermediateValueProcessingPolicy: IntermediateValueProcessingPolicy<OutputValue, SomeError>? {
+    didSet { setupIntermediateValueProcessing() }
+  }
 
   open private(set) lazy var close = _userWantsToCloseModule.asObservable()
 
-  private var finalizing: LoadingOperation<OutputValue, OutputValue, SomeError>?
-  private var intermediateValueProcessing: LoadingOperation<OutputValue, OutputValue, SomeError>?
+  private var finalizing:
+    LoadingOperation<OutputValue, OutputValue, SomeError>?
+
+  private var intermediateValueProcessing:
+    LoadingOperation<SoftResult<OutputValue, SomeError>, OutputValue, SomeError>?
 
   private let disposeBag = DisposeBag()
 
@@ -48,15 +56,19 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
       bindResultTo: _finalizationStatus.mapObserver { $0 }
     )
 
-    intermediateValueProcessing = .init(
-      when: _userDidChangeValue.asObservable(),
-      load: { [weak self] in self?.intermediateValueProcessor?.process($0) ?? .never() },
-      bindNotNilResultTo: .empty
-    )
-
     disposeBag {
       _finalizationStatus <== _resetFinalizationStatus.map { nil }
     }
+  }
+
+  private func setupIntermediateValueProcessing() {
+    guard let policy = intermediateValueProcessingPolicy else { return }
+
+    intermediateValueProcessing = .init(
+      when: _userDidChangeValue.throttle(policy.throttlingDuration, scheduler: MainScheduler.instance),
+      load: { policy.processValue($0) ?? .never() },
+      bindResultTo: .empty
+    )
   }
   
   @discardableResult

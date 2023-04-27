@@ -89,7 +89,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
         valueDidChange().map { nil }
       )
 
-      _value.compactMap(\.value) ==> interactor.userDidChangeValue
+      _value ==> interactor.userDidChangeValue
 
       _finalizeButtonTap
         .withLatestFrom(_value)

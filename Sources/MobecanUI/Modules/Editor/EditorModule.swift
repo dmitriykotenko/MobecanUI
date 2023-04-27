@@ -10,7 +10,7 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     public let interactor: EditorInteractor<InputValue, OutputValue, SomeError>
     public let presenter: EditorPresenter<InputValue, OutputValue, SomeError>
     public let view: EditorViewController<InputValue, OutputValue, SomeError>
-    
+
     public init(interactor: EditorInteractor<InputValue, OutputValue, SomeError>,
                 presenter: EditorPresenter<InputValue, OutputValue, SomeError>,
                 view: EditorViewController<InputValue, OutputValue, SomeError>) {
@@ -56,13 +56,13 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
       interactor.finalizationStatus.asSuccess().mapToVoid()
     )
   }
-  
+
   open var viewController: UIViewController { view }
 
   private let interactor: EditorInteractor<InputValue, OutputValue, SomeError>
   private let presenter: EditorPresenter<InputValue, OutputValue, SomeError>
   private let view: EditorViewController<InputValue, OutputValue, SomeError>
-  
+
   public var demonstrator: Demonstrator?
 
   public convenience init(parts: Parts) {
@@ -76,12 +76,12 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     self.view = parts.view
 
     self.demonstrator = demonstrator ??
-      UiKitDemonstrator(parentViewController: parts.view)
+    UiKitDemonstrator(parentViewController: parts.view)
 
     presenter.setInteractor(interactor)
     view.setPresenter(presenter)
   }
-  
+
   @discardableResult
   open func with(initialValue: Observable<InputValue?>) -> Self {
     interactor.with(initialValue: initialValue)
@@ -100,8 +100,8 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   }
 
   @discardableResult
-  open func with(intermediateValueProcessor: AsyncProcessor<OutputValue, SomeError>) -> Self {
-    interactor.intermediateValueProcessor = intermediateValueProcessor
+  open func with(intermediateValueProcessingPolicy: IntermediateValueProcessingPolicy<OutputValue, SomeError>) -> Self {
+    interactor.intermediateValueProcessingPolicy = intermediateValueProcessingPolicy
     return self
   }
 
