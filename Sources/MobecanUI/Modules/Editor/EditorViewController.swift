@@ -7,10 +7,10 @@ import UIKit
 
 open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIViewController {
 
-  open var buttonTitle: AnyObserver<String?> { saveButtonContainer.title }
+  open var buttonTitle: AnyObserver<String?> { finalizeButtonContainer.title }
   
-  @RxUiInput(false) open var isSaving: AnyObserver<Bool>
-  open var saveButtonTap: Observable<Void> { saveButtonContainer.buttonTap }
+  @RxUiInput(false) open var isFinalizing: AnyObserver<Bool>
+  open var finalizeButtonTap: Observable<Void> { finalizeButtonContainer.buttonTap }
 
   @RxUiInput({ .just(.success($0)) }) open var externalValidator: AnyObserver<AsyncValidator<OutputValue, SomeError>>
 
@@ -28,7 +28,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   private let subviews: EditorViewControllerSubviews
   private let layout: EditorViewControllerLayout
 
-  private let saveButtonContainer: LoadingButtonContainer
+  private let finalizeButtonContainer: LoadingButtonContainer
   
   private let disposeBag = DisposeBag()
   
@@ -43,7 +43,7 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     self.subviews = subviews
     self.layout = layout
 
-    self.saveButtonContainer = subviews.saveButtonContainer
+    self.finalizeButtonContainer = subviews.finalizeButtonContainer
     
     self.valueGetter = valueGetter
     self.valueSetter = valueSetter
@@ -52,8 +52,8 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
     super.init(nibName: nil, bundle: nil)
 
     disposeBag {
-      _isSaving ==> saveButtonContainer.isLoading
-      _isSaving ==> view.rx.isUserInteractionDisabled
+      _isFinalizing ==> finalizeButtonContainer.isLoading
+      _isFinalizing ==> view.rx.isUserInteractionDisabled
     }
   }
   
@@ -70,19 +70,19 @@ open class EditorViewController<InputValue, OutputValue, SomeError: Error>: UIVi
   Presenter.SomeError == SomeError {
     disposeBag {
       presenter.initialValue ==> valueSetter
-      presenter.isSaveButtonEnabled ==> saveButtonContainer.isEnabled
-      presenter.isSaving ==> isSaving
+      presenter.isFinalizeButtonEnabled ==> finalizeButtonContainer.isEnabled
+      presenter.isFinalizing ==> isFinalizing
       presenter.doNotDisturbMode ==> doNotDisturbModeSetter
-      presenter.hint ==> saveButtonContainer.hint
+      presenter.hint ==> finalizeButtonContainer.hint
 
       // TODO: hide error message after raw value has been changed
-      presenter.errorText ==> saveButtonContainer.errorText
+      presenter.errorText ==> finalizeButtonContainer.errorText
 
       Observable
         .combineLatest(valueGetter, _externalValidator)
         .flatMap { $0.validate(via: $1) } ==> presenter.value
 
-      saveButtonContainer.buttonTap ==> presenter.saveButtonTap
+      finalizeButtonContainer.buttonTap ==> presenter.finalizeButtonTap
     }
   }
 }

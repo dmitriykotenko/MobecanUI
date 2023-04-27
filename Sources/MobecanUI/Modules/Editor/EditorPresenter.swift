@@ -11,16 +11,16 @@ public protocol EditorPresenterProtocol {
   associatedtype SomeError: Error
 
   var initialValue: Driver<InputValue?> { get }
-  var isSaveButtonEnabled: Driver<Bool> { get }
-  var isSaving: Driver<Bool> { get }
+  var isFinalizeButtonEnabled: Driver<Bool> { get }
+  var isFinalizing: Driver<Bool> { get }
 
   var doNotDisturbMode: Driver<DoNotDisturbMode> { get }
   var hint: Driver<String?> { get }
   var errorText: Driver<String?> { get }
 
   var value: AnyObserver<SoftResult<OutputValue, SomeError>> { get }
-  var saveButtonTap: AnyObserver<Void> { get }
-  var resetSavingStatus: AnyObserver<Void> { get }
+  var finalizeButtonTap: AnyObserver<Void> { get }
+  var resetFinalizationStatus: AnyObserver<Void> { get }
 }
 
 
@@ -28,8 +28,8 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
 
   @RxDriverOutput(nil) open var initialValue: Driver<InputValue?>
 
-  @RxDriverOutput(true) open var isSaveButtonEnabled: Driver<Bool>
-  @RxDriverOutput(false) open var isSaving: Driver<Bool>
+  @RxDriverOutput(true) open var isFinalizeButtonEnabled: Driver<Bool>
+  @RxDriverOutput(false) open var isFinalizing: Driver<Bool>
 
   @RxDriverOutput(.on) open var doNotDisturbMode: Driver<DoNotDisturbMode>
   @RxDriverOutput(nil) open var hint: Driver<String?>
@@ -38,8 +38,8 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   @RxOutput(nil) private var error: Observable<SomeError?>
 
   @RxInput open var value: AnyObserver<SoftResult<OutputValue, SomeError>>
-  @RxInput open var saveButtonTap: AnyObserver<Void>
-  @RxInput open var resetSavingStatus: AnyObserver<Void>
+  @RxInput open var finalizeButtonTap: AnyObserver<Void>
+  @RxInput open var resetFinalizationStatus: AnyObserver<Void>
 
   private let errorFormatter: (SomeError) -> String?
 
@@ -51,12 +51,12 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
     self.errorFormatter = errorFormatter
 
     disposeBag {
-      _isSaveButtonEnabled <==
+      _isFinalizeButtonEnabled <==
         .combineLatest(initialValue.asObservable(), _value) { checker.isOutputValueValid($0, $1) }
 
       _hint <== _value.map { hintFormatter($0) }
       _errorText <== error.map { $0.flatMap(errorFormatter) }
-      _doNotDisturbMode <== _saveButtonTap.map { .off }
+      _doNotDisturbMode <== _finalizeButtonTap.map { .off }
     }
   }
   
@@ -77,25 +77,25 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
     disposeBag {
       _initialValue <== interactor.initialValue
 
-      _isSaving <== interactor.savingStatus
-        // After value is successfully saved, the module must be immediately closed,
+      _isFinalizing <== interactor.finalizationStatus
+        // After value is successfully finalized, the module must be immediately closed,
         // so we don't need to send `.success` to view controller.
         .filter { $0?.asSuccess == nil }
         .map { $0?.isLoading == true }
 
       _error <== .merge(
-        interactor.savingStatus.map(\.?.asError),
+        interactor.finalizationStatus.map(\.?.asError),
         // Hide error message after value has been changed by user.
         valueDidChange().map { nil }
       )
 
-      _saveButtonTap
+      _finalizeButtonTap
         .withLatestFrom(_value)
         .compactMap(\.asSuccess)
-        .filterWith(isSaveButtonEnabled)
-        ==> interactor.save
+        .filterWith(isFinalizeButtonEnabled)
+        ==> interactor.finalize
 
-      _resetSavingStatus ==> interactor.resetSavingStatus
+      _resetFinalizationStatus ==> interactor.resetFinalizationStatus
     }
   }
 

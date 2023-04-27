@@ -20,32 +20,32 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     }
   }
 
-  /// Result of first saving.
+  /// Result of first finalization.
   open var editingResult: Single<Result<OutputValue, SomeError>> {
-    interactor.savingStatus.compactMap(\.?.asResult).take(1).asSingle()
+    interactor.finalizationStatus.compactMap(\.?.asResult).take(1).asSingle()
   }
 
-  /// If the user closed the module without saving, returns .cancel.
-  /// Otherwise, returns result of first saving.
+  /// If the user closed the module without finalization, returns .cancel.
+  /// Otherwise, returns result of first finalization.
   open var editingResultOrCancel: Single<CancelOr<Result<OutputValue, SomeError>>> {
     Observable.merge(
       interactor.close.map { .cancel },
-      interactor.savingStatus.compactMap(\.?.asResult).map { .value($0) }
+      interactor.finalizationStatus.compactMap(\.?.asResult).map { .value($0) }
     )
     .take(1).asSingle()
   }
 
-  /// Final value produced by first successful saving.
+  /// Final value produced by first successful finalization.
   open var finalValue: Single<OutputValue> {
-    interactor.savingStatus.asSuccess().take(1).asSingle()
+    interactor.finalizationStatus.asSuccess().take(1).asSingle()
   }
 
-  /// If the user closed the module without saving, returns .cancel.
-  /// Otherwise, returns saved value.
+  /// If the user closed the module without finalizing, returns .cancel.
+  /// Otherwise, returns final value.
   open var finalValueOrCancel: Single<CancelOr<OutputValue>> {
     Observable.merge(
       interactor.close.map { .cancel },
-      interactor.savingStatus.asSuccess().map { .value($0) }
+      interactor.finalizationStatus.asSuccess().map { .value($0) }
     )
     .take(1).asSingle()
   }
@@ -53,7 +53,7 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   open var finished: Observable<Void> {
     .merge(
       interactor.close,
-      interactor.savingStatus.asSuccess().mapToVoid()
+      interactor.finalizationStatus.asSuccess().mapToVoid()
     )
   }
   
@@ -94,8 +94,8 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   }
 
   @discardableResult
-  open func with(saver: Saver<OutputValue, SomeError>) -> Self {
-    interactor.saver = saver
+  open func with(finalizer: AsyncProcessor<OutputValue, SomeError>) -> Self {
+    interactor.finalizer = finalizer
     return self
   }
 

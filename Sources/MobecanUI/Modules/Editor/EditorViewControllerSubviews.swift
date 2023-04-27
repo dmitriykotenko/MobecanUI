@@ -8,14 +8,14 @@ import UIKit
 public struct EditorViewControllerSubviews {
   
   public var editorView: UIView
-  public var saveButtonContainer: LoadingButtonContainer
+  public var finalizeButtonContainer: LoadingButtonContainer
   public var initScrollView: () -> UIScrollView
   
   public init(editorView: UIView,
-              saveButtonContainer: LoadingButtonContainer,
+              finalizeButtonContainer: LoadingButtonContainer,
               initScrollView: @escaping () -> UIScrollView) {
     self.editorView = editorView
-    self.saveButtonContainer = saveButtonContainer
+    self.finalizeButtonContainer = finalizeButtonContainer
     self.initScrollView = initScrollView
   }
 }

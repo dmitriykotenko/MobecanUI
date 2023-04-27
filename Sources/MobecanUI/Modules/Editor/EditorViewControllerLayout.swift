@@ -19,13 +19,13 @@ open class EditorViewControllerLayout {
     privateSetup(parentView, subviews)
   }
   
-  public static func saveButtonAtBottom(spacing: CGFloat) -> EditorViewControllerLayout {
+  public static func finalizeButtonAtBottom(spacing: CGFloat) -> EditorViewControllerLayout {
     .init { parentView, subviews in
       parentView.layout = InsetLayout<UIView>.fromSingleSubview(
         ScrollableView(
           contentView: .vstack(spacing: spacing, [
             subviews.editorView,
-            subviews.saveButtonContainer
+            subviews.finalizeButtonContainer
           ]),
           scrollView: subviews.initScrollView
         )
@@ -33,23 +33,23 @@ open class EditorViewControllerLayout {
     }
   }
   
-  public static func saveButtonInNavigationBar() -> EditorViewControllerLayout {
+  public static func finalizeButtonInNavigationBar() -> EditorViewControllerLayout {
     .init { parentView, subviews in
       let contentView = subviews.editorView
-      let saveButtonContainer = subviews.saveButtonContainer
+      let finalizeButtonContainer = subviews.finalizeButtonContainer
       let initScrollView = subviews.initScrollView
       
       parentView.layout = InsetLayout<UIView>.fromSingleSubview(
         .zstack([
           ScrollableView(
             contentView: .vstack([
-              .rxSpacer(saveButtonContainer),
+              .rxSpacer(finalizeButtonContainer),
               contentView
             ]),
             scrollView: initScrollView
           ),
           .safeAreaZstack([
-            .topTrailing(saveButtonContainer).clickThrough()
+            .topTrailing(finalizeButtonContainer).clickThrough()
           ])
           .clickThrough()
         ])
