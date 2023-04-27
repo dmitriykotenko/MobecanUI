@@ -100,6 +100,12 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
   }
 
   @discardableResult
+  open func with(intermediateValueProcessor: AsyncProcessor<OutputValue, SomeError>) -> Self {
+    interactor.intermediateValueProcessor = intermediateValueProcessor
+    return self
+  }
+
+  @discardableResult
   open func with(externalValidator: @escaping AsyncValidator<OutputValue, SomeError>) -> Self {
     view.externalValidator.onNext(externalValidator)
     return self
