@@ -17,6 +17,10 @@ public extension EditorPresenter {
 
     public let hint: (Input) -> String?
 
+    public init(hint: @escaping (Input) -> String?) {
+      self.hint = hint
+    }
+
     public static func alwaysNil() -> HintFormatter {
       .init { _ in nil }
     }
