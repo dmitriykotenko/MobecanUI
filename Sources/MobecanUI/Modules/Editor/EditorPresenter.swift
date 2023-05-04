@@ -5,7 +5,7 @@ import RxSwift
 
 
 public protocol EditorPresenterProtocol {
-  
+
   associatedtype InputValue
   associatedtype OutputValue
   associatedtype SomeError: Error
@@ -52,9 +52,9 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   private let errorFormatter: (SomeError) -> String?
 
   private let disposeBag = DisposeBag()
-  
+
   public init(checker: Checker<InputValue, OutputValue, SomeError>,
-              hintFormatter: @escaping (SoftResult<OutputValue, SomeError>) -> String? = { _ in nil },
+              hintFormatter: HintFormatter = .alwaysNil(),
               errorFormatter: @escaping (SomeError) -> String?) {
     self.errorFormatter = errorFormatter
 
@@ -62,16 +62,33 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
       _isFinalizeButtonEnabled <==
         .combineLatest(initialValue.asObservable(), _value) { checker.isOutputValueValid($0, $1) }
 
-      _hint <== _value.map { hintFormatter($0) }
+      _hint <== Driver
+        .combineLatest(
+          initialValue,
+          _value.asDriver(onErrorDriveWith: .never()),
+          doNotDisturbMode,
+          intermediateValueProcessingStatus
+        ) {
+          hintFormatter.hint(
+            HintFormatter.Input(
+              initialValue: $0,
+              currentValue: $1,
+              doNotDisturbMode: $2,
+              intermediateValueProcessingStatus: $3
+            )
+          )
+        }
+
       _errorText <== error.map { $0.flatMap(errorFormatter) }
+
       _doNotDisturbMode <== _finalizeButtonTap.map { .off }
     }
   }
-  
+
   public convenience init() {
     self.init(
       checker: .alwaysTrue(),
-      hintFormatter: { _ in nil },
+      hintFormatter: .alwaysNil(),
       errorFormatter: { "\($0.localizedDescription)" }
     )
   }
