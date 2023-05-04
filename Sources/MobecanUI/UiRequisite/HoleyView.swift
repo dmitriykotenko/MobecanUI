@@ -3,17 +3,30 @@
 import UIKit
 
 
-/// View with holes which are transparent for gestures.
-public class HoleyView: UIView {
-  
+/// Вьюшка с отверстиями, которые прозрачны для жестов.
+open class HoleyView: UIView, SizableView {
+
+  open var sizer = ViewSizer()
+
+  override open func sizeThatFits(_ size: CGSize) -> CGSize {
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
+    )
+  }
+
   private let holes: [UIView]
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
-  
+
+  /// Создаёт вьюшку с отверстиями, прозрачными для жестов.
+  /// - Parameter holes: Вьюшки позади `HoleyView`, жесты в которых мы не хотим блокировать.
   public init(holes: [UIView]) {
     self.holes = holes
     
     super.init(frame: .zero)
+
+    withStretchableSize()
   }
   
   override public func point(inside point: CGPoint,
@@ -21,8 +34,9 @@ public class HoleyView: UIView {
     let tappedHole = holes
       .lazy
       .filter {
-        // We must convert point to hole's coordinate system,
-        // because `point(inside:with:)` method uses view's local coordinate system.
+        // Надо конвертировать `point` в систему координат отверстия,
+        // потому что метод `UIView.point(inside:with:)` использует систему координат вьюшки,
+        // у которой он вызывается.
         let convertedPoint = $0.convert(point, from: self)
         
         return $0.point(inside: convertedPoint, with: event)
