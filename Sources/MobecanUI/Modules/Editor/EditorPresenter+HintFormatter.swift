@@ -10,7 +10,7 @@ public extension EditorPresenter {
 
     public struct Input {
       public var initialValue: InputValue?
-      public var currentValue: SoftResult<OutputValue, SomeError>
+      public var editedValue: SoftResult<OutputValue, SomeError>
       public var doNotDisturbMode: DoNotDisturbMode
       public var intermediateValueProcessingStatus: Loadable<OutputValue, SomeError>?
     }

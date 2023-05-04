@@ -72,7 +72,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
           hintFormatter.hint(
             HintFormatter.Input(
               initialValue: $0,
-              currentValue: $1,
+              editedValue: $1,
               doNotDisturbMode: $2,
               intermediateValueProcessingStatus: $3
             )
