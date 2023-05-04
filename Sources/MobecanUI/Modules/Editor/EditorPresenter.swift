@@ -18,6 +18,8 @@ public protocol EditorPresenterProtocol {
   var hint: Driver<String?> { get }
   var errorText: Driver<String?> { get }
 
+  var intermediateValueProcessingStatus: Driver<Loadable<OutputValue, SomeError>?> { get }
+
   var value: AnyObserver<SoftResult<OutputValue, SomeError>> { get }
   var finalizeButtonTap: AnyObserver<Void> { get }
   var resetFinalizationStatus: AnyObserver<Void> { get }
@@ -38,6 +40,8 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
   @RxDriverOutput(nil) open var errorText: Driver<String?>
 
   @RxOutput(nil) private var error: Observable<SomeError?>
+
+  @RxDriverOutput(nil) open var intermediateValueProcessingStatus: Driver<Loadable<OutputValue, SomeError>?>
 
   @RxInput open var value: AnyObserver<SoftResult<OutputValue, SomeError>>
   @RxInput open var finalizeButtonTap: AnyObserver<Void>
@@ -82,16 +86,18 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
       _initialValue <== interactor.initialValue
 
       _isFinalizing <== interactor.finalizationStatus
-        // After value is successfully finalized, the module must be immediately closed,
-        // so we don't need to send `.success` to view controller.
+        // После того, как значение успешно финализировано, модуль должен немедленно закрыться,
+        // поэтому не нужно отправлять `.success` во вью-контроллер.
         .filter { $0?.asSuccess == nil }
         .map { $0?.isLoading == true }
 
       _error <== .merge(
         interactor.finalizationStatus.map(\.?.asError),
-        // Hide error message after value has been changed by user.
+        // Прячем сообщение об ошибке после того, как пользователь изменил value.
         valueDidChange().map { nil }
       )
+
+      _intermediateValueProcessingStatus <== interactor.intermediateValueProcessingStatus
 
       _value ==> interactor.userDidChangeValue
 

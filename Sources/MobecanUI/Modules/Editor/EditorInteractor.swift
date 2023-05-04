@@ -11,6 +11,7 @@ public protocol EditorInteractorProtocol {
   
   var initialValue: Observable<InputValue?> { get }
   var finalizationStatus: Observable<Loadable<OutputValue, SomeError>?> { get }
+  var intermediateValueProcessingStatus: Observable<Loadable<OutputValue, SomeError>?> { get }
   
   var userDidChangeValue: AnyObserver<SoftResult<OutputValue, SomeError>> { get }
 
@@ -24,6 +25,7 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
   
   @RxOutput(nil) open var initialValue: Observable<InputValue?>
   @RxOutput(nil) open var finalizationStatus: Observable<Loadable<OutputValue, SomeError>?>
+  @RxOutput(nil) open var intermediateValueProcessingStatus: Observable<Loadable<OutputValue, SomeError>?>
 
   @RxInput open var userDidChangeValue: AnyObserver<SoftResult<OutputValue, SomeError>>
 
@@ -67,7 +69,7 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
     intermediateValueProcessing = .init(
       when: _userDidChangeValue.throttle(policy.throttlingDuration, scheduler: MainScheduler.instance),
       load: { policy.processValue($0) ?? .never() },
-      bindResultTo: .empty
+      bindResultTo: _intermediateValueProcessingStatus.mapObserver { $0 }
     )
   }
   

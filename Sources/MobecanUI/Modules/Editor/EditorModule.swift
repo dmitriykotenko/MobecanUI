@@ -20,13 +20,13 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     }
   }
 
-  /// Result of first finalization.
+  /// Результат первой финализации.
   open var editingResult: Single<Result<OutputValue, SomeError>> {
     interactor.finalizationStatus.compactMap(\.?.asResult).take(1).asSingle()
   }
 
-  /// If the user closed the module without finalization, returns .cancel.
-  /// Otherwise, returns result of first finalization.
+  /// Если пользователь закрыл модуль без финализации, возвращает `.cancel`.
+  /// Во всех остальных случаях возвращает результат первой финализации.
   open var editingResultOrCancel: Single<CancelOr<Result<OutputValue, SomeError>>> {
     Observable.merge(
       interactor.close.map { .cancel },
@@ -35,13 +35,13 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     .take(1).asSingle()
   }
 
-  /// Final value produced by first successful finalization.
+  /// Финальное значение, получившееся в результате первой успешной финализации.
   open var finalValue: Single<OutputValue> {
     interactor.finalizationStatus.asSuccess().take(1).asSingle()
   }
 
-  /// If the user closed the module without finalizing, returns .cancel.
-  /// Otherwise, returns final value.
+  /// Если пользователь закрыл модуль без финализации, возвращает `.cancel`.
+  /// Во всех остальных случаях возвращает финальное значение.
   open var finalValueOrCancel: Single<CancelOr<OutputValue>> {
     Observable.merge(
       interactor.close.map { .cancel },
@@ -122,9 +122,9 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
 private extension ObservableType {
 
   func asSuccess<Value, SomeError: Error>() -> Observable<Value> where Element == Loadable<Value, SomeError>? {
-    // We can not use .compactMap(\.?.asSuccess) here because of ambigious optional unwrapping in Swift.
+    // Нельзя использовать .compactMap(\.?.asSuccess) из-за неоднозначности optional unwrapping в Свифте.
     //
-    // Ambiguity appears when ``Value`` itself is an Optional.
+    // Неоднозначность возникает, когда ``Value`` само по себе Optional.
     compactMap {
       switch $0 {
       case .loaded(.success(let value)):
