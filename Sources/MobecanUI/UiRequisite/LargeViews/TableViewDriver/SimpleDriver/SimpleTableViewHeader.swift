@@ -23,6 +23,10 @@ public extension TableViewSection where Header == SimpleTableViewHeader? {
   static func error(_ errorText: String?) -> TableViewSection<Header, Element> {
     TableViewSection(header: .error(errorText), elements: [])
   }
+
+  static func string(_ string: String?) -> TableViewSection<Header, Element> {
+    TableViewSection(header: .string(string), elements: [])
+  }
 }
 
 
