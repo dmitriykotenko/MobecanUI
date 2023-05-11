@@ -13,7 +13,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
   @RxUiInput(nil) open var externalError: AnyObserver<ValidationError?>
   @RxUiInput(false) open var isMandatory: AnyObserver<Bool>
   
-  open var rxIsFocused: Driver<Bool> { valueEditor.focusableView.rx.isFirstResponder }
+  open var rxIsFocused: Driver<Bool> { (focusableView ?? valueEditor).rx.isFirstResponder }
 
   // MARK: - Value
   open private(set) var rawValue: ControlProperty<RawValue>
@@ -44,6 +44,13 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
   private let errorLabel: UILabel
   private let backgroundView: EditableFieldBackgroundProtocol
   private let valueEditor: UIView
+
+  /// Необязательная часть ``EditableField``, которая становится firstResponder-ом в начале редактирования поля.
+  ///
+  /// Обычно это UITextField или UITextView.
+  ///
+  /// Явное указание этой вьюшки нужно для более быстрой работы ``EditableField``.
+  private let focusableView: UIView?
   
   open var formatError: (ValidationError) -> String? = { "\($0.localizedDescription)" }
   private let validator: (RawValue) -> SoftResult<ValidatedValue, ValidationError>
@@ -64,6 +71,7 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
     self.errorLabel = subviews.errorLabel
     self.backgroundView = subviews.background
     self.valueEditor = subviews.valueEditor
+    self.focusableView = subviews.focusableView
     
     self.rawValue = ControlProperty(values: rawValueGetter, valueSink: rawValueSetter)
     self.validator = validator
@@ -154,11 +162,11 @@ open class EditableField<RawValue, ValidatedValue, ValidationError: Error>: Layo
   
   @discardableResult
   open func startEditing() -> Bool {
-    valueEditor.focusableView.becomeFirstResponder()
+    (focusableView ?? valueEditor).becomeFirstResponder()
   }
   
   @discardableResult
   open func endEditing() -> Bool {
-    valueEditor.focusableView.resignFirstResponder()
+    (focusableView ?? valueEditor).resignFirstResponder()
   }
 }
