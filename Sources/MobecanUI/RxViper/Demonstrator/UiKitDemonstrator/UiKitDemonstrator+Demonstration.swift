@@ -31,11 +31,11 @@ extension UiKitDemonstrator {
       .merge(
         module.finished
           .observe(on: MainScheduler.instance)
-          // If the user has recently initiated automatic dismissal
-          // (by swipe-down gesture or by other means), wait for inevitable .rxViewDidDismiss signal
-          // from containerViewController.
+          // Если пользователь совсем недавно инициировал автоматическое скрытие экрана
+          // (например, свайпнув вниз), ждём неизбежного события .rxViewDidDismiss
+          // от containerViewController.
           .filter { !containerViewController.isBeingDismissed }
-          // Delay too early 'module.finished' signals.
+          // Задержка, чтобы правильно обработать слишком ранние сигналы 'module.finished'.
           .wait(for: containerViewController.rxViewDidAppear.map { true }),
         containerViewController.rxViewDidDismiss.asObservable()
       )

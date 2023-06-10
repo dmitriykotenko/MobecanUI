@@ -5,22 +5,22 @@ import RxSwift
 import UIKit
 
 
-/// One of application's screens.
+/// Один из экранов приложения.
 public protocol Module {
 
-  /// View-controller with screen's content.
+  /// Вью-контроллер с содержимым экрана.
   var viewController: UIViewController { get }
 
-  /// Signal which says that the module has finished its work and can be closed.
+  /// Сигнал о том, что экран закончил свою работу и может быть закрыт.
   var finished: Observable<Void> { get }
 
-  /// A demonstrator to show additional modules from this module.
+  /// Демонстратор, чтобы открывать дополнительные модули из данного модуля.
   var demonstrator: Demonstrator? { get set }
 }
 
 
 public extension Module {
 
-  /// Signal which says that the module has finished its work and can be closed.
+  /// Сигнал о том, что экран закончил свою работу и может быть закрыт.
   var finishedAsSingle: Single<Void> { finished.take(1).asSingle() }
 }

@@ -29,7 +29,7 @@ public class RxOutput<Element>: ObserverType {
     case .next(let element):
       behaviorRelay?.accept(element) ?? publishRelay.accept(element)
     case .error, .completed:
-      // Do nothing. RxOutput can not finish or produce error.
+      // Ничего не делаем. RxOutput не может завершиться или выбросить ошибку.
       break
     }
   }

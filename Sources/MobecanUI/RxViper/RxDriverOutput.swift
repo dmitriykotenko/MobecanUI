@@ -26,7 +26,7 @@ public class RxDriverOutput<Element>: ObserverType {
     case .next(let element):
       relay.accept(element)
     case .error, .completed:
-      // Do nothing. RxDriverOutput can not finish or produce error.
+      // Ничего не делаем. RxDriverOutput не может завершиться или выбросить ошибку.
       break
     }
   }

@@ -4,17 +4,17 @@ import RxCocoa
 import RxSwift
 
 
-/// Listens events on main scheduler.
+/// Использует главный тред для прослушивания событий.
 ///
-/// Accepts only .next events and throws exception on .error or .completed event.
+/// Принимает только события ``.next``, игнорирует события ``.completed`` и ``.error``.
 @propertyWrapper
 public class RxUiInput<Element>: ObservableType {
   
   private let publishRelay: PublishRelay<Element> = PublishRelay()
   private var behaviorRelay: BehaviorRelay<Element>?
 
-  // Separate MainScheduler is needed,
-  // because sometimes MainScheduler.instance does not execute subscriber callbacks immediately.
+  /// Отдельный ``MainScheduler`` нужен,
+  /// потому что иногда ``MainScheduler.instance`` дёргает подписчиков не немедленно.
   private lazy var mainScheduler = MainScheduler()
   
   public init() {}
@@ -29,7 +29,7 @@ public class RxUiInput<Element>: ObservableType {
       case .next(let element):
         self?.behaviorRelay?.accept(element) ?? self?.publishRelay.accept(element)
       case .error, .completed:
-        // Do nothing. RxUiInput can not finish or produce error.
+        // Ничего не делаем. RxUiInput игнорирует сигналы о завершении или об ошибке.
         break
       }
     }

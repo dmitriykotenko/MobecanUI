@@ -31,7 +31,8 @@ public class UiKitDemonstrator: Demonstrator {
 
   public func demonstrate(module: Module,
                           animating: Bool?) -> Single<Void> {
-    // Reset disposeBag to ignore subsequent 'needsToBeFinished' events from previous demonstration.
+    // Сбрасываем disposeBag,
+    // чтобы не реагировать на события 'needsToBeFinished' от предыдущей демонстрации.
     disposeBag = DisposeBag()
 
     return finishCurrentDemonstration().weakFlatMap(self) {
@@ -79,7 +80,7 @@ public class UiKitDemonstrator: Demonstrator {
   private func finishCurrentDemonstrationImmediately(animating: Bool = false) -> Single<Void> {
     let dismission =
       currentDemonstration?.containerViewController.presentingViewController?.rx.dismiss(animated: animating)
-      ?? .just(()) // do not perform dismission if there is nothing to dismiss.
+      ?? .just(()) // не выполняем скрытие экрана, если нечего скрывать
 
     return dismission.do(onSuccess: { [weak self] in
       self?.onDemonstrationFinished()

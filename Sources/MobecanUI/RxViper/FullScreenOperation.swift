@@ -4,8 +4,8 @@ import RxSwift
 import UIKit
 
 
-/// Asynchronous operation which requires a separate screen to interact with the user
-/// (e. g. editing of geographical address).
+/// Асинхронная операция, которой для взаимодействия с пользователем нужен отдельный экран
+/// (например, редактирование географического адреса).
 open class FullScreenOperation<Input, Output> {
   
   private let when: Observable<Input>

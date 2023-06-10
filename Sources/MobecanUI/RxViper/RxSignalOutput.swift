@@ -24,7 +24,7 @@ public class RxSignalOutput<Element>: ObserverType {
     case .next(let element):
       relay.accept(element)
     case .error, .completed:
-      // Do nothing. RxSignalOutput can not finish or produce error.
+      // Ничего не делаем. RxSignalOutput не может завершиться или выбросить ошибку.
       break
     }
   }

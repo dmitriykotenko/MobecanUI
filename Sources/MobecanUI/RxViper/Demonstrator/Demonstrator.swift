@@ -3,7 +3,7 @@
 import RxSwift
 
 
-/// Used when some Module wants to temporarily show another Module.
+/// Используется, когда модуль хочет временно показать какой-то другой модуль.
 public protocol Demonstrator {
   
   func demonstrate(module: Module) -> Single<Void>
