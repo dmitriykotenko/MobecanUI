@@ -119,8 +119,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
       _value ==> interactor.userDidChangeValue
 
       _finalizeButtonTap
-        .withLatestFrom(_value)
-        .compactMap { $0.isSuccess ? $0.value : nil }
+        .withLatestFrom(_value.compactMap(\.value))
         .filterWith(isFinalizeButtonEnabled)
         ==> interactor.finalize
 
