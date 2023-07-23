@@ -64,9 +64,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
       flexibility: .flexible
     )
 
-    horizontalStack.map {
-      layout = $0.asLayout.withInsets(insets)
-    }
+    horizontalStack.map { layout = $0.asLayout }
   }
 
   private func setupVisibleElements(createButton: @escaping (Element) -> UIButton) {
