@@ -159,7 +159,8 @@ where
   public func tableView(_ tableView: UITableView,
                         heightForHeaderInSection sectionIndex: Int) -> CGFloat {
     stickerTuner.heightForHeader(
-      section(sectionIndex).header
+      section(sectionIndex).header,
+      relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
     )
   }
   

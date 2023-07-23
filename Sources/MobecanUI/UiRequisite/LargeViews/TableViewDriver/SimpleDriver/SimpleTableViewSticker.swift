@@ -25,8 +25,8 @@ open class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareView 
   open func displayValue(_ value: SimpleTableViewHeader??) {
     initIfNeeded()
     
-    // 'value' is double optional.
-    // We need .flatten() to transform it to single optional.
+    // 'value' — это двойной опшионал.
+    // Чтобы превратить его в обычный опшионал, используем .flatten().
     let header = value.flatten()
       
     label?.text = header.map(textFromHeader)
@@ -41,7 +41,7 @@ open class SimpleTableViewSticker: UITableViewHeaderFooterView, HeightAwareView 
   }
 
   private func initWithLabel(_ label: UILabel) {
-    // Set transparent background.
+    // Устанавливаем прозрачный фон.
     backgroundView = UIView()
     
     mainSubview = UIView.zstack([label], insets: labelInsets)

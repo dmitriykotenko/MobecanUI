@@ -27,7 +27,7 @@ where Sticker.Value == Header {
   }
   
   private func registerSticker() {
-    // Register Sticker only if the displayHeader is not nil.
+    // Если displayHeader == nil, не имеет смысла регистрировать Sticker.
     displayHeader.map { _ in
       tableView.register(Sticker.self)
     }
@@ -43,11 +43,13 @@ where Sticker.Value == Header {
     }
   }
 
-  // Returns sticker displaying given header.
-  // If there should be no sections header, returns nil.
+  /// Возвращает стикер, отображающий указанный заголовок.
+  /// Если в тэйбл-вью не настроено отображение заголовков секций, возвращает `nil`.
+  /// - Parameters:
+  ///   - header: Заголовок, который надо отобразить.
+  ///   - relativePosition: Относительная позиция секции в тэйбл-вью.
   open func sticker(header: Header,
                     relativePosition: SectionRelativePosition) -> Sticker? {
-
     displayHeader.flatMap { displayHeader in
       let sticker = tableView.dequeue(Sticker.self)
 
@@ -61,9 +63,18 @@ where Sticker.Value == Header {
     stickerEvents?(sticker)
   }
   
-  open func heightForHeader(_ header: Header?) -> CGFloat {
-    header
-      .flatMap { sampleSticker.heightFor(value: $0, width: tableView.frame.width) }
-      ?? 0
+  open func heightForHeader(_ header: Header?,
+                            relativePosition: SectionRelativePosition) -> CGFloat {
+    switch header {
+    case nil:
+      return 0
+    case let someHeader?:
+      displayHeader?(someHeader, sampleSticker, relativePosition)
+
+      return sampleSticker.heightFor(
+        value: someHeader,
+        width: tableView.frame.width
+      )
+    }
   }
 }
