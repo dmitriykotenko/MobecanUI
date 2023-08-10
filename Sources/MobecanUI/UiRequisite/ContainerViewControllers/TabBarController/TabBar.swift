@@ -31,7 +31,7 @@ public class TabBar: LayoutableView {
 
   public init(tabs: [Tab],
               backgroundView: UIView,
-              initTabButton: @escaping (String?, UIImage?) -> UIControl,
+              initTabButton: @escaping (Tab) -> UIControl,
               contentHeight: CGFloat,
               distribution: UIStackView.Distribution = .fillEqually) {
     self.backgroundView = backgroundView
@@ -39,7 +39,7 @@ public class TabBar: LayoutableView {
     
     radioButton = RadioButton(
       visibleElements: tabs,
-      initElementButton: { initTabButton($0.title, $0.icon) },
+      initElementButton: initTabButton,
       distribution: distribution
     )
 

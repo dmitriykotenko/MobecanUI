@@ -9,13 +9,16 @@ public struct Tab: Equatable {
   
   public let title: String
   public let icon: UIImage
+  public let badgeColor: Observable<UIColor?>
   public let viewController: UIViewController
   
   public init(title: String,
               icon: UIImage,
+              badgeColor: Observable<UIColor?> = .just(nil),
               viewController: UIViewController) {
     self.title = title
     self.icon = icon
+    self.badgeColor = badgeColor
     self.viewController = viewController
   }
   

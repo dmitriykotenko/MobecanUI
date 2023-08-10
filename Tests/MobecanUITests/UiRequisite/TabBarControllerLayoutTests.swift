@@ -34,8 +34,8 @@ class TabBarControllerLayoutTests: XCTestCase {
       backgroundView: LayoutableView(),
       initTabButton: {
         TabButton(
-          title: $0,
-          image: $1,
+          title: $0.title,
+          image: $0.icon,
           textStyle: .init(alignment: .center),
           spacing: 4,
           insets: .init(amount: 10)
