@@ -39,7 +39,7 @@ public class TabBar: LayoutableView {
     
     radioButton = RadioButton(
       visibleElements: tabs,
-      createButton: { initTabButton($0.title, $0.icon) },
+      initElementButton: { initTabButton($0.title, $0.icon) },
       distribution: distribution
     )
 

@@ -29,7 +29,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
   // MARK: - Subviews
   private var horizontalStack: StackView?
   
-  private let createButton: (Element) -> UIControl
+  private let initElementButton: (Element) -> UIControl
   private let selectionStrategy: SelectionStrategy
   
   private let disposeBag = DisposeBag()
@@ -38,19 +38,19 @@ open class RadioButton<Element: Equatable>: LayoutableView {
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init(visibleElements: [Element],
-              createButton: @escaping (Element) -> UIControl,
+              initElementButton: @escaping (Element) -> UIControl,
               selectionStrategy: SelectionStrategy = .singleElement,
               distribution: UIStackView.Distribution = .fillEqually,
               spacing: CGFloat = 0,
               insets: UIEdgeInsets = .zero) {
-    
-    self.createButton = createButton
+
+    self.initElementButton = initElementButton
     self.selectionStrategy = selectionStrategy
 
     super.init()
 
     setupHorizontalStack(distribution: distribution, spacing: spacing, insets: insets)
-    setupVisibleElements(createButton: createButton)
+    setupVisibleElements()
 
     setupProgrammaticSelection()
     setupInitialState(visibleElements: visibleElements)
@@ -70,9 +70,9 @@ open class RadioButton<Element: Equatable>: LayoutableView {
     horizontalStack.map { layout = $0.asLayout }
   }
 
-  private func setupVisibleElements(createButton: @escaping (Element) -> UIControl) {
+  private func setupVisibleElements() {
     disposeBag {
-      _visibleElements ==> { [weak self] in self?.recreateButtons(visibleElements: $0) }
+      _visibleElements ==> { [weak self] in self?.recreateElementButtons(visibleElements: $0) }
 
       _visibleElements
         .withLatestFrom(selectedElement) { [selectionStrategy] visible, selected -> Element? in
@@ -86,13 +86,13 @@ open class RadioButton<Element: Equatable>: LayoutableView {
     }
   }
 
-  private func recreateButtons(visibleElements: [Element]) {
-    let buttons = visibleElements.map { createButton($0) }
+  private func recreateElementButtons(visibleElements: [Element]) {
+    let elementButtons = visibleElements.map { initElementButton($0) }
     
     horizontalStack?.removeArrangedSubviews()
-    horizontalStack?.addArrangedSubviews(buttons)
+    horizontalStack?.addArrangedSubviews(elementButtons)
 
-    zip(buttons, visibleElements)
+    zip(elementButtons, visibleElements)
       .forEach { button, element in bindButton(button, to: element) }
 
     invalidateIntrinsicContentSize()
@@ -127,7 +127,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
         case nil:
           return selectionStrategy == .singleElementOrNil
         case let element?:
-          // Do not allow to select elements that are not displayed by RadioButton
+          // Не даём выделять невидимые элементы.
           return $0.visible.contains(element)
         }
       }
