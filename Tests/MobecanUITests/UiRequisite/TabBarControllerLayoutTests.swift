@@ -33,7 +33,7 @@ class TabBarControllerLayoutTests: XCTestCase {
       ],
       backgroundView: LayoutableView(),
       initTabButton: {
-        .init(
+        TabButton(
           title: $0,
           image: $1,
           textStyle: .init(alignment: .center),

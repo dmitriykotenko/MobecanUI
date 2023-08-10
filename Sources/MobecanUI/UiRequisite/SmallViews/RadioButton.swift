@@ -11,9 +11,12 @@ import UIKit
 open class RadioButton<Element: Equatable>: LayoutableView {
 
   public enum SelectionStrategy {
-    /// At most one element can be selected. When you tap on selected element, it becomes unselected.
+
+    /// Может быть выбрано не больше одного элемента.
+    /// При нажатии на выбранный элемент он перестаёт быть выбранным.
     case singleElementOrNil
-    /// Some element is always selected. Taps on currently selected element have no effect.
+
+    /// Всегда выбран ровно один элемент. Нажатие на выбранный элемент не даёт никакого эффекта.
     case singleElement
   }
 
@@ -26,7 +29,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
   // MARK: - Subviews
   private var horizontalStack: StackView?
   
-  private let createButton: (Element) -> UIButton
+  private let createButton: (Element) -> UIControl
   private let selectionStrategy: SelectionStrategy
   
   private let disposeBag = DisposeBag()
@@ -35,7 +38,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
   
   public init(visibleElements: [Element],
-              createButton: @escaping (Element) -> UIButton,
+              createButton: @escaping (Element) -> UIControl,
               selectionStrategy: SelectionStrategy = .singleElement,
               distribution: UIStackView.Distribution = .fillEqually,
               spacing: CGFloat = 0,
@@ -67,7 +70,7 @@ open class RadioButton<Element: Equatable>: LayoutableView {
     horizontalStack.map { layout = $0.asLayout }
   }
 
-  private func setupVisibleElements(createButton: @escaping (Element) -> UIButton) {
+  private func setupVisibleElements(createButton: @escaping (Element) -> UIControl) {
     disposeBag {
       _visibleElements ==> { [weak self] in self?.recreateButtons(visibleElements: $0) }
 
@@ -96,9 +99,9 @@ open class RadioButton<Element: Equatable>: LayoutableView {
     setNeedsLayoutAndPropagate()
   }
   
-  private func bindButton(_ button: UIButton,
+  private func bindButton(_ button: UIControl,
                           to element: Element) {
-    let tappedElement = button.rx.tap.map { _ -> Element in element }
+    let tappedElement = button.rx.controlEvent(.touchUpInside).map { _ -> Element in element }
     
     let elementToSelect = tappedElement
       .withLatestFrom(selectedElement) { [selectionStrategy] tapped, selected -> Element? in

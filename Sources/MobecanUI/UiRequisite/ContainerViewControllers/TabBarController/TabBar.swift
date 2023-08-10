@@ -31,7 +31,7 @@ public class TabBar: LayoutableView {
 
   public init(tabs: [Tab],
               backgroundView: UIView,
-              initTabButton: @escaping (String?, UIImage?) -> TabButton,
+              initTabButton: @escaping (String?, UIImage?) -> UIControl,
               contentHeight: CGFloat,
               distribution: UIStackView.Distribution = .fillEqually) {
     self.backgroundView = backgroundView
