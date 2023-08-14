@@ -63,6 +63,8 @@ open class SwitchView: LayoutableView {
         )
       )
     )
+
+    fitToContent(axis: [.vertical])
   }
 
   private func setupIsOn() {
