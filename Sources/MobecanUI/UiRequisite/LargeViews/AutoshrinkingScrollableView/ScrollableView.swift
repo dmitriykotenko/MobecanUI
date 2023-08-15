@@ -8,16 +8,16 @@ import UIKit
 import CoreGraphics
 
 
-/// Scrollable view which automatically changes its height
-/// depending on content, safe area insets and keyboard frame.
+/// Обёртка над ``UIScrollView``.
+/// Автоматически обновляет ``UIScrollView.contentSize`` при изменении размеров контента
+/// и, если надо, автоматически обновляет свою высоту в зависимости от высоты контента,
+/// размера клавиатуры и безопасных отступов.
 public class ScrollableView: UIView, UIScrollViewDelegate {
 
   public let scrollView: UIScrollView
 
-  /// Bottom-right counterpart of UIScrollView.contentOffset property.
-  ///
-  /// Horizontal and vertical distance
-  /// between scroll view's visible area bottom-right corner and scroll view content's bottom-right corner.
+  /// Аналог ``UIScrollView.contentOffset``, который показывает смещение
+  /// от правого нижнего угла видимой части скролл-вью до правого нижнего угла скролл-вьюшного контента.
   open var oppositeContentOffset: Observable<CGPoint> { oppositeContentOffsetTracker.value }
 
   @RxOutput private var adjustedContentInsetDidChange: Observable<Void>
@@ -61,7 +61,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
 
   private func setupScrollView() {
     scrollView.contentInsetAdjustmentBehavior = .never
-    scrollView.alwaysBounceVertical = false
+    if isVerticalHuggingEnabled { scrollView.alwaysBounceVertical = false }
     scrollView.delegate = self
   }
 
@@ -73,7 +73,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   private func setupInsetsCalculator() {
     disposeBag {
       rx.window
-        .delay(0.milliseconds, scheduler: MainScheduler.instance) // wait until superview finishes its layout
+        .delay(0.milliseconds, scheduler: MainScheduler.instance) // ждём, пока superview закончит обновлять свой лэйаут
         .whenNotEqual(to: nil)
         .do(onNext: { [weak self] in print("scroll-view-driver window = \(String(describing: self?.window))") })
         .compactMap { [weak self] in self?.longTermBottomY }

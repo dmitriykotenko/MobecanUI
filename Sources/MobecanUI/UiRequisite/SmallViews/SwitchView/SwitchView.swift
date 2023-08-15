@@ -12,7 +12,7 @@ open class SwitchView: LayoutableView {
   @RxUiInput(false) open var initialIsOn: AnyObserver<Bool>
   @RxOutput(false) open var isOn: Observable<Bool>
 
-  // Emits current value of uiSwitch every time the user toggles uiSwitch.
+  /// Возвращает текущее значение uiSwitch каждый раз, когда пользователь переключает этот uiSwitch.
   open var userDidChangeIsOn: Signal<Bool> {
     uiSwitch.rx.isOn.asSignal(onErrorJustReturn: false)
   }

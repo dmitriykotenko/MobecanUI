@@ -5,10 +5,10 @@ import RxSwift
 import UIKit
 
 
-/// Notifies about changes of .oppositeContentOffset property of UIScrollView.
+/// Уведомляет об изменениях ``UIScrollView.oppositeContentOffset``.
 public class RxScrollViewOppositeContentOffset {
 
-  /// Current oppositeContentOffset.
+  /// Текущий ``.oppositeContentOffset``.
   @RxOutput(.zero) public var value: Observable<CGPoint>
   
   private let contentSizeListener: NSKeyValueObservation
@@ -17,10 +17,11 @@ public class RxScrollViewOppositeContentOffset {
 
   private let disposeBag = DisposeBag()
   
-  /// UIScrollView.adjustedContentInset is not KVO-compliant,
-  /// so we need an explicit signal about inset change.
-  ///
-  /// We can get the signal e. g. via scroll view's delegate.
+  /// - Parameters:
+  ///   - scrollView: Скролл-вью, чей ``.oppositeContentOffset`` надо отслеживать.
+  ///   - adjustedContentInsetDidChange: Свойство ``UIScrollView.adjustedContentInset`` не поддерживает KVO,
+  ///   поэтому необходим явный сигнал о том, что инсеты поменялись.
+  ///   Например, этот сигнал можно взять у делегата ``UIScrollView``.
   public init(scrollView: UIScrollView,
               adjustedContentInsetDidChange: Observable<Void>) {
     self.scrollView = scrollView

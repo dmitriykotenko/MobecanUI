@@ -5,10 +5,8 @@ import UIKit
 
 public extension UIScrollView {
 
-  /// Bottom-right counterpart of .contentOffset property.
-  ///
-  /// Horizontal and vertical distance
-  /// between scroll view's visible area bottom-right corner and scroll view content's bottom-right corner.
+  /// Аналог свойства ``UIScrollView.contentOffset``, который показывает смещение
+  /// от правого нижнего угла видимой части скролл-вью до правого нижнего угла скролл-вьюшного контента.
   var oppositeContentOffset: CGPoint {
     let visibleAreaBottomRightCorner = contentOffset + frame.size
 
