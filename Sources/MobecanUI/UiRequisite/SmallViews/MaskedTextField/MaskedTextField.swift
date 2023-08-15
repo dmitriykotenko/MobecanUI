@@ -46,6 +46,7 @@ public class MaskedTextField: UITextField, SizableView {
   
   func userDidChangeText(to newText: String?) {
     text = newText
+    sendActions(for: .editingChanged)
   }
   
   /// Text field's current text with every character marked as significant or not significant.
