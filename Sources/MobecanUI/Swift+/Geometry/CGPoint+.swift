@@ -18,4 +18,11 @@ public extension CGPoint {
       y: this.y - that.y
     )
   }
+
+  static func + (point: CGPoint, size: CGSize) -> CGPoint {
+    .init(
+      x: point.x + size.width,
+      y: point.y + size.height
+    )
+  }
 }

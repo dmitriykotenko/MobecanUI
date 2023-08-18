@@ -8,7 +8,8 @@ import UIKit
 open class DiverseLabel: UILabel, SizableView {
 
   open var isLayoutInvalidationEnabled: Bool = true
-  open var sizer = ViewSizer()
+
+  open var sizer = ViewSizer().mustRespectWidthToFit(true)
 
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
     sizer.sizeThatFits(
