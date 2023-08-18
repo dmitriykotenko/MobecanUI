@@ -109,4 +109,23 @@ public extension SizableView {
       .withoutStretchableWidth()
       .withoutStretchableHeight()
   }
+
+  @discardableResult
+  func mustRespectWidthToFit(_ mustRespect: Bool) -> Self {
+    sizer.mustRespectWidthToFit = mustRespect
+    return self
+  }
+
+  @discardableResult
+  func mustRespectHeightToFit(_ mustRespect: Bool) -> Self {
+    sizer.mustRespectHeightToFit = mustRespect
+    return self
+  }
+
+  @discardableResult
+  func mustRespectSizeToFit(_ mustRespect: Bool) -> Self {
+    self
+      .mustRespectWidthToFit(mustRespect)
+      .mustRespectHeightToFit(mustRespect)
+  }
 }
