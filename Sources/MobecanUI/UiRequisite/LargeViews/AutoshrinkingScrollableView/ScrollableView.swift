@@ -73,7 +73,7 @@ public class ScrollableView: UIView, UIScrollViewDelegate {
   private func setupInsetsCalculator() {
     disposeBag {
       rx.window
-        .delay(0.milliseconds, scheduler: MainScheduler.instance) // ждём, пока superview закончит обновлять свой лэйаут
+        .observe(on: MainScheduler.asyncInstance) // ждём, пока superview закончит обновлять свой лэйаут
         .whenNotEqual(to: nil)
         .do(onNext: { [weak self] in print("scroll-view-driver window = \(String(describing: self?.window))") })
         .compactMap { [weak self] in self?.longTermBottomY }

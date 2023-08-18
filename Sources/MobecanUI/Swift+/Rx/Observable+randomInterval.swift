@@ -8,7 +8,7 @@ import SwiftDateTime
 public extension Observable where Element == Void {
   
   static func randomInterval(average: Duration,
-                             scheduler: SchedulerType = MainScheduler.instance) -> Observable<Void> {
+                             scheduler: SchedulerType = RxSchedulers.default) -> Observable<Void> {
     randomInterval(
       average: average,
       deviation: average * 0.5,
@@ -18,7 +18,7 @@ public extension Observable where Element == Void {
 
   static func randomInterval(average: Duration,
                              deviation: Duration,
-                             scheduler: SchedulerType = MainScheduler.instance) -> Observable<Void> {
+                             scheduler: SchedulerType = RxSchedulers.default) -> Observable<Void> {
     let possibleIntervals = (average - deviation)...(average + deviation)
     
     return Observable<Int>.timer(.random(in: possibleIntervals), scheduler: scheduler)

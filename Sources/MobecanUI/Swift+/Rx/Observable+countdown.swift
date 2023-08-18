@@ -10,7 +10,7 @@ public extension Observable where Element == Duration {
   static func countdown(deadline: DateTime,
                         interval: Duration = 1.seconds,
                         clock: Clock,
-                        scheduler: SchedulerType = MainScheduler.instance) -> Observable<Duration> {
+                        scheduler: SchedulerType = RxSchedulers.default) -> Observable<Duration> {
     let firstPulseDelay = (deadline - clock.now).positiveRemainder(divider: interval)
     
     return Observable<Void>

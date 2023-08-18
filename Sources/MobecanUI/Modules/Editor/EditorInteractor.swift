@@ -67,7 +67,7 @@ open class EditorInteractor<InputValue, OutputValue, SomeError: Error>: EditorIn
     guard let policy = intermediateValueProcessingPolicy else { return }
 
     intermediateValueProcessing = .init(
-      when: _userDidChangeValue.throttle(policy.throttlingDuration, scheduler: MainScheduler.instance),
+      when: _userDidChangeValue.throttle(policy.throttlingDuration, scheduler: RxSchedulers.default),
       load: { policy.processValue($0) ?? .never() },
       bindResultTo: _intermediateValueProcessingStatus.mapObserver { $0 }
     )
