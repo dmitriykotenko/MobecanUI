@@ -20,6 +20,20 @@ public struct NonEditableTextInteraction: Equatable, Hashable, Codable, Lensable
     dataDetectorTypes: []
   )
 
+  public static func selectableText(dataDetectorTypes: UIDataDetectorTypes) -> NonEditableTextInteraction {
+    .init(
+      isTextSelectable: true,
+      dataDetectorTypes: dataDetectorTypes
+    )
+  }
+
+  public static func nonSelectableText(dataDetectorTypes: UIDataDetectorTypes) -> NonEditableTextInteraction {
+    .init(
+      isTextSelectable: false,
+      dataDetectorTypes: dataDetectorTypes
+    )
+  }
+
   public init(isTextSelectable: Bool,
               dataDetectorTypes: UIDataDetectorTypes) {
     self.isTextSelectable = isTextSelectable
