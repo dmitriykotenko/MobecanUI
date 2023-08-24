@@ -6,6 +6,9 @@ import RxSwift
 import UIKit
 
 
+public typealias Observable = RxSwift.Observable
+
+
 public extension Observable where Element: UIGestureRecognizer {
 
   var isInProgress: Observable<Bool> {

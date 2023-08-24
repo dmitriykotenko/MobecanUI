@@ -6,6 +6,9 @@ import RxTest
 @testable import MobecanUI
 
 
+public typealias Observable = RxSwift.Observable
+
+
 final class ModuleDependencyTests: XCTestCase {}
 
 
