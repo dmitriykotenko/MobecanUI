@@ -29,3 +29,26 @@ public extension ObservableType where Element == Void {
       .mapToVoid()
   }
 }
+
+
+public extension PrimitiveSequenceType where Trait == SingleTrait, Element: RxAbstractInteger {
+
+  static func timer(_ dueTime: Duration,
+                    scheduler: SchedulerType) -> Single<Element> {
+    timer(
+      dueTime.toRxTimeInterval,
+      scheduler: scheduler
+    )
+  }
+}
+
+
+public extension PrimitiveSequenceType where Trait == SingleTrait, Element == Void {
+
+  static func voidTimer(_ dueTime: Duration,
+                        scheduler: SchedulerType) -> Single<Void> {
+    Single<Int>
+      .timer(dueTime, scheduler: scheduler)
+      .mapToVoid()
+  }
+}

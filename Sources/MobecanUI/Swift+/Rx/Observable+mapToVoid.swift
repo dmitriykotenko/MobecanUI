@@ -20,9 +20,9 @@ public extension SharedSequenceConvertibleType {
 }
 
 
-public extension Single {
+public extension PrimitiveSequence where Trait == SingleTrait {
 
   func mapToVoid() -> Single<Void> {
-    asObservable().mapToVoid().asSingle()
+    map { _ in () }
   }
 }
