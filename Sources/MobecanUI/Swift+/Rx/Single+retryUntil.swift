@@ -16,21 +16,21 @@ public enum RetryError: Error, Equatable {
 public extension Single {
 
   /// Повторяет асинхронную операцию до тех пор, пока не будет выполнено указанное условие,
-  /// и возвращает результат последнего повтора.
+  /// и возвращает результат последнего вызова операции.
   ///
   /// Например, эту функцию можно использовать, чтобы повторять один и тот же запрос к серверу до тех пор,
   /// пока он не завершится успешно.
   /// - Parameters:
   ///   - condition: Условие, при выполнении которого надо прекратить повторы и вернуть результат.
   ///   - retryInterval: Интервал между концом предыдущего повтора и началом следующего.
-  ///   - maximumAttemptsCount: Максимальное количество повторений.
+  ///   - maximumAttemptsCount: Максимальное количество повторов. Дефолтное значение равно ``Int.max``.
   ///   - scheduler: Шедулер, который управляет интервалом между повторами.
   ///   - operation: Асинхронная операция, успешного выполнения которой мы хотим добиться.
   /// - Returns: Если удалось выполнить указанное условие, возвращает результат последнего повтора.
-  /// - Throws: Если после указанного количества повторений условие всё ещё не выполнено,
+  /// - Throws: Если после указанного количества повторов условие всё ещё не выполнено,
   /// возвращает ``RetryError.noMoreAttempts``.
   ///
-  /// Если указанное количество повторений меньше единицы,
+  /// Если указанное количество повторов меньше единицы,
   /// возвращает ``RetryError.invalidMaximumAttemptsCount``.
   ///
   /// Если при выполнении операции возникла ошибка, возвращает эту ошибку.
@@ -45,32 +45,30 @@ public extension Single {
     let finalError = RetryError.noMoreAttempts(maximumAttemptsCount: maximumAttemptsCount)
 
     return Observable.concat(
-      Observable
-        .deferred {
-          operation().asObservable()
-            .map {
-              if !condition($0) { throw finalError }
-              return $0
+      Observable.deferred {
+        operation().asObservable()
+          .map {
+            if !condition($0) { throw finalError }
+            return $0
+          }
+          .catch { error in
+            if (error as? RetryError) == finalError {
+              return maximumAttemptsCount == 1 ? .error(finalError) : .empty()
+            } else {
+              return .error(error)
             }
-            .catch { error in
-              if (error as? RetryError) == finalError {
-                return maximumAttemptsCount == 1 ? .error(finalError) : .empty()
-              } else {
-                return .error(error)
-              }
-            }
-        },
-      Single
-        .deferred {
-          Single.voidTimer(retryInterval, scheduler: scheduler)
-            .flatMap { operation() }
-            .map {
-              if !condition($0) { throw finalError }
-              return $0
-            }
-        }
-        .retry(maximumAttemptsCount - 1)
-        .asObservable()
+          }
+      },
+      Single.deferred {
+        Single.voidTimer(retryInterval, scheduler: scheduler)
+          .flatMap { operation() }
+          .map {
+            if !condition($0) { throw finalError }
+            return $0
+          }
+      }
+      .retry(maximumAttemptsCount - 1)
+      .asObservable()
     )
     .take(1)
     .asSingle()
