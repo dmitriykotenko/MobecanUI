@@ -9,10 +9,8 @@ public extension Observable where Element == Void {
 
   static func voidInterval(_ interval: Duration,
                            scheduler: SchedulerType = RxSchedulers.default) -> Observable<Void> {
-    randomInterval(
-      average: interval,
-      deviation: .zero,
-      scheduler: scheduler
-    )
+    Observable<Int>.timer(interval, period: interval, scheduler: scheduler)
+      .mapToVoid()
+      .startWith(())
   }
 }
