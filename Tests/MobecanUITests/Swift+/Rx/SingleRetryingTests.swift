@@ -177,7 +177,7 @@ final class SingleRetryingTests: XCTestCase {
     let scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: false)
     let maximumAttemptsCount = 10
 
-    var attemptNumber = 1
+    var operationCallsCount = 0
 
     let signal: Single<Bool> = Single.retry(
       until: { $0 },
@@ -186,7 +186,7 @@ final class SingleRetryingTests: XCTestCase {
       scheduler: scheduler,
       operation: {
         let result = Single.just(false)
-        attemptNumber += 1
+        operationCallsCount += 1
         return result
       }
     )
@@ -196,15 +196,19 @@ final class SingleRetryingTests: XCTestCase {
     disposeBag { signal ==> listener1 }
     scheduler.start()
 
-    XCTAssertEqual(attemptNumber, maximumAttemptsCount + 1)
+    XCTAssertEqual(operationCallsCount, maximumAttemptsCount)
 
+    let currentTime = scheduler.clock
     let listener2 = scheduler.createObserver(Bool.self)
     disposeBag { signal ==> listener2 }
     scheduler.start()
 
-    XCTAssertEqual(attemptNumber, maximumAttemptsCount + 1)
+    XCTAssertEqual(operationCallsCount, 2 * maximumAttemptsCount)
 
-    XCTAssertEqual(listener1.events, listener2.events)
+    XCTAssertEqual(
+      listener2.events.map { $0.minus(timeOffset: currentTime) },
+      listener1.events
+    )
   }
 
   @discardableResult

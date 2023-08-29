@@ -57,6 +57,9 @@ public extension Single {
   ///
   /// - Warning: Если при очередном выполнении операции возникла ошибка,
   /// считается, что указанное условие не выполнено.
+  ///
+  /// - Warning: Сигнал ленивый — все вычисления начинаются после первой подписки
+  /// и повторяются заново при каждой новой подписке.
   /// - Parameters:
   ///   - condition: Условие, при выполнении которого надо прекратить повторы и вернуть результат.
   ///   - retryInterval: Интервал между концом предыдущего повтора и началом следующего.
@@ -77,7 +80,7 @@ public extension Single {
     guard maximumAttemptsCount > 0
     else { return .error(InvalidMaximumAttemptsCountError(maximumAttemptsCount: maximumAttemptsCount)) }
 
-    var buildError = NoMoreAttemptsErrorBuilder<Element>(
+    let buildError = NoMoreAttemptsErrorBuilder<Element>(
       maximumAttemptsCount: maximumAttemptsCount,
       attemptNumber: 1
     )
@@ -89,19 +92,23 @@ public extension Single {
           .ifNot(condition, throw: { buildError(value: $0) })
           .catch { maximumAttemptsCount == 1 ? .error($0) : .empty() }
       },
-      Single.deferred {
-        buildError.attemptNumber += 1
+      Observable.deferred {
+        var buildError = NoMoreAttemptsErrorBuilder<Element>(
+          maximumAttemptsCount: maximumAttemptsCount,
+          attemptNumber: 2
+        )
+
         return Single
           .voidTimer(retryInterval, scheduler: scheduler)
           .flatMap { operation() }
           .ifNot(condition, throw: { buildError(value: $0) })
+          .do(onDispose: { buildError.attemptNumber += 1 })
+          .retry(maximumAttemptsCount - 1)
+          .catch { throw buildError.wrapIfNecessary(error: $0) }
+          .asObservable()
       }
-      .retry(maximumAttemptsCount - 1)
-      .catch { throw buildError.wrapIfNecessary(error: $0) }
-      .asObservable()
     )
     .take(1)
-    .share(replay: 1, scope: .forever)
     .asSingle()
   }
 }
