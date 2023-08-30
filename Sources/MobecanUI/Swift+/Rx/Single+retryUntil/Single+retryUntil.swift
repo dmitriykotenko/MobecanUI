@@ -90,9 +90,10 @@ public extension Single {
       return Observable.deferred {
         buildError.attemptNumber += 1
 
-        return Observable.voidTimer(
-          (buildError.attemptNumber == 1) ? Duration.zero : retryInterval,
-          scheduler: scheduler
+        return Observable.if(
+          buildError.attemptNumber == 1,
+          then: .just(()),
+          else: .voidTimer(retryInterval, scheduler: scheduler)
         )
         .flatMap { operation() }
         .ifNot(condition, throw: { buildError(value: $0) })
