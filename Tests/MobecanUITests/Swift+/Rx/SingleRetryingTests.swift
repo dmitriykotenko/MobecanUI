@@ -216,7 +216,7 @@ final class SingleRetryingTests: XCTestCase {
                      retryInterval: Duration,
                      maximumAttemptsCount: Int = Int.max,
                      expectedEvents: [Recorded<Event<Bool>>]) -> Bool {
-    let scheduler = TestScheduler(initialClock: 0)
+    let scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: false)
 
     var attemptNumber = 1
 

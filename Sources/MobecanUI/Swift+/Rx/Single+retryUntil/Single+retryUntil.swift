@@ -77,37 +77,29 @@ public extension Single {
                     maximumAttemptsCount: Int = Int.max,
                     scheduler: SchedulerType = RxSchedulers.default,
                     operation: @escaping () -> Single<Element>) -> Single<Element> {
-    guard maximumAttemptsCount > 0
-    else { return .error(InvalidMaximumAttemptsCountError(maximumAttemptsCount: maximumAttemptsCount)) }
-
-    let buildError = NoMoreAttemptsErrorBuilder<Element>(
-      maximumAttemptsCount: maximumAttemptsCount,
-      attemptNumber: 1
-    )
-
-    return Observable.concat(
-      Observable.deferred {
-        operation().asObservable()
-          .catch { throw buildError(nestedError: $0) }
-          .ifNot(condition, throw: { buildError(value: $0) })
-          .catch { maximumAttemptsCount == 1 ? .error($0) : .empty() }
-      },
-      Observable.deferred {
-        var buildError = NoMoreAttemptsErrorBuilder<Element>(
-          maximumAttemptsCount: maximumAttemptsCount,
-          attemptNumber: 2
-        )
-
-        return Single
-          .voidTimer(retryInterval, scheduler: scheduler)
-          .flatMap { operation() }
-          .ifNot(condition, throw: { buildError(value: $0) })
-          .do(onDispose: { buildError.attemptNumber += 1 })
-          .retry(maximumAttemptsCount - 1)
-          .catch { throw buildError.wrapIfNecessary(error: $0) }
-          .asObservable()
+    Observable.deferred {
+      if maximumAttemptsCount <= 0 {
+        throw InvalidMaximumAttemptsCountError(maximumAttemptsCount: maximumAttemptsCount)
       }
-    )
+
+      var buildError = NoMoreAttemptsErrorBuilder<Element>(
+        maximumAttemptsCount: maximumAttemptsCount,
+        attemptNumber: 0
+      )
+
+      return Observable.deferred {
+        buildError.attemptNumber += 1
+
+        return Observable.voidTimer(
+          (buildError.attemptNumber == 1) ? Duration.zero : retryInterval,
+          scheduler: scheduler
+        )
+        .flatMap { operation() }
+        .ifNot(condition, throw: { buildError(value: $0) })
+      }
+      .retry(maximumAttemptsCount)
+      .catch { throw buildError.wrapIfNecessary(error: $0) }
+    }
     .take(1)
     .asSingle()
   }
