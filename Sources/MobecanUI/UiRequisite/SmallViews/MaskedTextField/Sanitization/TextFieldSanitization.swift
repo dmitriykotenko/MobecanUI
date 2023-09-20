@@ -1,7 +1,7 @@
 import Foundation
 
 
-/// Kind of cleaning which is applied to text before inserting this text from the clipboard.
+/// Rules applied by ``MaskedTextField`` to remove single undesirable characters from user input.
 public enum TextFieldSanitization {
 
   /// Do not perform any sanitization.

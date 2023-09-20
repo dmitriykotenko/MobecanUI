@@ -192,6 +192,7 @@ public class MaskedTextField: UITextField, SizableView {
   /// Sets a transformer which adds attributes to text field's text.
   public func setAttribution(_ attribution: TextFieldAttribution) {
     attributor = attribution.parse()
+    textStyleUpdated()
   }
 
   private func applyDecoration() {
