@@ -1,7 +1,7 @@
 import UIKit
 
 
-/// Custom implementations of Cut and Paste commands for MaskedTextField.
+/// Custom implementations of Cut and Paste commands for ``MaskedTextField``.
 class TextFieldCopyPaster {
   
   private weak var textField: MaskedTextField?
@@ -68,7 +68,7 @@ class TextFieldCopyPaster {
   }
   
   private func significantRange(from range: NSRange) -> NSRange {
-    return textField?.decoratedText?.significantRange(from: range) ?? range
+    textField?.decoratedText?.significantRange(from: range) ?? range
   }
 }
 
@@ -81,7 +81,7 @@ private extension MaskedTextField {
       let selectedUtf16range = selectedUtf16range
       else { return nil }
     
-    let selectedSubstring = NSString(string: decoratedText.value)
+    let selectedSubstring = NSString(string: decoratedText.content)
       .substring(with: selectedUtf16range)
     
     return selectedSubstring

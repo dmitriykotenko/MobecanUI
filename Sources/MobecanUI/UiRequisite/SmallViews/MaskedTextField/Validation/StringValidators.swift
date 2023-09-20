@@ -1,49 +1,45 @@
 /// Validators for different kinds of strings.
 public enum StringValidators {
   
-  static let empty: StringValidator = FunctionStringValidator { _ in true }
+  public static let empty: StringValidator = FunctionStringValidator { _ in true }
   
-  static let partialDate: StringValidator = FunctionStringValidator { string in
-    regexCheck(string, pattern: "^[0-9]{0,8}$")
-  }
+  public static let partialDate: StringValidator = regexValidator("^[0-9]{0,8}$")
   
-  static let partialRussianPassportNumber: StringValidator = FunctionStringValidator { string in
-    regexCheck(string, pattern: "^[0-9]{0,10}$")
-  }
-  
-  static let partialInternationalPassportNumber: StringValidator = FunctionStringValidator { string in
-    regexCheck(string, pattern: "^[0-9]{0,9}$")
-  }
-  
-  static let partialBirthCertificateNumber: StringValidator = FunctionStringValidator { string in
-    let uppercasedString = string.uppercased()
-    
+  public static let partialRussianPassportNumber: StringValidator = regexValidator("^[0-9]{0,10}$")
+
+  public static let partialInternationalPassportNumber: StringValidator = regexValidator("^[0-9]{0,9}$")
+
+  public static let partialBirthCertificateNumber: StringValidator = FunctionStringValidator { change in
     let romanDigitsSection = "[" + String.romanDigits + "]{0,10}"
     let cyrillicLettersSection = "[" + String.cyrillicLetters + "]{0,2}"
     let digitsSection = "[0-9]{0,6}"
     
-    return regexCheck(
-      string,
+    return change.replacementString.isEmpty || regexCheck(
+      change.newText,
       pattern: "^" + romanDigitsSection + cyrillicLettersSection + digitsSection + "$"
     )
   }
   
-  static let partialForeignDocumentNumber: StringValidator = FunctionStringValidator { string in
-    /// Only spaces are prohibited.
-    return regexCheck(string, pattern: "^\\S*$")
+  public static let partialForeignDocumentNumber: StringValidator = FunctionStringValidator { change in
+    change.replacementString.isEmpty
+    || regexCheck(change.newText, pattern: "^\\S*$") // only spaces are prohibited
   }
   
-  static func maximumLengthValidator(_ length: Int) -> StringValidator {
-    return FunctionStringValidator { string in string.count <= length }
+  public static func maximumLengthValidator(_ length: Int) -> StringValidator {
+    FunctionStringValidator { change in
+      change.replacementString.isEmpty || change.newText.count <= length
+    }
   }
   
-  static func regexValidator(_ pattern: String) -> StringValidator {
-    return FunctionStringValidator { string in regexCheck(string, pattern: pattern) }
+  public static func regexValidator(_ pattern: String) -> StringValidator {
+    FunctionStringValidator { change in
+      change.replacementString.isEmpty || regexCheck(change.newText, pattern: pattern)
+    }
   }
 }
 
 
 private func regexCheck(_ string: String,
                         pattern: String) -> Bool {
-  return string.range(of: pattern, options: .regularExpression) != nil
+  string.range(of: pattern, options: .regularExpression) != nil
 }

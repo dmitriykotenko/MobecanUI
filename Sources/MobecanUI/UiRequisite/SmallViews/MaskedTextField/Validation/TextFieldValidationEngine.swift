@@ -15,10 +15,13 @@ class TextFieldValidationEngine: TextFieldDelegateProxy {
   override func textField(_ textField: UITextField,
                           shouldChangeCharactersIn range: NSRange,
                           replacementString string: String) -> Bool {
-    let currentText = (textField.text ?? "") as NSString
-    let newText = currentText.replacingCharacters(in: range, with: string)
+    let textChange = TextChange(
+      oldText: textField.text,
+      replacementRange: range,
+      replacementString: string
+    )
     
-    if validator.isValid(String(newText)) {
+    if validator.isValid(textChange) {
       return askParent(textField, range, string)
     } else {
       // If new value is not valid, do not allow to use it.

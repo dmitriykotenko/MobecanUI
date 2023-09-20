@@ -1,10 +1,10 @@
-class EmptyStringDecorator: StringDecorator {
+public class EmptyStringDecorator: StringDecorator {
   
-  func decorate(_ string: String) -> DecoratedString {
-    let decoratedCharacters = string.map {
-      DecoratedCharacter(character: $0, isSignificant: true)
-    }
-    
-    return DecoratedString(characters: decoratedCharacters)
+  public func decorate(_ string: String) -> DecoratedString {
+    DecoratedString(
+      characters: string.map {
+        FlaggedCharacter.significant($0)
+      }
+    )
   }
 }

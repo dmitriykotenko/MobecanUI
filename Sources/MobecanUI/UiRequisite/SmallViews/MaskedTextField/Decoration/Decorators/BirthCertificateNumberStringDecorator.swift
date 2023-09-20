@@ -1,5 +1,5 @@
 /// Decorates a number of russian birth certificate entered by the user – to make the number more human-readable.
-class BirthCertificateNumberStringDecorator: StringDecorator {
+public class BirthCertificateNumberStringDecorator: StringDecorator {
   
   private struct Sections {
     var romanDigits: String
@@ -7,7 +7,7 @@ class BirthCertificateNumberStringDecorator: StringDecorator {
     var remainder: String
   }
   
-  func decorate(_ string: String) -> DecoratedString {
+  public func decorate(_ string: String) -> DecoratedString {
     let sections = splitIntoSections(string)
     
     /// Roman digits go first.
@@ -51,24 +51,18 @@ class BirthCertificateNumberStringDecorator: StringDecorator {
   }
   
   private func isRomanDigit(_ character: Character) -> Bool {
-    return String.romanDigits.contains(character)
+    String.romanDigits.contains(character)
   }
   
   private func isCyrillicLetter(_ character: Character) -> Bool {
-    return String.cyrillicLetters.contains(character)
+    String.cyrillicLetters.contains(character)
   }
   
-  private func significant(_ character: Character) -> DecoratedCharacter {
-    return DecoratedCharacter(
-      character: character,
-      isSignificant: true
-    )
+  private func significant(_ character: Character) -> FlaggedCharacter {
+    .significant(character)
   }
   
-  private func insignificant(_ character: Character) -> DecoratedCharacter {
-    return DecoratedCharacter(
-      character: character,
-      isSignificant: false
-    )
+  private func insignificant(_ character: Character) -> FlaggedCharacter {
+    .insignificant(character)
   }
 }
