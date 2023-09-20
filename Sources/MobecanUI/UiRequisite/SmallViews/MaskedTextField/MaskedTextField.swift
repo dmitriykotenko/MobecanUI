@@ -106,6 +106,8 @@ public class MaskedTextField: UITextField, SizableView {
     setSanitization(sanitization)
     setValidation(validation)
     setAttribution(attribution)
+
+    withStretchableWidth()
     
     text = ""
   }
