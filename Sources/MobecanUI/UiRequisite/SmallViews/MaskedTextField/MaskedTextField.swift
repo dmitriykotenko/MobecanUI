@@ -211,4 +211,11 @@ public class MaskedTextField: UITextField, SizableView {
   public override var defaultTextAttributes: [NSAttributedString.Key : Any] { didSet { textStyleUpdated() } }
 
   private func textStyleUpdated() { self.text = text }
+
+  public override func sizeThatFits(_ size: CGSize) -> CGSize {
+    sizer.sizeThatFits(
+      size,
+      nativeSizing: super.sizeThatFits
+    )
+  }
 }
