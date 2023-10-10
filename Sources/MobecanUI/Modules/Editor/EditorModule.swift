@@ -20,19 +20,33 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     }
   }
 
-  /// Результат первой финализации.
-  open var editingResult: Single<Result<OutputValue, SomeError>> {
-    interactor.finalizationStatus.compactMap(\.?.asResult).take(1).asSingle()
+  open var finished: Observable<Void> {
+    .merge(
+      interactor.close,
+      interactor.finalizationStatus.asSuccess().mapToVoid()
+    )
+  }
+
+  /// Результат последней финализации.
+  open var finalEditingResult: Single<Result<OutputValue, SomeError>> {
+    interactor.finalizationStatus.compactMap(\.?.asResult).takeLast(1).asSingle()
   }
 
   /// Если пользователь закрыл модуль без финализации, возвращает `.cancel`.
-  /// Во всех остальных случаях возвращает результат первой финализации.
-  open var editingResultOrCancel: Single<CancelOr<Result<OutputValue, SomeError>>> {
+  /// Во всех остальных случаях возвращает результат последней финализации.
+  open var finalEditingResultOrCancel: Single<CancelOr<Result<OutputValue, SomeError>>> {
     Observable.merge(
       interactor.close.map { .cancel },
-      interactor.finalizationStatus.compactMap(\.?.asResult).map { .value($0) }
+      interactor.finalizationStatus.compactMap(\.?.asResult)
+        .takeLast(1)
+        .map { .value($0) }
     )
     .take(1).asSingle()
+  }
+
+  /// Результат обработки промежуточного значения.
+  open var intermediateValueProcessingResult: Observable<Result<OutputValue, SomeError>> {
+    interactor.intermediateValueProcessingStatus.compactMap(\.?.asResult)
   }
 
   /// Финальное значение, получившееся в результате первой успешной финализации.
@@ -50,11 +64,9 @@ open class EditorModule<InputValue, OutputValue, SomeError: Error>: Module {
     .take(1).asSingle()
   }
 
-  open var finished: Observable<Void> {
-    .merge(
-      interactor.close,
-      interactor.finalizationStatus.asSuccess().mapToVoid()
-    )
+  /// Промежуточное выходное значение.
+  open var intermediateValue: Observable<OutputValue> {
+    interactor.intermediateValueProcessingStatus.asSuccess()
   }
 
   open var viewController: UIViewController { view }

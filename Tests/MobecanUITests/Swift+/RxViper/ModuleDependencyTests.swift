@@ -59,8 +59,8 @@ class AndSingleOutputTester {
   var editorModule: EditorModule<Int, String, Error> { fatalError() }
   
   init() {
-    _ = ModuleDependency.OneTime(editorModule, output: \.editingResult)
-    _ = editorModule.and(singleOutput: \.editingResult)
+    _ = ModuleDependency.OneTime(editorModule, output: \.finalEditingResult)
+    _ = editorModule.and(singleOutput: \.finalEditingResult)
   }
 }
 
