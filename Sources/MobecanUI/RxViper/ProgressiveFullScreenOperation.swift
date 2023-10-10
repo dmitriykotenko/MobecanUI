@@ -1,24 +1,24 @@
-// Copyright © 2020 Mobecan. All rights reserved.
+// Copyright © 2023 Mobecan. All rights reserved.
 
 import RxSwift
 import UIKit
 
 
-/// Асинхронная операция, которой для взаимодействия с пользователем нужен отдельный экран
-/// (например, редактирование географического адреса).
-open class FullScreenOperation<Input, Output> {
-  
+/// Асинхронная операция, которой для взаимодействия с пользователем нужен отдельный экран,
+/// умеющий отдавать промежуточные значения.
+open class ProgressiveFullScreenOperation<Input, Output> {
+
   private let when: Observable<Input>
-  
+
   private let disposeBag = DisposeBag()
 
   public init(when: Observable<Input>,
-              show initModule: @escaping (Input) -> ModuleDependency.OneTime<Output>,
+              show initModule: @escaping (Input) -> ModuleDependency.Output<Output>,
               via demonstrator: @escaping () -> Demonstrator?,
               animating: Bool? = nil,
               bindResultTo resultObserver: AnyObserver<Output> = .empty) {
     self.when = when
-    
+
     let moduleAndOutput =
       when.observe(on: MainScheduler.instance).map { initModule($0) }.share()
 
