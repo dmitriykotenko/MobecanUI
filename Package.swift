@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -19,7 +19,7 @@ let package = Package(
     .package(url: "https://github.com/RxSwiftCommunity/RxKeyboard", from: .init(2, 0, 0)),
     .package(url: "https://github.com/onevcat/Kingfisher", from: .init(7, 5, 0)),
     .package(url: "https://github.com/SnapKit/SnapKit", from: .init(5, 0, 1)),
-    .package(url: "https://github.com/dmitriykotenko/LayoutKit", .branch("feature/swift-5.3")),
+    .package(url: "https://github.com/dmitriykotenko/LayoutKit", branch: "feature/swift-5.3"),
     .package(url: "https://github.com/dmitriykotenko/SwiftDateTime", from: .init(0, 1, 6))
   ],
   targets: [
@@ -38,8 +38,8 @@ let package = Package(
       dependencies: [
         "MobecanUI",
         "LayoutKit",
-        "RxTest",
-        "RxBlocking"
+        .product(name: "RxTest", package: "RxSwift"),
+        .product(name: "RxBlocking", package: "RxSwift")
       ]
     )
   ]
