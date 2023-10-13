@@ -64,7 +64,24 @@ public struct ButtonColorsState {
       )
     )
   }
-  
+
+  public static func selectedAndHighlighted(title: UIColor? = nil,
+                                            tint: UIColor? = nil,
+                                            background: UIColor? = nil,
+                                            border: UIColor? = nil,
+                                            shadow: UIColor? = nil) -> ButtonColorsState {
+    ButtonColorsState(
+      state: [.selected, .highlighted],
+      colors: .init(
+        title: title,
+        tint: tint,
+        background: background,
+        border: border,
+        shadow: shadow
+      )
+    )
+  }
+
   public static func disabled(title: UIColor? = nil,
                               tint: UIColor? = nil,
                               background: UIColor? = nil,
