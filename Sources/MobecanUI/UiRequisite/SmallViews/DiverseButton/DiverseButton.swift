@@ -44,6 +44,7 @@ open class DiverseButton: UIButton, SizableView {
     updateTitleColor()
     updateTintColor()
     updateBackgroundColor()
+    updateBorderColor()
     updateShadowColor()
     updateAlpha()
   }
@@ -55,27 +56,25 @@ open class DiverseButton: UIButton, SizableView {
   }
   
   private func updateTintColor() {
-    let newTintColor = colorsByState
-      .first { $0.state == state }
-      .map { $0.colors.tint }
-    
-    newTintColor.map { self.tintColor = $0 }
+    colorFor(\.tint).map { tintColor = $0 }
   }
   
   private func updateBackgroundColor() {
-    let newBackgroundColor = colorsByState
-      .first { $0.state == state }
-      .map { $0.colors.background }
-    
-    newBackgroundColor.map { self.backgroundColor = $0 }
+    colorFor(\.background).map { backgroundColor = $0 }
   }
-  
+
+  private func updateBorderColor() {
+    colorFor(\.border).map { layer.borderColor = $0.cgColor }
+  }
+
   private func updateShadowColor() {
-    let newShadowColor = colorsByState
+    colorFor(\.shadow).map { layer.shadowColor = $0.cgColor }
+  }
+
+  private func colorFor(_ keyPath: KeyPath<ButtonColors, UIColor?>) -> UIColor? {
+    colorsByState
       .first { $0.state == state }
-      .map { $0.colors.shadow }
-    
-    newShadowColor.map { self.layer.shadowColor = $0?.cgColor }
+      .flatMap { $0.colors[keyPath: keyPath] }
   }
   
   private func updateAlpha() {

@@ -8,15 +8,18 @@ public struct ButtonColors {
   public let title: UIColor?
   public let tint: UIColor?
   public let background: UIColor?
+  public let border: UIColor?
   public let shadow: UIColor?
   
   public init(title: UIColor? = nil,
               tint: UIColor? = nil,
               background: UIColor? = nil,
+              border: UIColor? = nil,
               shadow: UIColor? = nil) {
     self.title = title
     self.tint = tint
     self.background = background
+    self.border = border
     self.shadow = shadow
   }
 }

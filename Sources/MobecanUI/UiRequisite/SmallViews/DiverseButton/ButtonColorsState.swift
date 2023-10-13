@@ -17,6 +17,7 @@ public struct ButtonColorsState {
   public static func normal(title: UIColor? = nil,
                             tint: UIColor? = nil,
                             background: UIColor? = nil,
+                            border: UIColor? = nil,
                             shadow: UIColor? = nil) -> ButtonColorsState {
     ButtonColorsState(
       state: .normal,
@@ -24,6 +25,7 @@ public struct ButtonColorsState {
         title: title,
         tint: tint,
         background: background,
+        border: border,
         shadow: shadow
       )
     )
@@ -32,6 +34,7 @@ public struct ButtonColorsState {
   public static func highlighted(title: UIColor? = nil,
                                  tint: UIColor? = nil,
                                  background: UIColor? = nil,
+                                 border: UIColor? = nil,
                                  shadow: UIColor? = nil) -> ButtonColorsState {
     ButtonColorsState(
       state: .highlighted,
@@ -39,6 +42,7 @@ public struct ButtonColorsState {
         title: title,
         tint: tint,
         background: background,
+        border: border,
         shadow: shadow
       )
     )
@@ -47,6 +51,7 @@ public struct ButtonColorsState {
   public static func selected(title: UIColor? = nil,
                               tint: UIColor? = nil,
                               background: UIColor? = nil,
+                              border: UIColor? = nil,
                               shadow: UIColor? = nil) -> ButtonColorsState {
     ButtonColorsState(
       state: .selected,
@@ -54,6 +59,7 @@ public struct ButtonColorsState {
         title: title,
         tint: tint,
         background: background,
+        border: border,
         shadow: shadow
       )
     )
@@ -62,6 +68,7 @@ public struct ButtonColorsState {
   public static func disabled(title: UIColor? = nil,
                               tint: UIColor? = nil,
                               background: UIColor? = nil,
+                              border: UIColor? = nil,
                               shadow: UIColor? = nil) -> ButtonColorsState {
     ButtonColorsState(
       state: .disabled,
@@ -69,6 +76,7 @@ public struct ButtonColorsState {
         title: title,
         tint: tint,
         background: background,
+        border: border,
         shadow: shadow
       )
     )
@@ -77,6 +85,7 @@ public struct ButtonColorsState {
   public static func pseudoDisabled(title: UIColor? = nil,
                                     tint: UIColor? = nil,
                                     background: UIColor? = nil,
+                                    border: UIColor? = nil,
                                     shadow: UIColor? = nil) -> ButtonColorsState {
     ButtonColorsState(
       state: .pseudoDisabled,
@@ -84,6 +93,7 @@ public struct ButtonColorsState {
         title: title,
         tint: tint,
         background: background,
+        border: border,
         shadow: shadow
       )
     )
