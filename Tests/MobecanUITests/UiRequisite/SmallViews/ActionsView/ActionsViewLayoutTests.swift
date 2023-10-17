@@ -90,6 +90,32 @@ class ActionsViewLayoutTests: ActionsViewLayoutTester {
     XCTAssertEqual(test.errorLabel.isVisible, false)
   }
 
+  func testLargeContentLayoutWithoutCheckmark() {
+    let test = Test(
+      contentViewText: .init(repeating: "The loveliest time of the year is Spring", count: 10),
+      selectionState: .notSelectable,
+      errorLabelInsets: .zero,
+      errorText: nil
+    )
+
+    let maximumContentViewWidth = test.screenWidth
+
+    let expectedTotalHeight = test.contentViewText.unroundedHeight(
+      forWidth: maximumContentViewWidth,
+      font: test.contentView.font
+    )
+
+    assert(
+      test: test,
+      subview: \.contentView,
+      expectedAbsoluteMinX: 0,
+      expectedWidth: test.screenWidth,
+      expectedHeight: expectedTotalHeight
+    )
+
+    XCTAssertEqual(test.checkmarkView.isVisible, false)
+  }
+
   func testLargeContentLayoutWithError() {
     let test = Test(
       contentViewText: .init(repeating: "The loveliest time of the year is Spring", count: 10),

@@ -106,6 +106,7 @@ class ActionsViewLayoutTester: XCTestCase {
 
     init(contentViewText: String,
          checkmarkPlacement: ActionsViewStructs.CheckmarkPlacement.Horizontal = .leading,
+         selectionState: ActionsViewStructs.SelectionState = .isSelected(false),
          errorLabelInsets: UIEdgeInsets,
          errorText: String?,
          deleteButtonHeight: CGFloat? = nil) {
@@ -146,7 +147,7 @@ class ActionsViewLayoutTester: XCTestCase {
 
       actionsView.ingredientsState.onNext(
         .init(
-          selectionState: .isSelected(false),
+          selectionState: selectionState,
           errorText: errorText,
           sideActions: [.delete]
         )

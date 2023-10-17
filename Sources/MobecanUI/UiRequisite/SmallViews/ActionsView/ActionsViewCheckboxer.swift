@@ -100,8 +100,11 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
 private extension UIView {
 
   func aligned(using alignment: Alignment) -> LayoutableView {
-    LayoutableView(
-      layout: self.withAlignment(alignment)
+    AutohidingContainerView(
+      self,
+      layout: {
+        LayoutableView(layout: $0.withAlignment(alignment))
+      }
     )
   }
 }
