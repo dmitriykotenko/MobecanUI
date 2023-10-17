@@ -67,28 +67,22 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
   private func container(contentView: ContentView,
                          containerView: UIView,
                          checkmarkView: CheckmarkView) -> UIView {
-    LayoutableView(
-      layout: StackLayout(
-        axis: .horizontal,
-        sublayouts: orderHorizontally(
-          containerViewLayout:
-            containerView.asLayout,
-          checkmarkViewLayout:
-            checkmarkView.withAlignment(verticalCheckmarkAlignment(contentView: contentView))
-        )
-      )
-    )
-  }
-
-  private func orderHorizontally(containerViewLayout: Layout,
-                                 checkmarkViewLayout: Layout) -> [Layout] {
-    let stretchableSpacer = UIView.stretchableHorizontalSpacer().asLayout
+    let verticallyAlignedCheckmarkView =
+      checkmarkView.aligned(using: verticalCheckmarkAlignment(contentView: contentView))
 
     switch checkmarkPlacement.horizontal {
     case .leading:
-      return [checkmarkViewLayout, containerViewLayout, stretchableSpacer]
+      return .hstack([
+        verticallyAlignedCheckmarkView,
+        containerView,
+        .stretchableHorizontalSpacer()
+      ])
     case .trailing:
-      return [containerViewLayout, stretchableSpacer, checkmarkViewLayout]
+      return .hstack([
+        containerView,
+        .stretchableHorizontalSpacer(),
+        verticallyAlignedCheckmarkView
+      ])
     }
   }
 
@@ -99,6 +93,16 @@ open class ActionsViewCheckboxer<ContentView: DataView & EventfulView>: ActionsV
     case .top(let offset):
       return .top(offset: offset)
     }
+  }
+}
+
+
+private extension UIView {
+
+  func aligned(using alignment: Alignment) -> LayoutableView {
+    LayoutableView(
+      layout: self.withAlignment(alignment)
+    )
   }
 }
 
