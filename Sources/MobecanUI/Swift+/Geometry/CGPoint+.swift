@@ -25,4 +25,10 @@ public extension CGPoint {
       y: point.y + size.height
     )
   }
+
+  func distance(to that: CGPoint) -> CGFloat {
+    sqrt(
+      (x - that.x) * (x - that.x) + (y - that.y) * (y - that.y)
+    )
+  }
 }

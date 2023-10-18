@@ -55,23 +55,28 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
         stateContainer.areTapsEnabled = $0.areGlobalTapsEnabled
       },
       events:
-        longPress
+        longPress.scan(LongPressFilter(allowableDistance: 10)) { container, gesture in
+          container.update(with: gesture)
+        }
         .do(onNext: { [weak contentView, weak containerView, onTouchDown, onTouchUp] in
           let views = ContentAndContainerViews(
             contentView: contentView,
             containerView: containerView
           )
 
-          switch $0.state {
+          switch $0.filteredState {
           case .began:
             views.map(onTouchDown)
-          case .changed:
+          case .changed where !$0.isFailed:
             break
           default:
             views.map(onTouchUp)
           }
         })
-        .filter(\.isEqualToTouchUpInside)
+        .filter {
+          $0.filteredState == .recognized
+          && ($0.gesture?.isHappeningInsideView == true)
+        }
         .withLatestFrom(valueSetter.filterNil())
         .map { Tap($0) }
         .share()
@@ -90,13 +95,5 @@ private class StateContainer {
 
   init(areTapsEnabled: Bool) {
     self.areTapsEnabled = areTapsEnabled
-  }
-}
-
-
-private extension UILongPressGestureRecognizer {
-
-  var isEqualToTouchUpInside: Bool {
-    state == .ended && isHappening(inside: view)
   }
 }
