@@ -13,3 +13,16 @@ public extension UIView {
       .withLatestFrom(value.filterNil())
   }
 }
+
+
+public extension Reactive where Base: UIView {
+
+  func tapWith<Value, ValueSignal: ObservableType>(value: ValueSignal,
+                                                   filter: @escaping (Base) -> Bool) -> Observable<Value>
+  where ValueSignal.Element == Value? {
+    tapGesture()
+      .when(.recognized)
+      .filter { [weak base] _ in base.map(filter) ?? false }
+      .withLatestFrom(value.filterNil())
+  }
+}

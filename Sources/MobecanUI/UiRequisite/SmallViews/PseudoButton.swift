@@ -7,7 +7,7 @@ import UIKit
 
 
 open class PseudoButton<Value>: LayoutableView, SizableView, DataView {
-  
+
   public typealias ViewEvent = Tap<Void>
   
   @RxUiInput(nil) open var value: AnyObserver<Value?>
@@ -15,6 +15,8 @@ open class PseudoButton<Value>: LayoutableView, SizableView, DataView {
   @RxDriverOutput(nil) open var valueGetter: Driver<Value?>
   
   open private(set) var tap: Observable<Void> = .never()
+
+  open var areTapsEnabled: Bool { isUserInteractionEnabled }
 
   open var sizer = ViewSizer()
 
@@ -59,7 +61,10 @@ open class PseudoButton<Value>: LayoutableView, SizableView, DataView {
   }
 
   private func setupTaps(tap: Observable<Void>?) {
-    self.tap = tap ?? rx.tapGesture().when(.recognized).mapToVoid()
+    self.tap =
+      (tap ?? rx.tapGesture().when(.recognized).mapToVoid()).filter { [weak self] in
+        self?.areTapsEnabled == true
+      }
   }
 
   private func setupValue(setter: AnyObserver<Value?>) {
