@@ -131,6 +131,8 @@ private class SwipableView: LayoutableView {
     }
 
     self.trailingViewWidth.onNext(trailingViewWidth)
+
+    bouncer.areAnimationsEnabled.onNext(true)
   }
 
   override func sizeThatFits(_ size: CGSize) -> CGSize {
