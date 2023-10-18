@@ -41,13 +41,8 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
 
     let stateContainer = StateContainer(areTapsEnabled: true)
 
-    let tap = containerView.rx.tapGesture { _, delegate in
-      delegate.beginPolicy = stateContainer.asGestureBeginPolicy()
-    }
-
     // У ``UITapGestureRecognizer`` никогда не происходит события `.began`.
-    // Поэтому, чтобы реагировать на начало нажатия, нужен дополнительный распознаватель жестов,
-    // у которого есть такое событие.
+    // Поэтому, чтобы реагировать на начало нажатия, используем ``UILongPressGestureRecognizer``.
     let longPress = containerView.rx.longPressGesture { gesture, delegate in
       gesture.minimumPressDuration = .leastNonzeroMagnitude
       delegate.beginPolicy = stateContainer.asGestureBeginPolicy()
@@ -59,32 +54,27 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
       state: .onNext { [stateContainer] in
         stateContainer.areTapsEnabled = $0.areGlobalTapsEnabled
       },
-      events: Observable.merge(
-        longPress.map(\.state)
-          .filter { $0 == .began }
-          .do(onNext: { [weak contentView, weak containerView, onTouchDown] _ in
-            ContentAndContainerViews(
-              contentView: contentView,
-              containerView: containerView
-            )
-            .map(onTouchDown)
-          }),
-        tap.map(\.state)
-          .filter {
-            $0 == .recognized || $0 == .ended || $0 == .failed || $0 == .cancelled
+      events:
+        longPress
+        .do(onNext: { [weak contentView, weak containerView, onTouchDown, onTouchUp] in
+          let views = ContentAndContainerViews(
+            contentView: contentView,
+            containerView: containerView
+          )
+
+          switch $0.state {
+          case .began:
+            views.map(onTouchDown)
+          case .changed:
+            break
+          default:
+            views.map(onTouchUp)
           }
-          .do(onNext: { [weak contentView, weak containerView, onTouchUp] _ in
-            ContentAndContainerViews(
-              contentView: contentView,
-              containerView: containerView
-            )
-            .map(onTouchUp)
-          })
-      )
-      .filter { $0 == .recognized }
-      .withLatestFrom(valueSetter.filterNil())
-      .map { Tap($0) }
-      .share()
+        })
+        .filter(\.isEqualToTouchUpInside)
+        .withLatestFrom(valueSetter.filterNil())
+        .map { Tap($0) }
+        .share()
     )
   }
 }
@@ -100,5 +90,13 @@ private class StateContainer {
 
   init(areTapsEnabled: Bool) {
     self.areTapsEnabled = areTapsEnabled
+  }
+}
+
+
+private extension UILongPressGestureRecognizer {
+
+  var isEqualToTouchUpInside: Bool {
+    state == .ended && isHappening(inside: view)
   }
 }
