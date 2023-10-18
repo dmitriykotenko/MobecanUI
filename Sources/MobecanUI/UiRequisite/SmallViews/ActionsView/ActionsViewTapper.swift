@@ -13,6 +13,13 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
   public struct ContentAndContainerViews {
     public var contentView: ContentView
     public var containerView: UIView
+
+    init?(contentView: ContentView?, containerView: UIView?) {
+      guard let contentView, let containerView else { return nil }
+
+      self.contentView = contentView
+      self.containerView = containerView
+    }
   }
   
   public typealias State = ActionsViewStructs.GlobalTapsState
@@ -34,8 +41,18 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
 
     let beginPolicy = TapsBeginPolicy(areTapsEnabled: true)
 
-    let tap = containerView.rx.tapGesture { _, delegate in
-      delegate.beginPolicy = .custom { [beginPolicy] _ in beginPolicy.shouldBeginTapGesture }
+    let tap = containerView.rx.tapGesture { [weak contentView, weak containerView, onTouchDown] _, delegate in
+      delegate.beginPolicy = .custom { [beginPolicy] _ in
+        if beginPolicy.shouldBeginTapGesture {
+            ContentAndContainerViews(
+              contentView: contentView,
+              containerView: containerView
+            )
+            .map(onTouchDown)
+        }
+
+        return beginPolicy.shouldBeginTapGesture
+      }
     }
 
     return .init(
@@ -45,16 +62,14 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
         beginPolicy.areTapsEnabled = $0.areGlobalTapsEnabled
       },
       events: tap
-        .do(onNext: { [weak contentView, weak containerView, onTouchDown, onTouchUp] in
+        .do(onNext: { [weak contentView, weak containerView, onTouchUp] in
           switch $0.state {
-          case .began:
-            zip(contentView, containerView)
-              .map { ContentAndContainerViews(contentView: $0, containerView: $1) }
-              .map(onTouchDown)
           case .ended, .cancelled, .failed:
-            zip(contentView, containerView)
-              .map { ContentAndContainerViews(contentView: $0, containerView: $1) }
-              .map(onTouchUp)
+            ContentAndContainerViews(
+              contentView: contentView,
+              containerView: containerView
+            )
+            .map(onTouchUp)
           default:
             break
           }
