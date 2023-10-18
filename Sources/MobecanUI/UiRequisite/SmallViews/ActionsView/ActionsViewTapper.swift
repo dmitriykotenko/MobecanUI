@@ -70,7 +70,9 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
             .map(onTouchDown)
           }),
         tap.map(\.state)
-          .filter { $0 == .recognized }
+          .filter {
+            $0 == .recognized || $0 == .ended || $0 == .failed || $0 == .cancelled
+          }
           .do(onNext: { [weak contentView, weak containerView, onTouchUp] _ in
             ContentAndContainerViews(
               contentView: contentView,
