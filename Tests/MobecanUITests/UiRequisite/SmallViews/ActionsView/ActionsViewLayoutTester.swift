@@ -134,6 +134,7 @@ class ActionsViewLayoutTester: XCTestCase {
           checkmarkView: checkmarkView,
           horizontalPlacement: checkmarkPlacement
         ),
+        tapper: .testable(),
         swiper: .testable(deleteButton: deleteButton)
       )
 
@@ -213,6 +214,17 @@ private extension ActionsViewErrorDisplayer {
             backgroundColor: .systemRed.withAlphaComponent(0.25)
           )
       }
+    )
+  }
+}
+
+
+private extension ActionsViewTapper {
+
+  static func testable() -> ActionsViewTapper {
+    .init(
+      onTouchDown: { _ in },
+      onTouchUp: { _ in }
     )
   }
 }

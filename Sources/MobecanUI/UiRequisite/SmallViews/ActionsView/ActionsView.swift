@@ -13,6 +13,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
   
   public typealias CheckmarkPlacement = Structs.CheckmarkPlacement
   public typealias SelectionState = Structs.SelectionState
+  public typealias GlobalTapsState = Structs.GlobalTapsState
   public typealias SideAction = Structs.SideAction
   public typealias IngredientsState = Structs.IngredientsState
   
@@ -21,8 +22,9 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
   public enum ViewEvent {
     case select(Value)
     case deselect(Value)
+    case tap(Value)
     case delete(Value)
-    
+
     case nestedEvent(ContentView.ViewEvent)
   }
 
@@ -40,6 +42,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
 
   private let errorDisplayer: ActionsViewErrorDisplayer<ContentView>
   private let checkboxer: ActionsViewCheckboxer<ContentView>
+  private let tapper: ActionsViewTapper<ContentView>
   private let swiper: ActionsViewSwiper<ContentView>
   
   private let disposeBag = DisposeBag()
@@ -50,12 +53,14 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
               insets: UIEdgeInsets = .zero,
               errorDisplayer: ActionsViewErrorDisplayer<ContentView>,
               checkboxer: ActionsViewCheckboxer<ContentView>,
+              tapper: ActionsViewTapper<ContentView>,
               swiper: ActionsViewSwiper<ContentView>) {
     self.contentView = contentView
     self.contentViewInsets = insets
     
     self.errorDisplayer = errorDisplayer
     self.checkboxer = checkboxer
+    self.tapper = tapper
     self.swiper = swiper
     
     super.init()
@@ -74,15 +79,21 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
       containerView: checkboxIngredient.containerView
     )
 
-    let swiperIngredient = swiper.setup(
+    let tapperIngredient = tapper.setup(
       contentView: contentView,
       containerView: errorIngredient.containerView
+    )
+
+    let swiperIngredient = swiper.setup(
+      contentView: contentView,
+      containerView: tapperIngredient.containerView
     )
 
     layout = swiperIngredient.containerView.asLayout.withInsets(.zero)
 
     disposeBag {
       _viewEvents <== .merge(
+        contentView.viewEvents.map { .nestedEvent($0) },
         checkboxIngredient.events.map {
           switch $0 {
           case .select(let value):
@@ -91,6 +102,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
             return .deselect(value)
           }
         },
+        tapperIngredient.events.map { .tap($0.element) },
         swiperIngredient.events.map {
           let (event, value) = $0
           switch event {
@@ -102,16 +114,24 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
     }
 
     displayEverything(
-      valueObservers: [contentView.value, checkboxIngredient.value, errorIngredient.value, swiperIngredient.value],
+      valueObservers: [
+        contentView.value,
+        checkboxIngredient.value,
+        errorIngredient.value,
+        tapperIngredient.value,
+        swiperIngredient.value
+      ],
       selectionState: checkboxIngredient.state,
       errorText: errorIngredient.state,
+      globalTapsState: tapperIngredient.state,
       sideActions: swiperIngredient.state
     )
   }
-  
+
   private func displayEverything(valueObservers: [AnyObserver<Value?>],
                                  selectionState: AnyObserver<SelectionState>,
                                  errorText: AnyObserver<String?>,
+                                 globalTapsState: AnyObserver<GlobalTapsState>,
                                  sideActions: AnyObserver<[SideAction]>) {
     valueObservers.forEach { observer in
       disposeBag {
@@ -122,6 +142,7 @@ public class ActionsView<ContentView: DataView & EventfulView>: LayoutableView, 
     disposeBag {
       _ingredientsState.compactMap { $0?.selectionState } ==> selectionState
       _ingredientsState.map { $0?.errorText } ==> errorText
+      _ingredientsState.compactMap { $0?.globalTapsState } ==> globalTapsState
       _ingredientsState.compactMap { $0?.sideActions } ==> sideActions
     }
   }
