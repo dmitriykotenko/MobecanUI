@@ -48,7 +48,8 @@ open class ActionsViewTapper<ContentView: DataView & EventfulView>: ActionsViewI
     // У ``UITapGestureRecognizer`` никогда не происходит события `.began`.
     // Поэтому, чтобы реагировать на начало нажатия, нужен дополнительный распознаватель жестов,
     // у которого есть такое событие.
-    let longPress = containerView.rx.longPressGesture { _, delegate in
+    let longPress = containerView.rx.longPressGesture { gesture, delegate in
+      gesture.minimumPressDuration = .leastNonzeroMagnitude
       delegate.beginPolicy = stateContainer.asGestureBeginPolicy()
     }
 
