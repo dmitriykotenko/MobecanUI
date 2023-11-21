@@ -1,79 +1,77 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Kingfisher",
-        "repositoryURL": "https://github.com/onevcat/Kingfisher",
-        "state": {
-          "branch": null,
-          "revision": "90135885ef506506620c4911cefb55a95ca2a9a2",
-          "version": "7.5.0"
-        }
-      },
-      {
-        "package": "LayoutKit",
-        "repositoryURL": "https://github.com/dmitriykotenko/LayoutKit",
-        "state": {
-          "branch": "feature/swift-5.3",
-          "revision": "261f52e4425da4e69979e842c3c18eac1fe23391",
-          "version": null
-        }
-      },
-      {
-        "package": "RxGesture",
-        "repositoryURL": "https://github.com/RxSwiftCommunity/RxGesture",
-        "state": {
-          "branch": null,
-          "revision": "e29e65a58c2f670677d17df9a18e846b87e78592",
-          "version": "4.0.2"
-        }
-      },
-      {
-        "package": "RxKeyboard",
-        "repositoryURL": "https://github.com/RxSwiftCommunity/RxKeyboard",
-        "state": {
-          "branch": null,
-          "revision": "085fd99d7bb4f98e671904fcfe7ff561e66574ad",
-          "version": "2.0.0"
-        }
-      },
-      {
-        "package": "RxOptional",
-        "repositoryURL": "https://github.com/RxSwiftCommunity/RxOptional",
-        "state": {
-          "branch": null,
-          "revision": "f116ec9c727a76e92fabc1724bb7f57e4772402f",
-          "version": "5.0.4"
-        }
-      },
-      {
-        "package": "RxSwift",
-        "repositoryURL": "https://github.com/ReactiveX/RxSwift",
-        "state": {
-          "branch": null,
-          "revision": "7c17a6ccca06b5c107cfa4284e634562ddaf5951",
-          "version": "6.2.0"
-        }
-      },
-      {
-        "package": "SnapKit",
-        "repositoryURL": "https://github.com/SnapKit/SnapKit",
-        "state": {
-          "branch": null,
-          "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
-          "version": "5.0.1"
-        }
-      },
-      {
-        "package": "SwiftDateTime",
-        "repositoryURL": "https://github.com/dmitriykotenko/SwiftDateTime",
-        "state": {
-          "branch": null,
-          "revision": "9546c604717452588b8dece49b77a64ac98f74b9",
-          "version": "0.1.6"
-        }
+  "pins" : [
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "90135885ef506506620c4911cefb55a95ca2a9a2",
+        "version" : "7.5.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "layoutkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/LayoutKit",
+      "state" : {
+        "branch" : "feature/swift-5.3",
+        "revision" : "261f52e4425da4e69979e842c3c18eac1fe23391"
+      }
+    },
+    {
+      "identity" : "rxgesture",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxGesture",
+      "state" : {
+        "revision" : "e29e65a58c2f670677d17df9a18e846b87e78592",
+        "version" : "4.0.2"
+      }
+    },
+    {
+      "identity" : "rxkeyboard",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxKeyboard",
+      "state" : {
+        "revision" : "085fd99d7bb4f98e671904fcfe7ff561e66574ad",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "rxoptional",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RxSwiftCommunity/RxOptional",
+      "state" : {
+        "revision" : "f116ec9c727a76e92fabc1724bb7f57e4772402f",
+        "version" : "5.0.4"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift",
+      "state" : {
+        "revision" : "7c17a6ccca06b5c107cfa4284e634562ddaf5951",
+        "version" : "6.2.0"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit",
+      "state" : {
+        "revision" : "d458564516e5676af9c70b4f4b2a9178294f1bc6",
+        "version" : "5.0.1"
+      }
+    },
+    {
+      "identity" : "swiftdatetime",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/SwiftDateTime",
+      "state" : {
+        "revision" : "e33ff0fe210699ec3120dd0ce7f2141dd073f281",
+        "version" : "0.2.2"
+      }
+    }
+  ],
+  "version" : 2
 }
