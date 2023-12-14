@@ -111,7 +111,7 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
       _error <== .merge(
         interactor.finalizationStatus.map(\.?.asError),
         // Прячем сообщение об ошибке после того, как пользователь изменил value.
-        valueDidChange().map { nil }
+        _value.map { _ in nil }
       )
 
       _intermediateValueProcessingStatus <== interactor.intermediateValueProcessingStatus
@@ -127,9 +127,5 @@ public class EditorPresenter<InputValue, OutputValue, SomeError: Error>: EditorP
 
       _closeButtonTap ==> interactor.userWantsToCloseModule
     }
-  }
-
-  private func valueDidChange() -> Observable<Void> {
-    _value.skip(1).take(1).mapToVoid()
   }
 }
