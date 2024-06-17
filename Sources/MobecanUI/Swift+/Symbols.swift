@@ -8,7 +8,7 @@ public extension String {
   static let thinNonBreakingSpace = " "
 
   static let newLine = "\n"
-  
+
   static let minus = "−"
   static let rouble = "₽"
 }

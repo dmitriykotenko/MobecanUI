@@ -1,60 +1,78 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
 
-/// Аналог ``Swift.EncodingError``, реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
+/// Аналог ``Swift.EncodingError``, дополненный типом сериализуемого объекта
+/// и реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
 public enum SerializationError: Error, Equatable, Hashable, Codable {
 
-  /// Энкодеру или какому-то из его контейнеров не удалось сериализовать данные.
+  /// Произошёл ``EncodingError`` (который был сконвертирован в ``CodableVersionOf.EncodingError``).
   /// - Parameters:
-  ///   - valueDescription: Подробное описание данных, которые не удалось сериализовать.
-  ///   - valueType: Тип данных, которые не удалось сериализовать.
-  ///   - context: Подробности ошибки.
-  case invalidValue(valueDescription: String, valueType: String, context: SerializationContext)
+  ///   - serializedType: Тип данных, которые не удалось сериализовать.
+  ///   - encodingError: Произошедший ``EncodingError`` .
+  case encodingError(
+    serializedType: TypeName,
+    encodingError: CodableVersionOf.EncodingError
+  )
 
-  /// Неизвестная разновидность ``EncodingError``.
-  /// - Parameters:
-  ///   - errorDescription: Описание ошибки.
-  case unsupportedEncodingError(errorDescription: String)
-
-  /// Ошибка, не являющаяся ``EncodingError``.
+  /// Произошла ошибка, не являющаяся ``EncodingError``.
   ///
-  /// - Warning: Может возникнуть при работе с try-catch-блоками,
-  /// где у нас нет гарантии, что произошёл именно ``DecodingError``.
+  /// - Warning: Может возникнуть при работе с try-catch-блоками
+  /// (где у нас нет гарантии от компилятора, что произошёл именно ``EncodingError``).
   ///
   /// - Parameters:
-  ///   - expectedType: Тип ошибки.
-  ///   - context: Описание ошибки.
-  case otherUnderlyingError(errorType: String, errorDescription: String)
+  ///   - serializedType: Тип данных, которые не удалось сериализовать.
+  ///   - errorType: Тип произошедшей ошибки.
+  ///   - errorDescription: Описание произошедшей ошибки.
+  case otherUnderlyingError(
+    serializedType: TypeName,
+    errorType: TypeName,
+    errorDescription: String
+  )
+
+  /// Тип данных, которые не удалось сериализовать.
+  var serializedType: TypeName {
+    switch self {
+    case .encodingError(let serializedType, _):
+      return serializedType
+    case .otherUnderlyingError(let serializedType, _, _):
+      return serializedType
+    }
+  }
 
   /// Оборачивает любую ошибку в ``SerializationError``.
   ///
-  /// - Warning: Этот конструктор нужен для работы с try-catch-блоками,
-  /// где у нас нет гарантии, что произошёл именно ``EncodingError``.
+  /// - Warning: Этот конструктор нужен для работы с try-catch-блоками
+  /// (где у нас нет гарантии от компилятора, что произошёл именно ``EncodingError``).
   ///
-  /// - Parameter origin: Исходная ошибка (обычно это ``EncodingError``).
-  public init(anyError: Error) {
+  /// - Parameters:
+  ///   - anyError: Исходная ошибка (обычно это ``EncodingError``).
+  ///   - serializedType: Тип данных, которые не удалось сериализовать.
+  public init(anyError: Error,
+              serializedType: Any.Type) {
     if let encodingError = anyError as? EncodingError {
-      self = .init(encodingError)
+      self = .init(
+        encodingError,
+        serializedType: serializedType
+      )
     } else {
       self = .otherUnderlyingError(
-        errorType: "\(type(of: anyError))",
+        serializedType: .init(type: serializedType),
+        errorType: .init(type: type(of: anyError)),
         errorDescription: "\(anyError)"
       )
     }
   }
 
   /// Конвертирует ``Swift.EncodingError`` в ``SerializationError``.
-  public init(_ origin: Swift.EncodingError) {
-    switch origin {
-    case .invalidValue(let value, let context):
-      self = .invalidValue(
-        valueDescription: "\(value)",
-        valueType: "\(type(of: value))",
-        context: context.asCodableValue
-      )
-    @unknown default:
-      self = .unsupportedEncodingError(errorDescription: "\(origin)")
-    }
+  /// - Parameters:
+  ///   - origin: Исходный ``EncodingError``.
+  ///   - serializedType: Тип данных, которые не удалось сериализовать.
+  public init(_ origin: Swift.EncodingError,
+              serializedType: Any.Type) {
+    self = .encodingError(
+      serializedType: .init(type: serializedType),
+      encodingError: origin.asCodableValue
+    )
   }
 }
 
@@ -62,5 +80,12 @@ public enum SerializationError: Error, Equatable, Hashable, Codable {
 public extension EncodingError {
 
   /// Конвертирует ``Swift.EncodingError`` в ``SerializationError``.
-  var asCodableValue: SerializationError { .init(self) }
+  /// - Parameters:
+  ///   - serializedType: Тип данных, которые не удалось сериализовать.
+  func asCodableValue(serializedType: Any.Type) -> SerializationError {
+    .init(
+      self, 
+      serializedType: serializedType
+    )
+  }
 }

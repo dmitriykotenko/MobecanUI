@@ -14,7 +14,9 @@ public extension Encodable {
     Result {
       try encoder.encode(self)
     }
-    .mapError(\.asSerializationError)
+    .mapError {
+      .init(anyError: $0, serializedType: Self.self)
+    }
   }
 }
 
@@ -31,13 +33,8 @@ public extension Decodable {
     Result {
       try decoder.decode(Self.self, from: data)
     }
-    .mapError(\.asDeserializationError)
+    .mapError {
+      .init(anyError: $0, deserializedType: Self.self)
+    }
   }
-}
-
-
-private extension Error {
-
-  var asSerializationError: SerializationError { .init(anyError: self) }
-  var asDeserializationError: DeserializationError { .init(anyError: self) }
 }

@@ -1,5 +1,7 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import Foundation
+
 
 /// Текстовое представление типа данных в Свифте.
 ///
@@ -101,4 +103,30 @@ public struct TypeName: Equatable, Hashable, Codable {
     self.qualified = qualified
     self.mangled = mangled
   }
+
+  static let never = TypeName(type: Never.self)
+  static let void = TypeName(type: Void.self)
+  static let any = TypeName(type: Any.self)
+  static let anyObject = TypeName(type: AnyObject.self)
+
+  static let bool = TypeName(type: Bool.self)
+  static let int = TypeName(type: Int.self)
+  static let int8 = TypeName(type: Int8.self)
+  static let int64 = TypeName(type: Int64.self)
+  static let uint = TypeName(type: UInt.self)
+  static let uint8 = TypeName(type: UInt8.self)
+  static let uint64 = TypeName(type: UInt64.self)
+  static let float = TypeName(type: Float.self)
+  static let double = TypeName(type: Double.self)
+
+  static let character = TypeName(type: Character.self)
+  static let string = TypeName(type: String.self)
+
+  static let data = TypeName(type: Data.self)
+  static let url = TypeName(type: URL.self)
+  static let decimal = TypeName(type: Decimal.self)
+
+  static let arrayOfAny = TypeName(type: [Any].self)
+  static let dictionaryOfStringAndAny = TypeName(type: [String: Any].self)
+  static let jsonValue = TypeName(type: JsonValue.self)
 }
