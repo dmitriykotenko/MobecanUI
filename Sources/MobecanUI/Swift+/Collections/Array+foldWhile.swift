@@ -12,7 +12,7 @@ public extension Array {
                     _ process: (T, Element) -> StopOrContinue<T>) -> T {
     var result = initialValue
     var index = 0
-    var shouldContinue = true
+    var shouldContinue = isNotEmpty
     
     while shouldContinue {
       let nextElement = process(result, self[index])
