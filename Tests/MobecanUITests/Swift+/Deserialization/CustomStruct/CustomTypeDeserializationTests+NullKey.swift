@@ -218,13 +218,13 @@ extension CustomTypeDeserializationTests {
       deserializedType: WebSite.self,
       jsonString: """
       {
-        "homePage": null
+        "home_page": null
       }
       """,
       expectedDecodingError: .valueNotFound(
         expectedType: .init(type: URL.self),
         context: .init(
-          codingPath: [codingKey("homePage")],
+          codingPath: [codingKey("home_page")],
           debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
           underlyingError: nil
         )

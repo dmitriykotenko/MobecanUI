@@ -2,10 +2,11 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import CompilerPluginSupport
 
 let package = Package(
   name: "MobecanUI",
-  platforms: [.iOS(.v12)],
+  platforms: [.iOS(.v12), .macOS(.v12)],
   products: [
     .library(
       name: "MobecanUI",
@@ -13,6 +14,7 @@ let package = Package(
     ),
   ],
   dependencies: [
+    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/ios12"),
     .package(url: "https://github.com/ReactiveX/RxSwift", from: .init(6, 2, 0)),
     .package(url: "https://github.com/RxSwiftCommunity/RxOptional", from: .init(5, 0, 4)),
     .package(url: "https://github.com/RxSwiftCommunity/RxGesture", from: .init(4, 0, 2)),
@@ -26,6 +28,7 @@ let package = Package(
     .target(
       name: "MobecanUI",
       dependencies: [
+        "MobecanUIMacros",
         "RxSwift", "RxOptional", "RxGesture", "RxKeyboard",
         "SnapKit",
         "LayoutKit",
@@ -33,10 +36,21 @@ let package = Package(
         "SwiftDateTime"
       ]
     ),
+    .macro(
+      name: "MobecanUIMacros",
+      dependencies: [
+        .product(name: "SwiftSyntax", package: "swift-syntax"),
+        .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+        .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+      ],
+      path: "Sources/Macros"
+    ),
     .testTarget(
       name: "MobecanUITests",
       dependencies: [
         "MobecanUI",
+        "MobecanUIMacros",
+        .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
         "LayoutKit",
         .product(name: "RxTest", package: "RxSwift"),
         .product(name: "RxBlocking", package: "RxSwift")

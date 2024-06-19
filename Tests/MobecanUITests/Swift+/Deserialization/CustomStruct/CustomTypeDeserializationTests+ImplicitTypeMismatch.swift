@@ -111,12 +111,12 @@ extension CustomTypeDeserializationTests {
       deserializedType: WebSite.self,
       jsonString: """
       {
-        "homePage": "Welcome to hell :-)"
+        "home_page": "Welcome to hell :-)"
       }
       """,
       expectedDecodingError: .dataCorrupted(
         context: .init(
-          codingPath: [codingKey("homePage")],
+          codingPath: [codingKey("home_page")],
           debugDescription: "Invalid URL string.",
           underlyingError: nil
         )

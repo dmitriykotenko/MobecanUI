@@ -64,6 +64,15 @@
       }
     },
     {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/swift-syntax",
+      "state" : {
+        "branch" : "feature/ios12",
+        "revision" : "38a1a779aaa0942432d7733c7e164cbfede2c652"
+      }
+    },
+    {
       "identity" : "swiftdatetime",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dmitriykotenko/SwiftDateTime",
