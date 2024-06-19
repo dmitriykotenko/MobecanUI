@@ -16,3 +16,4 @@ extension Decimal: EmptyCodingKeysReflector {}
 extension String: EmptyCodingKeysReflector {}
 extension URL: EmptyCodingKeysReflector {}
 extension Data: EmptyCodingKeysReflector {}
+extension UUID: EmptyCodingKeysReflector {}
