@@ -34,7 +34,7 @@ extension CodableVersionOf {
 
     /// Конвертирует ``Swift.CodingKey`` в ``CodableVersionOf.CodingKey``.
     public init(_ origin: any Swift.CodingKey) {
-      originalCodingKeyType = "\(type(of: origin))"
+      originalCodingKeyType = _typeName(type(of: origin), qualified: false)
       intValue = origin.intValue
       stringValue = origin.stringValue
     }

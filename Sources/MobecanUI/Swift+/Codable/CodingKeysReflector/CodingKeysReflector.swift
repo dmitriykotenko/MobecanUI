@@ -31,8 +31,9 @@ public extension CodingKeysReflector {
   /// Типы значений по каждому ``CodingKey`` из указанного пути.
   static func types(forCodingPath path: [CodingKey])
   -> Result<[CodingKeysReflector.Type], CodingKeysReflectorError> {
-    path.tailsIncludingSelf
+    path.headsIncludingSelf
       .map { typeOfValue(atCodingPath: $0) }
       .invert()
+      .map { [Self.self] + $0 }
   }
 }
