@@ -16,7 +16,7 @@ extension CodingKeysReflectionMacro: MemberMacro {
   public static func expansion(of node: AttributeSyntax,
                                providingMembersOf declaration: some DeclGroupSyntax,
                                in context: some MacroExpansionContext) throws -> [DeclSyntax] {
-    
+
     generateCodingKeyTypes(declaration: declaration).asArray
   }
 
@@ -30,11 +30,11 @@ extension CodingKeysReflectionMacro: MemberMacro {
     let codingKeysEnum = declaration.findNestedEnum(name: "CodingKeys")
     let codingCases = codingKeysEnum?.simplifiedCases.asSet ?? []
 
-    let correctedStoredProperties = 
-      storedProperties.map { $0.replacingName(usingCodingKeys: codingCases) }
+    let correctedStoredProperties =
+    storedProperties.map { $0.replacingName(usingCodingKeys: codingCases) }
 
     let codingKeyTypes =
-      dictionaryLiteral(keysAndValues: correctedStoredProperties.map {($0.name, $0.type + ".self") })
+    dictionaryLiteral(keysAndValues: correctedStoredProperties.map {($0.name, $0.type + ".self") })
 
     return """
       static var codingKeyTypes: [String: CodingKeysReflector.Type] {
@@ -54,7 +54,7 @@ extension CodingKeysReflectionMacro: MemberMacro {
 
 
 extension CodingKeysReflectionMacro: ExtensionMacro {
-  
+
   public static func expansion(of node: AttributeSyntax,
                                attachedTo declaration: some DeclGroupSyntax,
                                providingExtensionsOf type: some TypeSyntaxProtocol,
@@ -69,9 +69,9 @@ extension CodingKeysReflectionMacro: ExtensionMacro {
 
   private static func generateConformance(of type: some TypeSyntaxProtocol,
                                           to protocolName: String) -> ExtensionDeclSyntax? {
-      DeclSyntax(
-        "extension \(raw: type.trimmedDescription): \(raw: protocolName) {}"
-      )
-      .cast(ExtensionDeclSyntax.self)
+    DeclSyntax(
+      "extension \(raw: type.trimmedDescription): \(raw: protocolName) {}"
+    )
+    .cast(ExtensionDeclSyntax.self)
   }
 }

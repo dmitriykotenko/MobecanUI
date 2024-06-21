@@ -46,5 +46,7 @@ class MacroExpansionCompileErrorsCatcher {
     var ccc: [String]???
     var ddd: Double { 0 }
     var eee: EmptyStruct
+
+    static let url = #URL("https://www.apple.com")
   }
 }

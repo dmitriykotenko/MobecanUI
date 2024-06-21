@@ -7,6 +7,7 @@ import SwiftSyntaxMacros
 struct MobecanUIMacrosPlugin: CompilerPlugin {
 
   let providingMacros: [Macro.Type] = [
-    CodingKeysReflectionMacro.self
+    CodingKeysReflectionMacro.self,
+    UrlMacro.self
   ]
 }

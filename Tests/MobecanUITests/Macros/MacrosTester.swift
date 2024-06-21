@@ -11,11 +11,13 @@ class MacrosTester: XCTestCase {
 
   func checkThat(code: String,
                  expandsTo expectedExpandedCode: String,
+                 withDiagnostics diagnostics: [DiagnosticSpec] = [],
                  file: StaticString = #file,
                  line: UInt = #line) {
     assertMacroExpansion(
       code,
       expandedSource: expectedExpandedCode,
+      diagnostics: diagnostics,
       macros: availableMacros,
       file: file,
       line: line
@@ -29,7 +31,8 @@ class MacrosTester: XCTestCase {
   /// поэтому ссылки на типы можно получить с помощью функции `_typeByName()`.
   private var availableMacros: [String: Macro.Type] {
     let mangledMarcoNames = [
-      "CodingKeysReflection": "15MobecanUIMacros25CodingKeysReflectionMacroV"
+      "CodingKeysReflection": "15MobecanUIMacros25CodingKeysReflectionMacroV",
+      "URL": "15MobecanUIMacros8UrlMacroV",
     ]
 
     return mangledMarcoNames.compactMapValues { _typeByName($0) as? Macro.Type }
