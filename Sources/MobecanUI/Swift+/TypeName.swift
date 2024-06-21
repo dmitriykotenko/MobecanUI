@@ -124,7 +124,9 @@ public struct TypeName: Equatable, Hashable, Codable {
 
   static let data = TypeName(type: Data.self)
   static let url = TypeName(type: URL.self)
+  static let uuid = TypeName(type: UUID.self)
   static let decimal = TypeName(type: Decimal.self)
+  static let nsNumber = TypeName(type: NSNumber.self)
 
   static let arrayOfAny = TypeName(type: [Any].self)
   static let dictionaryOfStringAndAny = TypeName(type: [String: Any].self)
