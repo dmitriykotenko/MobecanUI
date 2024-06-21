@@ -31,7 +31,13 @@ public extension Array {
     
     return result
   }
-  
+
+  func foldWhileFromRight<T>(_ initialValue: T,
+                             _ process: (Element, T) -> StopOrContinue<T>) -> T {
+    reversed()
+      .foldWhile(initialValue, { process($1, $0) })
+  }
+
   func splitWhile(_ predicate: ([Element], Element) -> Bool) -> ([Element], [Element]) {
     let margin = foldWhile(0, { index, _ in
       if predicate(Array(prefix(index)), self[index]) {
@@ -41,6 +47,18 @@ public extension Array {
       }
     })
     
+    return (Array(prefix(margin)), Array(dropFirst(margin)))
+  }
+
+  func splitWhileFromRight(_ predicate: (Element, [Element]) -> Bool) -> ([Element], [Element]) {
+    let margin = foldWhileFromRight(count, { _, index in
+      if predicate(self[index - 1], Array(suffix(count - index))) {
+        return .next(index - 1)
+      } else {
+        return .stop(index)
+      }
+    })
+
     return (Array(prefix(margin)), Array(dropFirst(margin)))
   }
 }
