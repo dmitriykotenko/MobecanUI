@@ -16,8 +16,10 @@ struct Tuple: Equatable, Hashable, Codable {
 
     func asStoredProperty(defaultName: String) -> StoredProperty {
       .init(
+        kind: "var",
         name: name ?? defaultName,
-        type: type
+        type: type,
+        defaultValue: nil
       )
     }
   }

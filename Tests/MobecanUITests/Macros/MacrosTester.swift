@@ -32,8 +32,9 @@ class MacrosTester: XCTestCase {
   /// поэтому ссылки на типы можно получить с помощью функции `_typeByName()`.
   private var availableMacros: [String: Macro.Type] {
     let mangledMarcoNames = [
-      "DerivesCodingKeysReflector": "15MobecanUIMacros24CodingKeysReflectorMacroV",
       "URL": "15MobecanUIMacros8UrlMacroV",
+      "TryInit": "15MobecanUIMacros12TryInitMacroV",
+      "DerivesCodingKeysReflector": "15MobecanUIMacros24CodingKeysReflectorMacroV",
       "DerivesAutoGeneratable": "15MobecanUIMacros20AutoGeneratableMacroV"
     ]
 

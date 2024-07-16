@@ -20,8 +20,10 @@ extension VariableDeclSyntax {
 
     return bindings.first.flatMap {
       StoredProperty(
+        kind: bindingSpecifier.text,
         name: $0.pattern.as(IdentifierPatternSyntax.self)?.identifier.text,
-        type: $0.typeAnnotation?.type.trimmedDescription
+        type: $0.typeAnnotation?.type.trimmedDescription,
+        defaultValue: $0.initializer?.value.trimmedDescription
       )
     }
   }

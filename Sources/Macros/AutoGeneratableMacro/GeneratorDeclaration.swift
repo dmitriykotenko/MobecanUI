@@ -62,12 +62,12 @@ struct GeneratorDeclaration: MobecanDeclaration {
   private var buildBody: String {
     [
       nestedTypes.mkStringWithNewParagraph().notBlankOrNil,
-      declarationOf(storedProperties: storedProperties),
+      Self.declarationOf(storedProperties: storedProperties),
       initializerParameters.map {
-        memberwiseInitializer(parameters: $0, isCompact: false)
+        Self.memberwiseInitializer(parameters: $0, isCompact: false)
       },
       initializerParameters.map {
-        memberwiseInitializer(
+        Self.memberwiseInitializer(
           parameters: $0,
           customName: "using",
           selfType: className,
@@ -83,7 +83,7 @@ struct GeneratorDeclaration: MobecanDeclaration {
 
   private var declarationOfGenerateMethod: String? {
     bodyOfGenerateMethod.map {
-      function(
+      Self.function(
         signature: """
         override public func generate(factory: GeneratorsFactory)
         -> Single<GeneratorResult<\(valueType)>>
@@ -106,10 +106,10 @@ struct GeneratorDeclaration: MobecanDeclaration {
 
   func withStaticBuiltin(from nestedGenerator: GeneratorDeclaration) -> Self {
     appendingBody(
-      with: function(
+      with: Self.function(
         keywords: ["static", "func"],
         name: "builtin",
-        arguments: nestedGenerator.initializerParameters ?? [],
+        parameters: nestedGenerator.initializerParameters ?? [],
         returns: "-> " + className,
         body: [
           ".init {",

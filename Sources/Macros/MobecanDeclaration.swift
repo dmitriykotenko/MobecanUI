@@ -12,36 +12,47 @@ protocol MobecanDeclaration {}
 
 extension MobecanDeclaration {
 
-  func declarationOf(storedProperties: [StoredProperty]) -> String {
-    """
-    \(storedProperties.mkString(format: { "var \($0.name): \($0.type)" }, separator: .newLine))
-    """
+  static func declarationOf(storedProperties: [StoredProperty]) -> String {
+    storedProperties.map(\.varDeclaration).mkStringWithNewLine()
   }
+}
 
-  func memberwiseInitializer(storedProperties: [StoredProperty],
-                             isCompact: Bool = true) -> String {
+
+extension MobecanDeclaration {
+
+  static func memberwiseInitializer(storedProperties: [StoredProperty],
+                                    isCompact: Bool = true) -> String {
     initializer(
-      arguments: storedProperties.map { $0.asFunctionParameter() },
+      parameters: storedProperties.map { $0.asFunctionParameter() },
       isCompact: isCompact,
-      body: initializerBody(storedProperties: storedProperties)
+      body: membewiseInitializerBody(storedProperties: storedProperties)
     )
   }
 
-  func memberwiseInitializer(parameters: [FunctionParameter],
-                             isCompact: Bool = true) -> String {
+  static func memberwiseInitializer(parameters: [FunctionParameter],
+                                    isCompact: Bool = true) -> String {
     initializer(
-      arguments: parameters,
+      parameters: parameters,
       isCompact: isCompact,
-      body: initializerBody(storedProperties: parameters.compactMap(\.asStoredProperty))
+      body: membewiseInitializerBody(
+        storedProperties: parameters.compactMap(\.asStoredProperty)
+      )
     )
   }
 
-  func memberwiseInitializer(parameters: [FunctionParameter],
-                             customName: String,
-                             selfType: String,
-                             isCompact: Bool = true) -> String {
+  private static func membewiseInitializerBody(storedProperties: [StoredProperty]) -> String {
+    storedProperties.mkString(
+      format: { "self.\($0.name) = \($0.name)" },
+      separator: "\n"
+    ) + .newLine + .newLine + "super.init()"
+  }
+
+  static func memberwiseInitializer(parameters: [FunctionParameter],
+                                    customName: String,
+                                    selfType: String,
+                                    isCompact: Bool = true) -> String {
     initializer(
-      arguments: parameters,
+      parameters: parameters,
       customName: customName,
       selfType: selfType,
       isCompact: isCompact,
@@ -58,43 +69,43 @@ extension MobecanDeclaration {
     )
   }
 
-  func initializer(arguments: [FunctionParameter],
-                   isCompact: Bool,
-                   body: String) -> String {
+  static func initializer(parameters: [FunctionParameter],
+                          isCompact: Bool,
+                          body: String) -> String {
     function(
       keywords: ["public"],
       name: "init",
-      arguments: arguments,
+      parameters: parameters,
       isCompact: isCompact,
       body: body
     )
   }
 
-  func initializer(arguments: [FunctionParameter],
-                   customName: String,
-                   selfType: String,
-                   isCompact: Bool,
-                   body: String) -> String {
+  static func initializer(parameters: [FunctionParameter],
+                          customName: String,
+                          selfType: String,
+                          isCompact: Bool,
+                          body: String) -> String {
     function(
       keywords: ["public static func"],
       name: customName,
-      arguments: arguments,
+      parameters: parameters,
       returns: "-> \(selfType)",
       isCompact: isCompact,
       body: body
     )
   }
 
-  func function(keywords: [String] = ["function"],
-                name: String,
-                arguments: [FunctionParameter],
-                returns: String? = nil,
-                isCompact: Bool = true,
-                body: String) -> String {
+  static func function(keywords: [String] = ["function"],
+                       name: String,
+                       parameters: [FunctionParameter],
+                       returns: String? = nil,
+                       isCompact: Bool = true,
+                       body: String) -> String {
     function(
       signature: functionSignature(
         title: (keywords + [name]).mkString(separator: " "),
-        arguments: arguments,
+        parameters: parameters,
         returns: returns,
         isCompact: isCompact
       ),
@@ -102,22 +113,14 @@ extension MobecanDeclaration {
     )
   }
 
-  func function(signature: String,
-                body: String) -> String {
-    """
-    \(signature) {
-    \("  ".prependingToLines(of: body))
-    }
-    """
-  }
-
-  func functionSignature(title: String,
-                         arguments: [FunctionParameter],
-                         returns: String? = nil,
-                         isCompact: Bool) -> String {
+  static func functionSignature(title: String,
+                                parameters: [FunctionParameter],
+                                returns: String? = nil,
+                                isCompact: Bool,
+                                lineLengthThreshold: Int = 100) -> String {
     let indentationForCompactForm = String(repeating: " ", count: title.count + 1)
 
-    let compactForm = arguments.mkString(
+    let compactForm = parameters.mkString(
       start: title + "(",
       format: { "\($0.declaration)" },
       separator: ",\n\(indentationForCompactForm)",
@@ -126,13 +129,13 @@ extension MobecanDeclaration {
 
     let maximumLineLength = compactForm.lines.map(\.count).max() ?? 0
 
-    if maximumLineLength <= 100 { return compactForm }
+    if maximumLineLength <= lineLengthThreshold { return compactForm }
 
     let indentation = "  "
     let afterOpeningBrace = "\n" + indentation
     let beforeClosingBrace = "\n"
 
-    return arguments.mkString(
+    return parameters.mkString(
       start: title + "(" + afterOpeningBrace,
       format: { "\($0.declaration)" },
       separator: ",\n\(indentation)",
@@ -140,86 +143,12 @@ extension MobecanDeclaration {
     )
   }
 
-  private func initializerBody(storedProperties: [StoredProperty]) -> String {
-    storedProperties.mkString(
-      format: { "self.\($0.name) = \($0.name)" },
-      separator: "\n"
-    ) + .newLine + .newLine + "super.init()"
-  }
-}
-
-
-extension MobecanDeclaration {
-
-  static func declarationOf(storedProperties: [StoredProperty]) -> String {
-    storedProperties.map { "var \($0.name): \($0.type)" }.mkStringWithNewLine()
-  }
-
-  static func memberwiseInitializer(storedProperties: [StoredProperty]) -> String {
-    initializer(
-      arguments: storedProperties.map { $0.asFunctionParameter() },
-      body: initializerBody(storedProperties: storedProperties)
-    )
-  }
-
-  static func memberwiseInitializer(parameters: [FunctionParameter]) -> String {
-    initializer(
-      arguments: parameters,
-      body: initializerBody(storedProperties: parameters.compactMap(\.asStoredProperty))
-    )
-  }
-
-  static func initializer(arguments: [FunctionParameter],
-                          body: String) -> String {
-    function(
-      keywords: ["public"],
-      name: "init",
-      arguments: arguments,
-      body: body
-    )
-  }
-
-  static func function(keywords: [String] = ["function"],
-                name: String,
-                arguments: [FunctionParameter],
-                returns: String? = nil,
-                body: String) -> String {
-    function(
-      signature: functionSignature(
-        title: (keywords + [name]).mkString(separator: " "),
-        arguments: arguments,
-        returns: returns
-      ),
-      body: body
-    )
-  }
-
   static func function(signature: String,
-                body: String) -> String {
+                       body: String) -> String {
     """
     \(signature) {
     \("  ".prependingToLines(of: body))
     }
     """
-  }
-
-  static func functionSignature(title: String,
-                                arguments: [FunctionParameter],
-                                returns: String? = nil) -> String {
-    let indentation = String(repeating: " ", count: title.count + 1)
-
-    return arguments.mkString(
-      start: title + "(",
-      format: { "\($0.declaration)" },
-      separator: ",\n\(indentation)",
-      end: ")" + (" ".prependTo(returns) ?? "")
-    )
-  }
-
-  private static func initializerBody(storedProperties: [StoredProperty]) -> String {
-    storedProperties.mkString(
-      format: { "self.\($0.name) = \($0.name)" },
-      separator: "\n"
-    ) + .newLine + .newLine + "super.init()"
   }
 }

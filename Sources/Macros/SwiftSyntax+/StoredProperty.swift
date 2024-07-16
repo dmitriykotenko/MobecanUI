@@ -9,18 +9,38 @@ import SwiftSyntaxMacros
 
 struct StoredProperty: Equatable, Hashable, Codable {
 
+  var kind: String?
   var name: String
   var type: String
+  var defaultValue: String?
 
-  init(name: String, type: String) {
+  init(kind: String?,
+       name: String,
+       type: String,
+       defaultValue: String?) {
+    self.kind = kind
     self.name = name
     self.type = type
+    self.defaultValue = defaultValue
   }
 
-  init?(name: String?, type: String?) {
+  init?(kind: String?,
+        name: String?,
+        type: String?,
+        defaultValue: String?) {
     guard let name, let type else { return nil }
+
+    self.kind = kind
     self.name = name
     self.type = type
+    self.defaultValue = defaultValue
+  }
+
+
+  var canBeInitialized: Bool { !canNotBeInitialized }
+
+  var canNotBeInitialized: Bool {
+    kind == "let" && defaultValue != nil
   }
 
   var letDeclaration: String { declaration(prefix: "let") }
@@ -33,12 +53,12 @@ struct StoredProperty: Equatable, Hashable, Codable {
 
   func asFunctionParameter(outerName: String?? = .none,
                            innerName: String?? = .none,
-                           defaultValue: String? = nil) -> FunctionParameter {
+                           defaultValue: String?? = .none) -> FunctionParameter {
     .init(
       outerName: outerName ?? name,
       innerName: innerName ?? name,
       type: type,
-      defaultValue: defaultValue
+      defaultValue: defaultValue ?? self.defaultValue
     )
   }
 

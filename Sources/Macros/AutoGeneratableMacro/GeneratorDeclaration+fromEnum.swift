@@ -26,8 +26,7 @@ extension GeneratorDeclaration {
         [casesSelector(for: someEnum)] +
         someEnum.nonTrivialCases.map {
           FunctionParameter(
-            outerName: $0.name,
-            innerName: $0.name,
+            name: $0.name,
             type: "Generator_\($0.name)",
             defaultValue: ".builtin()"
           )
@@ -46,8 +45,7 @@ extension GeneratorDeclaration {
 
   private static func casesSelector(for someEnum: Enum) -> FunctionParameter {
     FunctionParameter(
-      outerName: casesSelectorName,
-      innerName: casesSelectorName,
+      name: casesSelectorName,
       type: "MobecanGenerator<Cases>",
       defaultValue: ".unsafeEither(Cases.allCases)"
     )

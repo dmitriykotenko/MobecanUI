@@ -13,6 +13,14 @@ struct Struct: Equatable, Hashable, Codable {
   var genericArguments: [String]
   var storedProperties: [StoredProperty]
 
+  var parametersOfImplicitInitializer: [FunctionParameter] {
+    storedProperties.filter(\.canBeInitialized).map {
+      $0.asFunctionParameter(
+        defaultValue: $0.type.hasSuffix("?") ? "nil" : $0.defaultValue
+      )
+    }
+  }
+
   var asNominalType: NominalType {
     .init(
       name: name,

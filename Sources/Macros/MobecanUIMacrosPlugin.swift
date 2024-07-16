@@ -10,6 +10,7 @@ struct MobecanUIMacrosPlugin: CompilerPlugin {
 
   let providingMacros: [Macro.Type] = [
     UrlMacro.self,
+    TryInitMacro.self,
     CodingKeysReflectorMacro.self,
     AutoGeneratableMacro.self
   ]

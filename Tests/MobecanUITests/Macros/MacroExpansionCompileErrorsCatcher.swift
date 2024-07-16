@@ -2,6 +2,7 @@
 
 import XCTest
 
+import NonEmpty
 import RxSwift
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
@@ -14,6 +15,24 @@ import MobecanUI
 /// Если при компиляции тестового таргета в этом классе возникли ошибки,
 /// значит, макросы сгенерировали некомпилируемый код.
 class MacroExpansionCompileErrorsCatcher {
+
+  @TryInit
+  open class Pair<First, Second> {
+    var first: First?
+    var second: Second
+
+    init!(_: Bool = false,
+         _ first: First? = nil,
+         second: Second) {
+      self.first = first
+      self.second = second
+    }
+
+    public required init?(firstAndSecond: (First?, Second)) throws {
+      self.first = firstAndSecond.0
+      self.second = firstAndSecond.1
+    }
+  }
 
   @DerivesAutoGeneratable
   @DerivesCodingKeysReflector
@@ -87,7 +106,3 @@ class MacroExpansionCompileErrorsCatcher {
     static let url3 = #URL("https://www.apple.com")
   }
 }
-
-extension MacroExpansionCompileErrorsCatcher.GenericEnum: Codable where BBB: Codable, DDD: Codable {}
-
-extension MacroExpansionCompileErrorsCatcher.Subject: Codable where Animal: Codable, Human: Codable {}

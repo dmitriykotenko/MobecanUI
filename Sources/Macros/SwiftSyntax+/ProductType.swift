@@ -17,7 +17,12 @@ struct ProductType: Equatable, Hashable, Codable {
     var type: String
 
     var asStoredProperty: StoredProperty {
-      .init(name: name, type: type)
+      .init(
+        kind: "var",
+        name: name,
+        type: type, 
+        defaultValue: nil
+      )
     }
 
     func asFunctionParameter(outerName: String?? = .none,

@@ -11,6 +11,10 @@ extension String {
     """
   }
 
+  var nilIfUnderscore: String? {
+    self == "_" ? nil : self
+  }
+
   var lines: [SubSequence] {
     split(separator: "\n")
   }

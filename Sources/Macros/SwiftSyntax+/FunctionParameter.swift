@@ -48,13 +48,22 @@ struct FunctionParameter: Equatable, Hashable, Codable {
     [unescapedOuterName, value].filterNil().mkStringWithColon()
   }
 
+  var isCompletelyUnnamed: Bool {
+    outerName == nil && innerName == nil
+  }
+
   var unescapedOuterName: String? { outerName?.asUnescapedFunctionParameterName }
 
   var unescapedInnerName: String? { innerName?.asUnescapedFunctionParameterName }
 
   var asStoredProperty: StoredProperty? {
     (innerName ?? outerName).map {
-      StoredProperty(name: $0, type: type)
+      StoredProperty(
+        kind: "var",
+        name: $0,
+        type: type,
+        defaultValue: defaultValue
+      )
     }
   }
 
@@ -68,9 +77,27 @@ struct FunctionParameter: Equatable, Hashable, Codable {
     }
   }
 
+  func with(innerName: String) -> Self {
+    var result = self
+    result.innerName = innerName
+    return result
+  }
+
   func with(typeContainer: String) -> Self {
     var result = self
     result.type = typeContainer + "<" + type  + ">"
+    return result
+  }
+
+  func with(typeModificator: (String) -> String) -> Self {
+    var result = self
+    result.type = typeModificator(type)
+    return result
+  }
+
+  func with(defaultValueModificator: (String) -> String) -> Self {
+    var result = self
+    result.defaultValue = defaultValue.map(defaultValueModificator)
     return result
   }
 }

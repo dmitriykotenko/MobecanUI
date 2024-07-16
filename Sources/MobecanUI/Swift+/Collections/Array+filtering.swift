@@ -2,7 +2,11 @@
 
 
 public extension Array {
-  
+
+  func filterNot(_ predicate: (Element) -> Bool) -> [Element] {
+    filter { !predicate($0) }
+  }
+
   func filter<Property: Equatable>(property keyPath: KeyPath<Element, Property>,
                                    among other: [Property]) -> [Element] {
     filter { other.contains($0[keyPath: keyPath]) }

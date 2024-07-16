@@ -59,6 +59,10 @@ extension DeclGroupSyntax {
     self.as(EnumDeclSyntax.self)?.name.text
   }
 
+  var visibilityModifiers: [String] {
+    modifiers.filter(\.isVisibilityModifier).map(\.name.text)
+  }
+
   var genericArguments: [String]? {
     asStruct?.genericArguments ?? asEnum?.genericArguments
   }
@@ -73,6 +77,11 @@ extension DeclGroupSyntax {
     let members = memberBlock.members
     let variables = members.compactMap { $0.decl.as(VariableDeclSyntax.self) }
     return variables.compactMap(\.asStoredProperty)
+  }
+
+  var initializers: [InitializerDeclSyntax] {
+    let members = memberBlock.members
+    return members.compactMap { $0.decl.as(InitializerDeclSyntax.self) }
   }
 
   var explicitCodingKeys: [EnumCase]? {
