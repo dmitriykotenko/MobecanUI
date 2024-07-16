@@ -10,7 +10,7 @@ import RxSwift
 
 extension DeserializationTester {
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct WebSite: Equatable, Hashable, Codable {
     var homePage: URL
 
@@ -19,47 +19,47 @@ extension DeserializationTester {
     }
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct DataContainer: Equatable, Hashable, Codable {
     var someData: Data
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct Country: Equatable, Hashable, Codable {
     var name: String?
     var capital: CityEnum
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   enum CityEnum: String, Equatable, Hashable, Codable {
     case melbourne
     case pretoria
     case buenosAires
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct NumbersPhile: Equatable, Hashable, Codable {
     var favoriteNumber: GoodNumbersEnum
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   enum GoodNumbersEnum: Int, Equatable, Hashable, Codable {
     case zero = 0
     case minusTwo = -2
     case sixHundredsSixtySix = 666
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct Match: Equatable, Hashable, Codable {
     var players: [Player]
     var winner: Player?
     var score: Score
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct Score: Equatable, Hashable, Codable {
     
-    @CodingKeysReflection
+    @DerivesCodingKeysReflector
     struct SetScore: Equatable, Hashable, Codable {
       var winnerGames: Int
       var loserGames: Int
@@ -68,13 +68,13 @@ extension DeserializationTester {
     var sets: [SetScore]
   }
 
-  @CodingKeysReflection
+  @DerivesCodingKeysReflector
   struct Player: Equatable, Hashable, Codable {
     
-    @CodingKeysReflection
+    @DerivesCodingKeysReflector
     enum Hand: String, Codable { case right, left }
 
-    @CodingKeysReflection
+    @DerivesCodingKeysReflector
     struct Name: Equatable, Hashable, Codable {
       var firstName: String
       var lastName: String

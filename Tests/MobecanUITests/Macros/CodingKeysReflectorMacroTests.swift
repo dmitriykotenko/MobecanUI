@@ -6,20 +6,20 @@ import SwiftSyntaxMacrosTestSupport
 import MobecanUI
 
 
-final class CodingKeysReflectionMacroTests: MacrosTester {
+final class CodingKeysReflectorMacroTests: MacrosTester {
 
   func testEmptyStructExpansion() {
     checkThat(
       code: """
-      @CodingKeysReflection
+      @DerivesCodingKeysReflector
       struct EmptyStruct {}
       """,
       expandsTo: """
       struct EmptyStruct {
 
-          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-            [:]
-          }
+        static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+          [:]
+        }
       }
 
       extension EmptyStruct: SimpleCodingKeysReflector {
@@ -31,15 +31,15 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
   func testEmptyClassExpansion() {
     checkThat(
       code: """
-      @CodingKeysReflection
+      @DerivesCodingKeysReflector
       class EmptyClass {}
       """,
       expandsTo: """
       class EmptyClass {
 
-          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-            [:]
-          }
+        static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+          [:]
+        }
       }
 
       extension EmptyClass: SimpleCodingKeysReflector {
@@ -51,7 +51,7 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
   func testStringBasedEnumExpansion() {
     checkThat(
       code: """
-      @CodingKeysReflection
+      @DerivesCodingKeysReflector
       enum StringBasedEnum: String {
         case someString
         case someOtherString
@@ -72,7 +72,7 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
   func testExpansionOfStructWithCodingKeys() {
     checkThat(
       code: """
-      @CodingKeysReflection
+      @DerivesCodingKeysReflector
       struct StructWithCodingKeys: Codable {
 
         var _id: String?
@@ -99,13 +99,13 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
           case modificationTimestamp = "modified_at"
         }
 
-          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-            [
-              "id": String?.self,
-              "title": String.self,
-              "modified_at": Int64.self
-            ]
-          }
+        static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+          [
+            "id": String?.self,
+            "title": String.self,
+            "modified_at": Int64.self
+          ]
+        }
       }
 
       extension StructWithCodingKeys: SimpleCodingKeysReflector {
@@ -117,13 +117,13 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
   func testComplexStructExpansion() {
     checkThat(
       code: """
-      @CodingKeysReflection
+      @DerivesCodingKeysReflector
       struct ComplexStruct {
 
-        @CodingKeysReflection
+        @DerivesCodingKeysReflector
         struct EmptyStruct: Codable {
 
-          @CodingKeysReflection 
+          @DerivesCodingKeysReflector 
           struct NonEmptyStruct: Codable {
             var isNested: Bool
           }
@@ -143,16 +143,16 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
           struct NonEmptyStruct: Codable {
             var isNested: Bool
 
-              static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-                [
-                  "isNested": Bool.self
-                ]
-              }
+            static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+              [
+                "isNested": Bool.self
+              ]
+            }
           }
 
-            static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-              [:]
-            }
+          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+            [:]
+          }
         }
 
         var bbb: Int
@@ -160,13 +160,13 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
         var ddd: Double { 0 }
         var eee: EmptyStruct
 
-          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-            [
-              "bbb": Int.self,
-              "ccc": [String]???.self,
-              "eee": EmptyStruct.self
-            ]
-          }
+        static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+          [
+            "bbb": Int.self,
+            "ccc": [String]???.self,
+            "eee": EmptyStruct.self
+          ]
+        }
       }
 
       extension ComplexStruct.EmptyStruct.NonEmptyStruct: SimpleCodingKeysReflector {
@@ -184,13 +184,13 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
   func testExpansionOfComplexStructWithCodingKeys() {
     checkThat(
       code: """
-      @CodingKeysReflection
+      @DerivesCodingKeysReflector
       struct ComplexStruct {
 
-        @CodingKeysReflection
+        @DerivesCodingKeysReflector
         struct EmptyStruct: Codable {
 
-          @CodingKeysReflection
+          @DerivesCodingKeysReflector
           struct NonEmptyStruct: Codable {
             var isNested: Bool
 
@@ -222,16 +222,16 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
               case isNested = "is_nested"
             }
 
-              static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-                [
-                  "is_nested": Bool.self
-                ]
-              }
+            static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+              [
+                "is_nested": Bool.self
+              ]
+            }
           }
 
-            static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-              [:]
-            }
+          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+            [:]
+          }
         }
 
         var bbb: Int
@@ -245,13 +245,13 @@ final class CodingKeysReflectionMacroTests: MacrosTester {
           case eee = "yep"
         }
 
-          static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-            [
-              "bbb": Int.self,
-              "c_c_c": [String]???.self,
-              "yep": EmptyStruct.self
-            ]
-          }
+        static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+          [
+            "bbb": Int.self,
+            "c_c_c": [String]???.self,
+            "yep": EmptyStruct.self
+          ]
+        }
       }
 
       extension ComplexStruct.EmptyStruct.NonEmptyStruct: SimpleCodingKeysReflector {

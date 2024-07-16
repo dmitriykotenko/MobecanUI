@@ -19,6 +19,7 @@ class MacrosTester: XCTestCase {
       expandedSource: expectedExpandedCode,
       diagnostics: diagnostics,
       macros: availableMacros,
+      indentationWidth: .spaces(2),
       file: file,
       line: line
     )
@@ -31,8 +32,9 @@ class MacrosTester: XCTestCase {
   /// поэтому ссылки на типы можно получить с помощью функции `_typeByName()`.
   private var availableMacros: [String: Macro.Type] {
     let mangledMarcoNames = [
-      "CodingKeysReflection": "15MobecanUIMacros25CodingKeysReflectionMacroV",
+      "DerivesCodingKeysReflector": "15MobecanUIMacros24CodingKeysReflectorMacroV",
       "URL": "15MobecanUIMacros8UrlMacroV",
+      "DerivesAutoGeneratable": "15MobecanUIMacros20AutoGeneratableMacroV"
     ]
 
     return mangledMarcoNames.compactMapValues { _typeByName($0) as? Macro.Type }

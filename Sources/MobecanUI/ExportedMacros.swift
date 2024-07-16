@@ -6,9 +6,18 @@ import Foundation
 @attached(extension, conformances: EmptyCodingKeysReflector, SimpleCodingKeysReflector)
 @attached(member, names: named(codingKeyTypes))
 @available(swift 5.9)
-public macro CodingKeysReflection() = #externalMacro(
+public macro DerivesCodingKeysReflector() = #externalMacro(
   module: "MobecanUIMacros", 
-  type: "CodingKeysReflectionMacro"
+  type: "CodingKeysReflectorMacro"
+)
+
+
+@attached(extension, conformances: AutoGeneratable, names: arbitrary)
+@attached(member, names: arbitrary)
+@available(swift 5.9)
+public macro DerivesAutoGeneratable() = #externalMacro(
+  module: "MobecanUIMacros",
+  type: "AutoGeneratableMacro"
 )
 
 

@@ -3,11 +3,23 @@
 
 extension String {
 
-  func appendingToLines(of string: String) -> Self {
-    string.appendingToEveryLine(self)
+  static let newLine = "\n"
+
+  var quoted: String {
+    """
+    "\(self)"
+    """
   }
 
-  func appendingToEveryLine(_ prefix: any StringProtocol) -> Self {
+  var lines: [SubSequence] {
+    split(separator: "\n")
+  }
+
+  func prependingToLines(of string: String) -> Self {
+    string.prependingToEveryLine(self)
+  }
+
+  func prependingToEveryLine(_ prefix: any StringProtocol) -> Self {
     split(separator: "\n")
       .map { prefix + $0 }
       .mkStringWithNewLine()

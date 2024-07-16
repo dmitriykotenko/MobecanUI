@@ -6,7 +6,7 @@ import SwiftSyntaxMacrosTestSupport
 import MobecanUI
 
 
-final class ParserMacroTests: MacrosTester {
+final class UrlMacroTests: MacrosTester {
 
   func testValidUrls() {
     checkThat(

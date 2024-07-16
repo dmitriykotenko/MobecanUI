@@ -113,7 +113,7 @@ class CodingKeysReflectorTests: DeserializationTester {
                          forPath path: [CodableVersionOf.CodingKey],
                          file: StaticString = #file,
                          line: UInt = #line) {
-    let actualTypes = type.types(forCodingPath: path.map(\.asCustomCodingKey))
+    let actualTypes = type.types(forCodingPath: path.map(\.asPlainKey))
 
     XCTAssertEqual(
       actualTypes.asSuccess?.map { TypeName(type: $0) },
