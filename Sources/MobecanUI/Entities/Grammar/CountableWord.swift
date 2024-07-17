@@ -1,8 +1,11 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import NonEmpty
+
 
 /// Слово, у которого есть разные формы для обозначения разного количества
 /// (например: «1 смартфон», «2 смартфона», «5 смартфонов»).
+@TryInit
 public struct CountableWord: Equatable, Hashable, Codable, Lensable {
 
   /// Форма для одного предмета (например: 1 «смартфон»).

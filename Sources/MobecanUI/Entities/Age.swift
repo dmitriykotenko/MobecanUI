@@ -1,6 +1,9 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
+import NonEmpty
 
+
+@TryInit
 public struct Age: Equatable, Hashable, Codable, Comparable, Lensable, CustomStringConvertible {
   
   public var years: Int

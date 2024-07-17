@@ -1,7 +1,10 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
+import NonEmpty
+
 
 /// Имя существительное.
+@TryInit
 public struct Noun: Equatable, Hashable, Codable, Lensable {
 
   /// Форма для одного предмета.

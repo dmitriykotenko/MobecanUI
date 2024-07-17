@@ -1,6 +1,9 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
+import NonEmpty
 
+
+@TryInit
 public struct Location: Equatable, Hashable, Codable, Lensable {
 
   public var latitude: Double

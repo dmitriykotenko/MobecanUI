@@ -1,8 +1,10 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 import Foundation
+import NonEmpty
 
 
+@TryInit
 public struct Money: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
 
   public var amount: Decimal

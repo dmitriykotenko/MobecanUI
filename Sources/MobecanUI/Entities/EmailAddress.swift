@@ -1,6 +1,9 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
+import NonEmpty
 
+
+@TryInit
 public struct EmailAddress: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
   
   public let string: String
