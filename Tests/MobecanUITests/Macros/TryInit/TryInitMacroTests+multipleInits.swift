@@ -58,11 +58,13 @@ extension TryInitMacroTests {
           if let nonEmptyErrors = NonEmpty(rawValue: errors) {
             return .failure(.composed(from: nonEmptyErrors))
           }
+          // swiftlint:disable force_try
           return .success(
             .init(
-              try! value.get() /* swiftlint:disable:this force_try */
+              try! value.get()
             )
           )
+          // swiftlint:enable force_try
         }
 
         static func tryInit<
@@ -77,11 +79,13 @@ extension TryInitMacroTests {
           if let nonEmptyErrors = NonEmpty(rawValue: errors) {
             return .failure(.composed(from: nonEmptyErrors))
           }
+          // swiftlint:disable force_try
           return .success(
             .init(
-              lines: try! lines.get() /* swiftlint:disable:this force_try */
+              lines: try! lines.get()
             )
           )
+          // swiftlint:enable force_try
         }
 
         static func tryInit<
@@ -96,11 +100,13 @@ extension TryInitMacroTests {
           if let nonEmptyErrors = NonEmpty(rawValue: errors) {
             return .failure(.composed(from: nonEmptyErrors))
           }
+          // swiftlint:disable force_try
           return try .success(
             .init(
-              try! value.get() /* swiftlint:disable:this force_try */
+              try! value.get()
             )
           )
+          // swiftlint:enable force_try
         }
       }
       """

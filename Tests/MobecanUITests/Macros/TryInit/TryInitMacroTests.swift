@@ -66,12 +66,14 @@ final class TryInitMacroTests: MacrosTester {
           if let nonEmptyErrors = NonEmpty(rawValue: errors) {
             return .failure(.composed(from: nonEmptyErrors))
           }
+          // swiftlint:disable force_try
           return .success(
             .init(
-              first: try! first.get() /* swiftlint:disable:this force_try */,
-              second: try! second.get() /* swiftlint:disable:this force_try */
+              first: try! first.get(),
+              second: try! second.get()
             )
           )
+          // swiftlint:enable force_try
         }
       }
       """

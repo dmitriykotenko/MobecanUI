@@ -62,13 +62,15 @@ extension TryInitMacroTests {
           if let nonEmptyErrors = NonEmpty(rawValue: errors) {
             return .failure(.composed(from: nonEmptyErrors))
           }
+          // swiftlint:disable force_try
           return try .success(
             .init(
-              firstAndSecond: try! firstAndSecond.get() /* swiftlint:disable:this force_try */,
-              third: try! third.get() /* swiftlint:disable:this force_try */,
-              fourth: try! fourth.get() /* swiftlint:disable:this force_try */
+              firstAndSecond: try! firstAndSecond.get(),
+              third: try! third.get(),
+              fourth: try! fourth.get()
             )
           )
+          // swiftlint:enable force_try
         }
       }
       """

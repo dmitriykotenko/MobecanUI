@@ -111,6 +111,7 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
         return .failure(.composed(from: nonEmptyErrors))
       }
 
+      // swiftlint:disable force_try
       return \(maybeTry).success(
         .init(
       \("    ".prependingToLines(
@@ -118,6 +119,7 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
       ))
         )
       )
+      // swiftlint:enable force_try
       """
     )
   )
@@ -157,7 +159,7 @@ private extension BetterFunctionParameter {
       // Именованный параметр имеет тип Result<...>.
       // Достаём значение из этого резалта и просим Свифт-линт не ругаться на `try!`.
       return parameter.initialization(
-        withValue: "try! \(innerName).get() /* swiftlint:disable:this force_try */"
+        withValue: "try! \(innerName).get()"
       )
     case .unnamed(let parameter, let index):
       // Анонимный параметр передаём как есть.
