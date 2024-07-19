@@ -12,7 +12,7 @@ extension FunctionParameterSyntax {
   var asFunctionParameter: FunctionParameter {
     .init(
       outerName: firstName.text.nilIfUnderscore,
-      innerName: secondName?.text.nilIfUnderscore ?? firstName.text.nilIfUnderscore,
+      innerName: (secondName ?? firstName).text.nilIfUnderscore,
       type: type.trimmedDescription,
       defaultValue: defaultValue?.value.trimmedDescription
     )

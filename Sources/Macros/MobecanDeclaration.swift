@@ -98,48 +98,24 @@ extension MobecanDeclaration {
 
   static func function(keywords: [String] = ["function"],
                        name: String,
+                       genericParameters: [String] = [],
                        parameters: [FunctionParameter],
                        returns: String? = nil,
+                       where: String? = nil,
                        isCompact: Bool = true,
                        body: String) -> String {
-    function(
-      signature: functionSignature(
-        title: (keywords + [name]).mkString(separator: " "),
-        parameters: parameters,
-        returns: returns,
-        isCompact: isCompact
-      ),
+    let signature = FunctionSignature(
+      keywords: keywords,
+      name: name,
+      genericParameters: genericParameters,
+      parameters: parameters,
+      returns: returns,
+      where: `where`
+    )
+
+    return function(
+      signature: signature.build(isCompact: isCompact, lineLengthThreshold: 100),
       body: body
-    )
-  }
-
-  static func functionSignature(title: String,
-                                parameters: [FunctionParameter],
-                                returns: String? = nil,
-                                isCompact: Bool,
-                                lineLengthThreshold: Int = 100) -> String {
-    let indentationForCompactForm = String(repeating: " ", count: title.count + 1)
-
-    let compactForm = parameters.mkString(
-      start: title + "(",
-      format: { "\($0.declaration)" },
-      separator: ",\n\(indentationForCompactForm)",
-      end: ")" + (" ".prependTo(returns) ?? "")
-    )
-
-    let maximumLineLength = compactForm.lines.map(\.count).max() ?? 0
-
-    if maximumLineLength <= lineLengthThreshold { return compactForm }
-
-    let indentation = "  "
-    let afterOpeningBrace = "\n" + indentation
-    let beforeClosingBrace = "\n"
-
-    return parameters.mkString(
-      start: title + "(" + afterOpeningBrace,
-      format: { "\($0.declaration)" },
-      separator: ",\n\(indentation)",
-      end: beforeClosingBrace + ")" + (" ".prependTo(returns) ?? "")
     )
   }
 

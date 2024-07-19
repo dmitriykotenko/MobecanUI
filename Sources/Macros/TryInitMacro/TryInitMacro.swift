@@ -57,11 +57,8 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
   private static func tryInit(from initializer: InitializerDeclSyntax,
                               typeName: String) -> DeclSyntax? {
     tryInit(
-      initializerAttributes: initializer.visibilityModifiers.mkStringWithSpace(),
-      typeName: typeName,
-      isOptionalInitializer: initializer.optionalMark?.text == "?",
-      isThrowingInitializer: initializer.signature.effectSpecifiers?.throwsClause != nil,
-      originalParameters: initializer.signature.parameterClause.parameters.map(\.asFunctionParameter)
+      originalSignature: initializer.asFunctionSignature,
+      typeName: typeName
     )
   }
 
@@ -69,18 +66,18 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
     guard let someStruct = declaration.asStruct else { return nil }
 
     return tryInit(
-      initializerAttributes: declaration.visibilityModifiers.mkStringWithSpace(),
-      typeName: someStruct.name,
-      originalParameters: someStruct.parametersOfImplicitInitializer
+      originalSignature: .init(
+        keywords: [],
+        name: "init",
+        parameters: someStruct.parametersOfImplicitInitializer
+      ),
+      typeName: someStruct.name
     )
   }
 
-  private static func tryInit(initializerAttributes: String? = nil,
-                              typeName: String,
-                              isOptionalInitializer: Bool = false,
-                              isThrowingInitializer: Bool = false,
-                              originalParameters: [FunctionParameter]) -> DeclSyntax? {
-    let parameters = originalParameters.enumerated().map {
+  private static func tryInit(originalSignature: FunctionSignature,
+                              typeName: String) -> DeclSyntax? {
+    let parameters = originalSignature.parameters.enumerated().map {
       $1.asBetterParameter(index: $0)
     }
 
@@ -88,17 +85,19 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
     // нет смысла делать для него tryInit-версию.
     guard parameters.contains(where: \.isNamed) else { return nil }
 
-    let maybeTry = isThrowingInitializer ? "try " : ""
-    let maybeThrows = isThrowingInitializer ? "throws " : ""
-    let maybeQuestionMark = isOptionalInitializer ? "?" : ""
+    let maybeTry = originalSignature.isThrowing ? "try " : ""
+    let maybeQuestionMark = originalSignature.name.hasSuffix("?") ? "?" : ""
+
+    var signature = originalSignature
+    signature.keywords += ["static", "func"]
+    signature.name = "tryInit"
+    signature.genericParameters += ["SomeError: ComposableError"]
+    signature.parameters = parameters.map(\.asTryInitParameter)
+    signature.returns = "-> Result<\(typeName)\(maybeQuestionMark), SomeError>"
 
     return """
     \(raw: function(
-      keywords: [initializerAttributes, "static", "func"].filterNil(),
-      name: "tryInit<SomeError: ComposableError>",
-      parameters: parameters.map(\.asTryInitParameter),
-      returns: "\(maybeThrows)-> Result<\(typeName)\(maybeQuestionMark), SomeError>",
-      isCompact: false,
+      signature: signature.build(isCompact: true, lineLengthThreshold: 100),
       body: """
       var errors: [String: SomeError] = [:]
 

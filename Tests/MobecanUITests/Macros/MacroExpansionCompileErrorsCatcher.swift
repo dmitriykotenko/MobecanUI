@@ -32,6 +32,11 @@ class MacroExpansionCompileErrorsCatcher {
       self.first = firstAndSecond.0
       self.second = firstAndSecond.1
     }
+
+    init<Element: Hashable>(elements: Set<Element>) where Second == [Element] {
+      self.first = nil
+      self.second = elements.asArray
+    }
   }
 
   @DerivesAutoGeneratable
