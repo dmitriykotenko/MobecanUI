@@ -44,7 +44,28 @@ extension GeneratorDeclaration {
 
   private static func bodyOfGenerationMethod(ofProduct product: ProductType,
                                              nestedGenerators: [StoredProperty]) -> String {
-    let singles = nestedGenerators.map { "factory.generate(via: \($0.name))" }
+    switch nestedGenerators.count {
+    case 1:
+      return bodyOfGenerationMethod(ofProduct: product, singleNestedGenerator: nestedGenerators[0])
+    default:
+      return bodyOfGenerationMethod(ofProduct: product, multipleNestedGenerators: nestedGenerators)
+    }
+  }
+
+  private static func bodyOfGenerationMethod(ofProduct product: ProductType,
+                                             singleNestedGenerator: StoredProperty) -> String {
+    """
+    factory
+      .generate(via: \(singleNestedGenerator.name))
+      .mapSuccess {
+    \("    ".prependingToLines(of: product.initializationWithAnonymousArguments()))
+      }
+    """
+  }
+
+  private static func bodyOfGenerationMethod(ofProduct product: ProductType,
+                                             multipleNestedGenerators: [StoredProperty]) -> String {
+    let singles = multipleNestedGenerators.map { "factory.generate(via: \($0.name))" }
 
     return """
       Single

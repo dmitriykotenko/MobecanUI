@@ -94,6 +94,50 @@ final class AutoGeneratableMacroTests: MacrosTester {
     )
   }
 
+  func testStructWithSingleProperty() {
+    checkThat(
+      code: """
+      @DerivesAutoGeneratable
+      struct Container {
+        var value: String
+      }
+      """,
+      expandsTo: """
+      struct Container {
+        var value: String
+
+        class BuiltinGenerator: MobecanGenerator<Container> {
+
+          var value: MobecanGenerator<String>
+          init(value: MobecanGenerator<String> = AsAutoGeneratable<String>.defaultGenerator) {
+            self.value = value
+            super.init()
+          }
+          static func using(
+            value: MobecanGenerator<String> = AsAutoGeneratable<String>.defaultGenerator
+          ) -> BuiltinGenerator {
+            .init(value: value)
+          }
+          override func generate(factory: GeneratorsFactory) -> Single<GeneratorResult<Container>> {
+            factory
+              .generate(via: value)
+              .mapSuccess {
+                Container(value: $0)
+              }
+          }
+        }
+      }
+
+      extension Container: AutoGeneratable {
+
+        static var defaultGenerator: BuiltinGenerator {
+          .init()
+        }
+      }
+      """
+    )
+  }
+
   func testStructWithTupleProperties() {
     checkThat(
       code: """
