@@ -13,6 +13,7 @@ extension GeneratorDeclaration {
       from(emptyStruct: someStruct) :
       from(
         product: someStruct.asProductType,
+        visibilityModifiers: someStruct.visibilityModifiersForProtocolExtension,
         className: "BuiltinGenerator",
         parentClassName: "MobecanGenerator",
         genericArgumentsCondition:
@@ -22,6 +23,7 @@ extension GeneratorDeclaration {
 
   private static func from(emptyStruct: Struct) -> Self {
     .init(
+      visibilityModifiers: emptyStruct.visibilityModifiersForProtocolExtension,
       className: "BuiltinGenerator",
       inheritedClassName: "MobecanGenerator",
       valueType: emptyStruct.name,
@@ -30,5 +32,15 @@ extension GeneratorDeclaration {
       initializerParameters: nil,
       bodyOfGenerateMethod: ".just(.success(\(emptyStruct.name)()))"
     )
+  }
+}
+
+
+private extension Struct {
+
+  var visibilityModifiersForProtocolExtension: [String] {
+    visibilityModifiers.contains { $0 == "public" || $0 == "open" } ?
+    ["public"] :
+    []
   }
 }

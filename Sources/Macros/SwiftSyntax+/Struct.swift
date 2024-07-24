@@ -9,9 +9,14 @@ import SwiftSyntaxMacros
 
 struct Struct: Equatable, Hashable, Codable {
 
+  var visibilityModifiers: [String]
   var name: String
   var genericArguments: [String]
   var storedProperties: [StoredProperty]
+
+  var visibilityPrefix: String {
+    visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
+  }
 
   var implicitInitializer: Function {
     let parameters = parametersOfImplicitInitializer

@@ -10,102 +10,20 @@ import RxTest
 import RxBlocking
 
 
-final class AutoGeneratableMacroTests: MacrosTester {
-
-  func testEmptyStruct() {
-    checkThat(
-      code: """
-      @DerivesAutoGeneratable struct Empty {}
-      """,
-      expandsTo: """
-      struct Empty {
-
-        public class BuiltinGenerator: MobecanGenerator<Empty> {
-
-          override public func generate(factory: GeneratorsFactory) -> Single<GeneratorResult<Empty>> {
-            .just(.success(Empty()))
-          }
-        }
-      }
-
-      extension Empty: AutoGeneratable {
-
-        static var defaultGenerator: BuiltinGenerator {
-          .init()
-        }
-      }
-      """
-    )
-  }
-
-  func testSimpleStruct() {
-    checkThat(
-      code: """
-      @DerivesAutoGeneratable
-      struct Pair {
-        var first: String
-        var second: Int?
-      }
-      """,
-      expandsTo: """
-      struct Pair {
-        var first: String
-        var second: Int?
-
-        public class BuiltinGenerator: MobecanGenerator<Pair> {
-
-          var first: MobecanGenerator<String>
-          var second: MobecanGenerator<Int?>
-          public init(first: MobecanGenerator<String> = AsAutoGeneratable<String>.defaultGenerator,
-                      second: MobecanGenerator<Int?> = AsAutoGeneratable<Int?>.defaultGenerator) {
-            self.first = first
-            self.second = second
-            super.init()
-          }
-          public static func using(
-            first: MobecanGenerator<String> = AsAutoGeneratable<String>.defaultGenerator,
-            second: MobecanGenerator<Int?> = AsAutoGeneratable<Int?>.defaultGenerator
-          ) -> BuiltinGenerator {
-            .init(first: first, second: second)
-          }
-          override public func generate(factory: GeneratorsFactory) -> Single<GeneratorResult<Pair>> {
-            Single
-              .zip(
-                factory.generate(via: first),
-                factory.generate(via: second)
-              )
-              .map {
-                zip($0, $1)
-              }
-              .mapSuccess {
-                Pair(first: $0, second: $1)
-              }
-          }
-        }
-      }
-
-      extension Pair: AutoGeneratable {
-
-        static var defaultGenerator: BuiltinGenerator {
-          .init()
-        }
-      }
-      """
-    )
-  }
+extension AutoGeneratableMacroTests {
 
   func testSimpleEnum() {
     checkThat(
       code: """
       @DerivesAutoGeneratable
-      enum Medal {
+      internal enum Medal {
         case gold
         case silver
         case bronze
       }
       """,
       expandsTo: """
-      enum Medal {
+      internal enum Medal {
         case gold
         case silver
         case bronze
@@ -125,12 +43,12 @@ final class AutoGeneratableMacroTests: MacrosTester {
     checkThat(
       code: """
       @DerivesAutoGeneratable
-      enum Medal {
+      fileprivate enum Medal {
         case gold, silver, bronze
       }
       """,
       expandsTo: """
-      enum Medal {
+      fileprivate enum Medal {
         case gold, silver, bronze
       }
 
@@ -148,14 +66,14 @@ final class AutoGeneratableMacroTests: MacrosTester {
     checkThat(
       code: """
       @DerivesAutoGeneratable
-      enum Subject<Animal, Human> {
+      public enum Subject<Animal, Human> {
         case legalPerson
         case animal(Animal)
         case human(Human, age: Int)
       }
       """,
       expandsTo: """
-      enum Subject<Animal, Human> {
+      public enum Subject<Animal, Human> {
         case legalPerson
         case animal(Animal)
         case human(Human, age: Int)
@@ -163,14 +81,14 @@ final class AutoGeneratableMacroTests: MacrosTester {
         public class BuiltinGenerator: MobecanGenerator<Subject>
         where Animal: AutoGeneratable, Human: AutoGeneratable {
 
-          enum Cases: CaseIterable {
+          public enum Cases: CaseIterable {
             case legalPerson
             case animal
             case human
           }
           public class Generator_animal: FunctionalGenerator<Animal> {
             public class Builtin: MobecanGenerator<Animal> {
-              var _0: MobecanGenerator<Animal>
+              public var _0: MobecanGenerator<Animal>
               public init(_ _0: MobecanGenerator<Animal> = AsAutoGeneratable<Animal>.defaultGenerator) {
                 self._0 = _0
                 super.init()
@@ -184,7 +102,7 @@ final class AutoGeneratableMacroTests: MacrosTester {
                 factory.generate(via: _0)
               }
             }
-            static func builtin(
+            public static func builtin(
               _ _0: MobecanGenerator<Animal> = AsAutoGeneratable<Animal>.defaultGenerator
             ) -> Generator_animal {
               .init {
@@ -194,8 +112,8 @@ final class AutoGeneratableMacroTests: MacrosTester {
           }
           public class Generator_human: FunctionalGenerator<(Human, age: Int)> {
             public class Builtin: MobecanGenerator<(Human, age: Int)> {
-              var _0: MobecanGenerator<Human>
-              var age: MobecanGenerator<Int>
+              public var _0: MobecanGenerator<Human>
+              public var age: MobecanGenerator<Int>
               public init(_ _0: MobecanGenerator<Human> = AsAutoGeneratable<Human>.defaultGenerator,
                           age: MobecanGenerator<Int> = AsAutoGeneratable<Int>.defaultGenerator) {
                 self._0 = _0
@@ -208,8 +126,9 @@ final class AutoGeneratableMacroTests: MacrosTester {
               ) -> Builtin {
                 .init(_0, age: age)
               }
-              override public func generate(factory: GeneratorsFactory)
-              -> Single<GeneratorResult<(Human, age: Int)>> {
+              override public func generate(
+                factory: GeneratorsFactory
+              ) -> Single<GeneratorResult<(Human, age: Int)>> {
                 Single
                   .zip(
                     factory.generate(via: _0),
@@ -223,7 +142,7 @@ final class AutoGeneratableMacroTests: MacrosTester {
                   }
               }
             }
-            static func builtin(
+            public static func builtin(
               _ _0: MobecanGenerator<Human> = AsAutoGeneratable<Human>.defaultGenerator,
               age: MobecanGenerator<Int> = AsAutoGeneratable<Int>.defaultGenerator
             ) -> Generator_human {
@@ -232,9 +151,9 @@ final class AutoGeneratableMacroTests: MacrosTester {
               }
             }
           }
-          var `case`: MobecanGenerator<Cases>
-          var animal: Generator_animal
-          var human: Generator_human
+          public var `case`: MobecanGenerator<Cases>
+          public var animal: Generator_animal
+          public var human: Generator_human
           public init(case: MobecanGenerator<Cases> = .unsafeEither(Cases.allCases),
                       animal: Generator_animal = .builtin(),
                       human: Generator_human = .builtin()) {
@@ -271,7 +190,7 @@ final class AutoGeneratableMacroTests: MacrosTester {
 
       extension Subject: AutoGeneratable where Animal: AutoGeneratable, Human: AutoGeneratable {
 
-        static var defaultGenerator: BuiltinGenerator {
+        public static var defaultGenerator: BuiltinGenerator {
           .init()
         }
       }
@@ -304,83 +223,6 @@ final class AutoGeneratableMacroTests: MacrosTester {
           message: "Макрос @DerivesAutoGeneratable не поддерживает енумы с одноимёнными кейсами.",
           line: 4,
           column: 8
-        )
-      ]
-    )
-  }
-
-  func testStructWithTupleProperties() {
-    checkThat(
-      code: """
-      struct Good {
-        var int: Int
-        var string: String
-      }
-
-      protocol Owner {
-        var ownedString: String { get }
-      }
-
-      @DerivesAutoGeneratable
-      struct NotGood {
-        var reallyNotGood: [(Int, String, and: Bool)?]
-        var maybeGood: Good
-        var notGoodToo: (Good, Decimal)
-      }
-      """,
-      expandsTo: """
-      struct Good {
-        var int: Int
-        var string: String
-      }
-
-      protocol Owner {
-        var ownedString: String { get }
-      }
-      struct NotGood {
-        var reallyNotGood: [(Int, String, and: Bool)?]
-        var maybeGood: Good
-        var notGoodToo: (Good, Decimal)
-      }
-      """,
-      withDiagnostics: [
-        .init(
-          message: "Макрос @DerivesAutoGeneratable не поддерживает тьюплы.",
-          line: 12,
-          column: 23
-        ),
-        .init(
-          message: "Макрос @DerivesAutoGeneratable не поддерживает тьюплы.",
-          line: 14,
-          column: 19
-        )
-      ]
-    )
-  }
-
-  func testClass() {
-    checkThat(
-      code: "@DerivesAutoGeneratable class NotGood {}",
-      expandsTo: "class NotGood {}",
-      withDiagnostics: [
-        .init(
-          message: "Макрос @DerivesAutoGeneratable поддерживает только структуры и енумы.",
-          line: 1,
-          column: 1
-        )
-      ]
-    )
-  }
-
-  func testProtocol() {
-    checkThat(
-      code: "@DerivesAutoGeneratable protocol NotGood {}",
-      expandsTo: "protocol NotGood {}",
-      withDiagnostics: [
-        .init(
-          message: "Макрос @DerivesAutoGeneratable поддерживает только структуры и енумы.",
-          line: 1,
-          column: 1
         )
       ]
     )

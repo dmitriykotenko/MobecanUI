@@ -45,7 +45,7 @@ struct Enum: Equatable, Hashable, Codable {
 
   func declaration(inheritedProtocols: [String]) -> String {
     """
-    enum \(name): \(inheritedProtocols.mkStringWithComma()) {
+    \(visibilityPrefix)enum \(name): \(inheritedProtocols.mkStringWithComma()) {
     \("  ".prependingToLines(of: casesDeclaration))
     }
     """

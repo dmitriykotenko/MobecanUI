@@ -12,26 +12,36 @@ protocol MobecanDeclaration {}
 
 extension MobecanDeclaration {
 
-  static func declarationOf(storedProperties: [StoredProperty]) -> String {
-    storedProperties.map(\.varDeclaration).mkStringWithNewLine()
+  static func declarationOf(storedProperties: [StoredProperty],
+                            visibilityModifiers: [String]) -> String {
+    let visibilityPrefix =
+      visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
+
+    return storedProperties.map(\.varDeclaration)
+      .map { visibilityPrefix + $0 }
+      .mkStringWithNewLine()
   }
 }
 
 
 extension MobecanDeclaration {
 
-  static func memberwiseInitializer(storedProperties: [StoredProperty],
+  static func memberwiseInitializer(visibilityModifiers: [String],
+                                    storedProperties: [StoredProperty],
                                     isCompact: Bool = true) -> String {
     initializer(
+      visibilityModifiers: visibilityModifiers,
       parameters: storedProperties.map { $0.asFunctionParameter() },
       isCompact: isCompact,
       body: membewiseInitializerBody(storedProperties: storedProperties)
     )
   }
 
-  static func memberwiseInitializer(parameters: [FunctionParameter],
+  static func memberwiseInitializer(visibilityModifiers: [String],
+                                    parameters: [FunctionParameter],
                                     isCompact: Bool = true) -> String {
     initializer(
+      visibilityModifiers: visibilityModifiers,
       parameters: parameters,
       isCompact: isCompact,
       body: membewiseInitializerBody(
@@ -47,11 +57,13 @@ extension MobecanDeclaration {
     ) + .newLine + .newLine + "super.init()"
   }
 
-  static func memberwiseInitializer(parameters: [FunctionParameter],
+  static func memberwiseInitializer(visibilityModifiers: [String],
+                                    parameters: [FunctionParameter],
                                     customName: String,
                                     selfType: String,
                                     isCompact: Bool = true) -> String {
     initializer(
+      visibilityModifiers: visibilityModifiers,
       parameters: parameters,
       customName: customName,
       selfType: selfType,
@@ -69,11 +81,12 @@ extension MobecanDeclaration {
     )
   }
 
-  static func initializer(parameters: [FunctionParameter],
+  static func initializer(visibilityModifiers: [String],
+                          parameters: [FunctionParameter],
                           isCompact: Bool,
                           body: String) -> String {
     function(
-      keywords: ["public"],
+      keywords: visibilityModifiers,
       name: "init",
       parameters: parameters,
       isCompact: isCompact,
@@ -81,13 +94,14 @@ extension MobecanDeclaration {
     )
   }
 
-  static func initializer(parameters: [FunctionParameter],
+  static func initializer(visibilityModifiers: [String],
+                          parameters: [FunctionParameter],
                           customName: String,
                           selfType: String,
                           isCompact: Bool,
                           body: String) -> String {
     function(
-      keywords: ["public static func"],
+      keywords: visibilityModifiers + ["static", "func"],
       name: customName,
       parameters: parameters,
       returns: "-> \(selfType)",

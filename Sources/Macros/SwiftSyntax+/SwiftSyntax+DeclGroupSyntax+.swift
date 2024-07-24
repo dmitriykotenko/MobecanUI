@@ -29,6 +29,7 @@ extension DeclGroupSyntax {
     zip(self.as(StructDeclSyntax.self), storedProperties)
       .map {
         Struct(
+          visibilityModifiers: visibilityModifiers, 
           name: $0.name.text,
           genericArguments: $0.genericParameterClause?.parameters.map(\.name.text) ?? [],
           storedProperties: $1
@@ -61,6 +62,10 @@ extension DeclGroupSyntax {
 
   var visibilityModifiers: [String] {
     modifiers.filter(\.isVisibilityModifier).map(\.name.text)
+  }
+
+  var visibilityPrefix: String {
+    visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
   }
 
   var genericArguments: [String]? {

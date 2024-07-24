@@ -65,11 +65,14 @@ struct FunctionSignature {
   }
 
   private func buildTitle(isCompact: Bool) -> String {
+    let keywordsString = keywords.mkStringWithSpace()
+    let prefix = keywordsString.isEmpty ? "" : keywordsString + " "
+
     switch genericParameters.count {
     case 0:
-      return keywords.mkStringWithSpace() + " " + name
+      return prefix + name
     default:
-      return keywords.mkStringWithSpace() + " " + name + withAngleBrackets(
+      return prefix + name + withAngleBrackets(
         genericParameters: genericParameters,
         isCompact: isCompact
       )

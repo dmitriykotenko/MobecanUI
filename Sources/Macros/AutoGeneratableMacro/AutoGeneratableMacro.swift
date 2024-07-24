@@ -15,10 +15,7 @@ extension AutoGeneratableMacro: MemberMacro {
   public static func expansion(of node: AttributeSyntax,
                                providingMembersOf declaration: some DeclGroupSyntax,
                                 in context: some MacroExpansionContext) throws -> [DeclSyntax] {
-    [
-      try builtinGenerator(declaration: declaration)?.build
-    ]
-    .filterNil()
+    try (builtinGenerator(declaration: declaration)?.build).asSequence
   }
 
   private static func builtinGenerator(declaration: some DeclGroupSyntax) throws -> GeneratorDeclaration? {
@@ -54,16 +51,21 @@ extension AutoGeneratableMacro: ExtensionMacro {
   }
 
   private static func declarationOfDefaultGenerator(for declaration: some DeclGroupSyntax) -> String {
+    let isPublic = declaration.visibilityModifiers.contains { $0 == "public" || $0 == "open" }
+    let visibility = isPublic ? "public" : nil
+
+    let keywords = [visibility, "static", "var"].filterNil().mkStringWithSpace()
+
     switch declaration.asEnum {
     case let someEnum? where someEnum.isPrimitive:
       return """
-      static var defaultGenerator: MobecanGenerator<\(someEnum.name)> {
+      \(keywords) defaultGenerator: MobecanGenerator<\(someEnum.name)> {
         .oneOf(\(someEnum.cases.map(\.dotName).mkStringWithComma()))
       }
       """
     default:
       return """
-      static var defaultGenerator: BuiltinGenerator {
+      \(keywords) defaultGenerator: BuiltinGenerator {
         .init()
       }
       """

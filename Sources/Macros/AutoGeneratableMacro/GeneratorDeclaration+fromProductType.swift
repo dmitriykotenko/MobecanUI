@@ -9,10 +9,12 @@ import SwiftSyntaxMacros
 extension GeneratorDeclaration {
 
   static func from(product: ProductType,
+                   visibilityModifiers: [String],
                    className: String,
                    parentClassName: String,
                    genericArgumentsCondition: String? = nil) -> Self {
     .init(
+      visibilityModifiers: visibilityModifiers,
       className: className,
       inheritedClassName: parentClassName,
       valueType: product.name(),

@@ -14,13 +14,14 @@ extension GeneratorDeclaration {
     guard !someEnum.isPrimitive else { return nil }
 
     return .init(
+      visibilityModifiers: someEnum.visibilityModifiersForProtocolExtension,
       className: "BuiltinGenerator",
       inheritedClassName: "MobecanGenerator",
       valueType: someEnum.name,
       genericArgumentsCondition:
         someEnum.genericArgumentsConformanceRequirement(protocolName: "AutoGeneratable"),
       nestedTypes: [metaEnum(of: someEnum).description] + someEnum.nonTrivialCases.compactMap {
-        generator(forEnumCase: $0)?.buildRawString
+        generator(forCase: $0, ofEnum: someEnum)?.buildRawString
       },
       initializerParameters: 
         [casesSelector(for: someEnum)] +
@@ -51,9 +52,11 @@ extension GeneratorDeclaration {
     )
   }
 
-  private static func generator(forEnumCase enumCase: EnumCase) -> GeneratorDeclaration? {
-    builtinGenerator(forEnumCase: enumCase).map { builtinGenerator in
+  private static func generator(forCase enumCase: EnumCase,
+                                ofEnum someEnum: Enum) -> GeneratorDeclaration? {
+    builtinGenerator(forCase: enumCase, ofEnum: someEnum).map { builtinGenerator in
       .init(
+        visibilityModifiers: someEnum.visibilityModifiersForProtocolExtension,
         className: "Generator_\(enumCase.name)",
         inheritedClassName: "FunctionalGenerator",
         valueType: enumCase.parametersAsTuple.normalizedName(),
@@ -64,23 +67,30 @@ extension GeneratorDeclaration {
     }
   }
 
-  private static func builtinGenerator(forEnumCase enumCase: EnumCase) -> GeneratorDeclaration? {
+  private static func builtinGenerator(forCase enumCase: EnumCase,
+                                       ofEnum someEnum: Enum) -> GeneratorDeclaration? {
     switch enumCase.parameters.count {
     case 0:
       return nil
     case 1:
-      return from(singleParameter: enumCase.parameters[0])
+      return from(
+        singleParameter: enumCase.parameters[0], 
+        ofEnum: someEnum
+      )
     default:
       return from(
         product: enumCase.parametersAsTuple.asProductType,
+        visibilityModifiers: someEnum.visibilityModifiersForProtocolExtension,
         className: "Builtin",
         parentClassName: "MobecanGenerator"
       )
     }
   }
 
-  private static func from(singleParameter: EnumCase.Parameter) -> GeneratorDeclaration {
+  private static func from(singleParameter: EnumCase.Parameter,
+                           ofEnum someEnum: Enum) -> GeneratorDeclaration {
     .init(
+      visibilityModifiers: someEnum.visibilityModifiersForProtocolExtension,
       className: "Builtin",
       inheritedClassName: "MobecanGenerator",
       valueType: singleParameter.type,
@@ -136,5 +146,15 @@ extension GeneratorDeclaration {
           }
         """
     }
+  }
+}
+
+
+private extension Enum {
+
+  var visibilityModifiersForProtocolExtension: [String] {
+    visibilityModifiers.contains { $0 == "public" || $0 == "open" } ?
+      ["public"] :
+      []
   }
 }

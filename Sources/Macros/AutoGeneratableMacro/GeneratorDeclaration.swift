@@ -8,6 +8,7 @@ import SwiftSyntaxMacros
 
 struct GeneratorDeclaration: MobecanDeclaration {
 
+  var visibilityModifiers: [String]
   var className: String
   var inheritedClassName: String
   var valueType: String
@@ -51,7 +52,7 @@ struct GeneratorDeclaration: MobecanDeclaration {
 
   private var buildHeader: String {
     [
-      "public class \(className): \(inheritedClassName)<\(valueType)>",
+      "\(visibilityPrefix)class \(className): \(inheritedClassName)<\(valueType)>",
       "where ".prependTo(genericArgumentsCondition?.notBlankOrNil)
     ]
     .filterNil()
@@ -59,15 +60,27 @@ struct GeneratorDeclaration: MobecanDeclaration {
     .asSingleLineIfShort()
   }
 
+  private var visibilityPrefix: String {
+    visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
+  }
+
   private var buildBody: String {
     [
       nestedTypes.mkStringWithNewParagraph().notBlankOrNil,
-      Self.declarationOf(storedProperties: storedProperties),
+      Self.declarationOf(
+        storedProperties: storedProperties,
+        visibilityModifiers: visibilityModifiers
+      ),
       initializerParameters.map {
-        Self.memberwiseInitializer(parameters: $0, isCompact: true)
+        Self.memberwiseInitializer(
+          visibilityModifiers: visibilityModifiers,
+          parameters: $0,
+          isCompact: true
+        )
       },
       initializerParameters.map {
         Self.memberwiseInitializer(
+          visibilityModifiers: visibilityModifiers,
           parameters: $0,
           customName: "using",
           selfType: className,
@@ -84,11 +97,12 @@ struct GeneratorDeclaration: MobecanDeclaration {
   private var declarationOfGenerateMethod: String? {
     bodyOfGenerateMethod.map {
       Self.function(
-        signature: """
-        override public func generate(factory: GeneratorsFactory)
-        -> Single<GeneratorResult<\(valueType)>>
-        """
-        .asSingleLineIfShort(),
+        signature: .init(
+          keywords: ["override"] + visibilityModifiers + ["func"],
+          name: "generate",
+          parameters: [.init(name: "factory", type: "GeneratorsFactory")],
+          returns: "-> Single<GeneratorResult<\(valueType)>>"
+        ),
         body: $0
       )
     }
@@ -107,7 +121,7 @@ struct GeneratorDeclaration: MobecanDeclaration {
   func withStaticBuiltin(from nestedGenerator: GeneratorDeclaration) -> Self {
     appendingBody(
       with: Self.function(
-        keywords: ["static", "func"],
+        keywords: visibilityModifiers + ["static", "func"],
         name: "builtin",
         parameters: nestedGenerator.initializerParameters ?? [],
         returns: "-> " + className,
