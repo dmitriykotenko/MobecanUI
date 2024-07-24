@@ -17,6 +17,18 @@ import MobecanUI
 class MacroExpansionCompileErrorsCatcher {
 
   @TryInit
+  public enum Banknotes {
+    case nothing
+    case roubles(Int)
+    case euros(amount: Int, fakeness: Double)
+    case pounds(Int, royalness: Double = 999)
+
+    init(euros: Int) {
+      self = .euros(amount: euros, fakeness: 1)
+    }
+  }
+
+  @TryInit
   open class Pair<First, Second> {
     var first: First?
     var second: Second
@@ -109,5 +121,18 @@ class MacroExpansionCompileErrorsCatcher {
     var eee: EmptyStruct
 
     static let url3 = #URL("https://www.apple.com")
+
+    static let vvv: Result<Banknotes, SomeError> = Banknotes.tryInit.euros(
+      amount: .success(0),
+      fakeness: .success(5)
+    )
+  }
+}
+
+
+import NonEmpty
+struct SomeError: ComposableError {
+  static func composed(from children: NonEmpty<[String : SomeError]>) -> SomeError {
+    fatalError()
   }
 }

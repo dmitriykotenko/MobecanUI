@@ -30,6 +30,14 @@ struct EnumCase: Equatable, Hashable, Codable {
         defaultValue: nil
       )
     }
+
+    func asInitializerParameter(defaultInnerName: String) -> FunctionParameter {
+      .init(
+        outerName: name,
+        innerName: name ?? defaultInnerName,
+        type: type
+      )
+    }
   }
 
   var name: String

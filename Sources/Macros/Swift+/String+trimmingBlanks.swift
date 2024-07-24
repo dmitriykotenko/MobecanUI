@@ -20,4 +20,8 @@ public extension StringProtocol {
   var trimmingBlanks: String {
     trimmingCharacters(in: .whitespacesAndNewlines)
   }
+
+  var trimmingCurlyBraces: String {
+    trimmingCharacters(in: .init(charactersIn: "{}"))
+  }
 }

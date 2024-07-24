@@ -6,7 +6,6 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-
 extension DeclGroupSyntax {
 
   var asNamedDeclaration: NamedDeclSyntax? {
@@ -48,6 +47,7 @@ extension DeclGroupSyntax {
   var asEnum: Enum? {
     self.as(EnumDeclSyntax.self).map {
       Enum(
+        visibilityModifiers: $0.visibilityModifiers,
         name: $0.name.text,
         genericArguments: $0.genericParameterClause?.parameters.map(\.name.text) ?? [],
         cases: $0.simplifiedCases
@@ -79,11 +79,6 @@ extension DeclGroupSyntax {
     return variables.compactMap(\.asStoredProperty)
   }
 
-  var initializers: [InitializerDeclSyntax] {
-    let members = memberBlock.members
-    return members.compactMap { $0.decl.as(InitializerDeclSyntax.self) }
-  }
-
   var explicitCodingKeys: [EnumCase]? {
     findNestedEnum(name: "CodingKeys")?.simplifiedCases
   }
@@ -97,6 +92,21 @@ extension DeclGroupSyntax {
 
   var isRawValueRepresentableEnum: Bool {
     primitiveTypes.intersection(inheritedTypes ?? []).isNotEmpty
+  }
+
+  // MARK: Initializers
+  var initializers: [Function] {
+    explicitInitializers + implicitInitializer.asSequence
+  }
+
+  var explicitInitializers: [Function] {
+    memberBlock.members
+      .compactMap { $0.decl.as(InitializerDeclSyntax.self) }
+      .map(\.asFunction)
+  }
+
+  var implicitInitializer: Function? {
+    (asStruct?.implicitInitializer).filter { _ in explicitInitializers.isEmpty }
   }
 }
 

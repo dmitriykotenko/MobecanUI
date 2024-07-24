@@ -47,7 +47,7 @@ struct FunctionSignature {
     build(
       titleString: buildTitle(isCompact: false),
       indentation: "  ",
-      afterOpeningBrace: .newLine,
+      afterOpeningBrace: .newLine + "  ",
       beforeClosingBrace: .newLine
     )
   }
@@ -57,7 +57,7 @@ struct FunctionSignature {
                      afterOpeningBrace: String,
                      beforeClosingBrace: String) -> String {
     parameters.mkString(
-      start: titleString + "(" + afterOpeningBrace + indentation,
+      start: titleString + "(" + afterOpeningBrace,
       format: { "\($0.declaration)" },
       separator: ",\n\(indentation)",
       end: beforeClosingBrace + ")" + returnsAndWhere()

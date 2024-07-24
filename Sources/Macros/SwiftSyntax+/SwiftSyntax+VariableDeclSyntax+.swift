@@ -11,8 +11,12 @@ extension VariableDeclSyntax {
 
   var isSingleVariable: Bool { bindings.count == 1 }
 
+  var isStatic: Bool {
+    modifiers.contains { $0.name.text == "static" }
+  }
+
   var isStoredProperty: Bool {
-    isSingleVariable && bindings.first?.accessorBlock == nil
+    isSingleVariable && !isStatic && bindings.first?.accessorBlock == nil
   }
 
   var asStoredProperty: StoredProperty? {

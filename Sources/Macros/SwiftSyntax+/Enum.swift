@@ -9,6 +9,7 @@ import SwiftSyntaxMacros
 
 struct Enum: Equatable, Hashable, Codable {
 
+  var visibilityModifiers: [String]
   var name: String
   var genericArguments: [String]
   var cases: [EnumCase]

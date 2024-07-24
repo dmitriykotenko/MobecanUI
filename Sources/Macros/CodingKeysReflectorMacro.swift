@@ -18,7 +18,7 @@ extension CodingKeysReflectorMacro: MemberMacro {
                                providingMembersOf declaration: some DeclGroupSyntax,
                                in context: some MacroExpansionContext) throws -> [DeclSyntax] {
 
-    generateCodingKeyTypes(declaration: declaration).asArray
+    generateCodingKeyTypes(declaration: declaration).asSequence
   }
 
   private static func generateCodingKeyTypes(declaration: some DeclGroupSyntax) -> DeclSyntax? {

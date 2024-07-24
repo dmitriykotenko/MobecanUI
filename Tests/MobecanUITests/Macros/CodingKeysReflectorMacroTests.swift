@@ -133,6 +133,8 @@ final class CodingKeysReflectorMacroTests: MacrosTester {
         var ccc: [String]???
         var ddd: Double { 0 }
         var eee: EmptyStruct
+
+        static var fff: Void = ()
       }
       """,
       expandsTo: """
@@ -159,6 +161,8 @@ final class CodingKeysReflectorMacroTests: MacrosTester {
         var ccc: [String]???
         var ddd: Double { 0 }
         var eee: EmptyStruct
+
+        static var fff: Void = ()
 
         static var codingKeyTypes: [String: CodingKeysReflector.Type] {
           [

@@ -119,6 +119,14 @@ extension MobecanDeclaration {
     )
   }
 
+  static func function(signature: FunctionSignature,
+                       body: String) -> String {
+    function(
+      signature: signature.build(isCompact: true, lineLengthThreshold: 100), 
+      body: body
+    )
+  }
+
   static func function(signature: String,
                        body: String) -> String {
     """

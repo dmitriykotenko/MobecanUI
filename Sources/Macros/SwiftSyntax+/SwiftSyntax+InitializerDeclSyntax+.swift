@@ -33,6 +33,16 @@ extension InitializerDeclSyntax {
     signature.effectSpecifiers?.throwsClause != nil
   }
 
+  var asFunction: Function {
+    .init(
+      signature: asFunctionSignature,
+      body: body?.trimmedDescription
+        .trimmingBlanks
+        .trimmingCurlyBraces
+        ?? ""
+    )
+  }
+
   var asFunctionSignature: FunctionSignature {
     .init(
       keywords: visibilityModifiers,

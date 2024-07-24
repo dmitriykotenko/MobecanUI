@@ -64,14 +64,14 @@ struct GeneratorDeclaration: MobecanDeclaration {
       nestedTypes.mkStringWithNewParagraph().notBlankOrNil,
       Self.declarationOf(storedProperties: storedProperties),
       initializerParameters.map {
-        Self.memberwiseInitializer(parameters: $0, isCompact: false)
+        Self.memberwiseInitializer(parameters: $0, isCompact: true)
       },
       initializerParameters.map {
         Self.memberwiseInitializer(
           parameters: $0,
           customName: "using",
           selfType: className,
-          isCompact: false
+          isCompact: true
         )
       },
       declarationOfGenerateMethod,

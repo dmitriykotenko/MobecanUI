@@ -13,6 +13,25 @@ struct Struct: Equatable, Hashable, Codable {
   var genericArguments: [String]
   var storedProperties: [StoredProperty]
 
+  var implicitInitializer: Function {
+    let parameters = parametersOfImplicitInitializer
+
+    return .init(
+      signature: .init(
+        keywords: [],
+        name: "init",
+        parameters: parameters
+      ),
+      body: """
+      \(parameters
+        .compactMap(\.innerName)
+        .map { "self.\($0) = \($0)" }
+        .mkStringWithNewLine()
+      )
+      """
+    )
+  }
+
   var parametersOfImplicitInitializer: [FunctionParameter] {
     storedProperties.filter(\.canBeInitialized).map {
       $0.asFunctionParameter(

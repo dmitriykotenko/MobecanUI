@@ -44,34 +44,46 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
     else { return [] }
 
     var tryInits = declaration.initializers.compactMap {
-      tryInit(from: $0, typeName: typeName)
+      tryInit(originalSignature: $0.signature, typeName: typeName)
     }
 
-    if tryInits.isEmpty {
-      tryInits += [tryInitFromImplicitInitializer(declaration: declaration)].filterNil()
+    if let someEnum = declaration.asEnum {
+      tryInits += tryInitObject(for: someEnum).asSequence
     }
 
     return tryInits
   }
 
-  private static func tryInit(from initializer: InitializerDeclSyntax,
-                              typeName: String) -> DeclSyntax? {
-    tryInit(
-      originalSignature: initializer.asFunctionSignature,
-      typeName: typeName
-    )
+  private static func tryInitObject(for someEnum: Enum) -> DeclSyntax? {
+    let nonTrivialCases = someEnum.nonTrivialCases
+
+    guard nonTrivialCases.isNotEmpty else { return nil }
+
+    let caseInits = nonTrivialCases.compactMap { tryInit(forCase: $0, ofEnum: someEnum) }
+
+    let rawString = """
+    enum tryInit {
+    \(caseInits.map(\.trimmedDescription).mkStringWithNewParagraph())
+    }
+    """
+
+    return "\(raw: rawString)"
   }
 
-  private static func tryInitFromImplicitInitializer(declaration: some DeclGroupSyntax) -> DeclSyntax? {
-    guard let someStruct = declaration.asStruct else { return nil }
+  private static func tryInit(forCase enumCase: EnumCase,
+                              ofEnum someEnum: Enum) -> DeclSyntax? {
+    guard enumCase.parameters.isNotEmpty else { return nil }
 
     return tryInit(
       originalSignature: .init(
-        keywords: [],
-        name: "init",
-        parameters: someStruct.parametersOfImplicitInitializer
+        keywords: someEnum.visibilityModifiers + ["static", "func"],
+        name: enumCase.name,
+        genericParameters: [],
+        parameters: enumCase.parameters.enumerated().map {
+          $1.asInitializerParameter(defaultInnerName: "_\($0)")
+        }
       ),
-      typeName: someStruct.name
+      typeName: someEnum.name
     )
   }
 
@@ -85,20 +97,45 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
     // нет смысла делать для него tryInit-версию.
     guard parameters.contains(where: \.isNamed) else { return nil }
 
-    let maybeTry = originalSignature.isThrowing ? "try " : ""
-    let maybeQuestionMark = originalSignature.name.hasSuffix("?") ? "?" : ""
+    return """
+    \(raw: 
+      function(
+        signature: tryInitSignature(
+          originalSignature: originalSignature,
+          parameters: parameters,
+          typeName: typeName
+        ),
+        body: tryInitBody(
+          parameters: parameters,
+          nameOfOriginalInit: originalSignature.name,
+          maybeTry: originalSignature.isThrowing ? "try " : ""
+        )
+      )
+    )
+    """
+  }
 
+  private static func tryInitSignature(originalSignature: FunctionSignature,
+                                       parameters: [BetterFunctionParameter],
+                                       typeName: String) -> FunctionSignature {
     var signature = originalSignature
-    signature.keywords += ["static", "func"]
-    signature.name = "tryInit"
+
+    if !signature.keywords.contains("func") { signature.name = "tryInit" }
+
+    signature.keywords.appendNovelElements(from: ["static", "func"])
     signature.genericParameters += ["SomeError: ComposableError"]
     signature.parameters = parameters.map(\.asTryInitParameter)
+
+    let maybeQuestionMark = originalSignature.name.hasSuffix("?") ? "?" : ""
     signature.returns = "-> Result<\(typeName)\(maybeQuestionMark), SomeError>"
 
-    return """
-    \(raw: function(
-      signature: signature.build(isCompact: true, lineLengthThreshold: 100),
-      body: """
+    return signature
+  }
+
+  private static func tryInitBody(parameters: [BetterFunctionParameter],
+                                  nameOfOriginalInit: String,
+                                  maybeTry: String) -> String {
+    """
       var errors: [String: SomeError] = [:]
 
       \(parameters
@@ -113,7 +150,7 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
 
       // swiftlint:disable force_try
       return \(maybeTry).success(
-        .init(
+        .\(nameOfOriginalInit.dropLastWhile { $0 == "?" }.mkString())(
       \("    ".prependingToLines(
         of: parameters.map(\.application).mkStringWithCommaAndNewLine()
       ))
@@ -121,9 +158,6 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
       )
       // swiftlint:enable force_try
       """
-    )
-  )
-  """
   }
 }
 
@@ -156,8 +190,7 @@ private extension BetterFunctionParameter {
   var application: String {
     switch self {
     case .named(let parameter, let innerName):
-      // Именованный параметр имеет тип Result<...>.
-      // Достаём значение из этого резалта и просим Свифт-линт не ругаться на `try!`.
+      // Именованный параметр имеет тип Result<...>. Достаём значение из этого резалта.
       return parameter.initialization(
         withValue: "try! \(innerName).get()"
       )
@@ -166,5 +199,4 @@ private extension BetterFunctionParameter {
       return parameter.initialization(withValue: "_\(index)")
     }
   }
-
 }

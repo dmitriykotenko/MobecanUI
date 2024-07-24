@@ -3,7 +3,7 @@
 
 extension Optional {
 
-  var asArray: [Wrapped] { map { [$0] } ?? [] }
+  var asSequence: [Wrapped] { map { [$0] } ?? [] }
 
   func filter(_ predicate: (Wrapped) -> Bool) -> Wrapped? {
     flatMap { predicate($0) ? $0 : nil }
