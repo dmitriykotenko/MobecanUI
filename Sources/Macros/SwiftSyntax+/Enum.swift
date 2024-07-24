@@ -14,6 +14,10 @@ struct Enum: Equatable, Hashable, Codable {
   var genericArguments: [String]
   var cases: [EnumCase]
 
+  var visibilityPrefix: String {
+    visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
+  }
+
   var nonTrivialCases: [EnumCase] {
     cases.filter(\.parameters.isNotEmpty)
   }

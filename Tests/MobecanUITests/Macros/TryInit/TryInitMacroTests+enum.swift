@@ -73,7 +73,7 @@ extension TryInitMacroTests {
           // swiftlint:enable force_try
         }
 
-        enum tryInit {
+        public enum tryInit {
           public static func roubles<
             SomeError: ComposableError
           >(

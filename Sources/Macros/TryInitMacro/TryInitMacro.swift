@@ -56,13 +56,13 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
 
   private static func tryInitObject(for someEnum: Enum) -> DeclSyntax? {
     let nonTrivialCases = someEnum.nonTrivialCases
-
     guard nonTrivialCases.isNotEmpty else { return nil }
 
+    let visibility = someEnum.visibilityPrefix
     let caseInits = nonTrivialCases.compactMap { tryInit(forCase: $0, ofEnum: someEnum) }
 
     let rawString = """
-    enum tryInit {
+    \(visibility)enum tryInit {
     \(caseInits.map(\.trimmedDescription).mkStringWithNewParagraph())
     }
     """
