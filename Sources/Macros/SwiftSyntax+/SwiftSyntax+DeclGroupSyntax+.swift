@@ -16,9 +16,9 @@ extension DeclGroupSyntax {
     self.as(ExtensionDeclSyntax.self)
   }
 
-  var asNominalType: NominalType? {
-    asStruct?.asNominalType
-    ?? asEnum?.asNominalType
+  func asNominalType(inEnclosingContext context: some MacroExpansionContext) -> NominalType? {
+    asStruct(inEnclosingContext: context)?.asNominalType
+    ?? asEnum(inEnclosingContext: context)?.asNominalType
   }
 
   var isStruct: Bool {
@@ -35,6 +35,12 @@ extension DeclGroupSyntax {
           storedProperties: $1
         )
       }
+  }
+
+  func asStruct(inEnclosingContext context: some MacroExpansionContext) -> Struct? {
+    var result = asStruct
+    result?.visibilityModifiers = self.visibilityModifiers(forEnclosingContext: context)
+    return result
   }
 
   var structName: String? {
@@ -56,6 +62,12 @@ extension DeclGroupSyntax {
     }
   }
 
+  func asEnum(inEnclosingContext context: some MacroExpansionContext) -> Enum? {
+    var result = asEnum
+    result?.visibilityModifiers = self.visibilityModifiers(forEnclosingContext: context)
+    return result
+  }
+
   var enumName: String? {
     self.as(EnumDeclSyntax.self)?.name.text
   }
@@ -66,6 +78,31 @@ extension DeclGroupSyntax {
 
   var visibilityPrefix: String {
     visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
+  }
+
+  func visibilityModifiers(forEnclosingContext context: some MacroExpansionContext) -> [String] {
+    let explicitModifiers = visibilityModifiers
+    let implicitModifiers = implicitVisibilityModifiers(in: context)
+
+    if explicitModifiers.contains("public") || explicitModifiers.contains("open") {
+      return explicitModifiers
+    } else {
+      return explicitModifiers + implicitModifiers
+    }
+  }
+
+  func implicitVisibilityModifiers(in enclosingContext: some MacroExpansionContext) -> [String] {
+    let parent = enclosingContext.lexicalContext.first
+
+    switch parent?.as(ExtensionDeclSyntax.self) {
+    case let someExtension? where someExtension.visibilityPrefix.contains("public"):
+      // По правилам Свифта все мемберы публичного экстеншена,
+      // у которых явно не указана видимость,
+      // тоже автоматически становятся публичными.
+      return ["public"]
+    default:
+      return []
+    }
   }
 
   var genericArguments: [String]? {

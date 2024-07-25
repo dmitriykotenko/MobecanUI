@@ -47,6 +47,7 @@ struct Struct: Equatable, Hashable, Codable {
 
   var asNominalType: NominalType {
     .init(
+      visibilityModifiers: visibilityModifiers,
       name: name,
       genericArguments: genericArguments
     )

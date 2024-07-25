@@ -9,6 +9,7 @@ import SwiftSyntaxMacros
 
 struct NominalType: Equatable, Hashable, Codable {
 
+  var visibilityModifiers: [String]
   var name: String
   var genericArguments: [String]
 
