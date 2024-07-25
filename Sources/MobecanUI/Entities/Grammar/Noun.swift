@@ -1,9 +1,11 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 import NonEmpty
+import RxSwift
 
 
 /// Имя существительное.
+@DerivesAutoGeneratable
 @TryInit
 public struct Noun: Equatable, Hashable, Codable, Lensable {
 

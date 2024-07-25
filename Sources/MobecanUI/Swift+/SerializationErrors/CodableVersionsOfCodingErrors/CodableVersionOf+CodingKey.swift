@@ -1,5 +1,7 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import RxSwift
+
 
 extension CodableVersionOf {
 
@@ -13,6 +15,7 @@ extension CodableVersionOf {
   /// В JSON-объекте {"a": 1, "b": 2} ключами являются "a" и "b".
   ///
   /// В JSON-массиве [true, false, null] ключами являются 0, 1 и 2.
+  @DerivesAutoGeneratable
   public struct CodingKey: Equatable, Hashable, Codable {
 
     /// Тип исходного объекта, реализующего протокол ``Swift.CodingKey`` (обычно нужен только для отладки).

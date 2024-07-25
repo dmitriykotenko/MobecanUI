@@ -1,9 +1,12 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import RxSwift
+
 
 extension CodableVersionOf {
 
   /// Аналог ``Swift.DecodingError``, реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
+  @DerivesAutoGeneratable
   public enum DecodingError: Error, Equatable, Hashable, Codable {
 
     /// Кривые или повреждённые данные для десериализации

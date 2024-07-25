@@ -1,10 +1,12 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
 import NonEmpty
+import RxSwift
 
 
 /// Слово, склоняемое по падежам
 /// (например: «смартфон», «смартфона», «смартфону», «смартфон», «смартфоном» и «смартфоне»).
+@DerivesAutoGeneratable
 @TryInit
 public struct InclinableWord: Equatable, Hashable, Codable, Lensable {
 

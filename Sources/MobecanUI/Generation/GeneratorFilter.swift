@@ -11,11 +11,11 @@ public struct GeneratorFilter<Value> {
     validate(value)
   }
 
-  init(validate: @escaping (Value) -> GeneratorResult<Value>) {
+  public init(validate: @escaping (Value) -> GeneratorResult<Value>) {
     self.validate = validate
   }
 
-  func combine(with other: Self) -> Self {
+  public func combine(with other: Self) -> Self {
     .init {
       self($0).flatMap { other($0) }
     }

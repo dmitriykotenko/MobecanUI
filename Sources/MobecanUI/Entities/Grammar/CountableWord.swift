@@ -1,10 +1,12 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
 import NonEmpty
+import RxSwift
 
 
 /// Слово, у которого есть разные формы для обозначения разного количества
 /// (например: «1 смартфон», «2 смартфона», «5 смартфонов»).
+@DerivesAutoGeneratable
 @TryInit
 public struct CountableWord: Equatable, Hashable, Codable, Lensable {
 

@@ -2,8 +2,10 @@
 
 import Foundation
 import NonEmpty
+import RxSwift
 
 
+@DerivesAutoGeneratable
 @TryInit
 public struct Hyperlink: Equatable, Hashable, Lensable {
   

@@ -2,7 +2,10 @@
 
 import Foundation
 
+import RxSwift
 
+
+@DerivesAutoGeneratable
 public enum CancelOr<Value> {
 
   case cancel

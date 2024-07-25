@@ -1,10 +1,13 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import RxSwift
+
 
 /// Ошибка при десериализации объекта, реализующего протокол ``Codable``.
 ///
 /// Аналог ``Swift.DecodingError``, дополненный типом десериализуемого объекта
 /// и реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
+@DerivesAutoGeneratable
 public enum DeserializationError: Error, Equatable, Hashable, Codable {
 
   /// Произошёл ``DecodingError`` (который был сконвертирован в ``CodableVersionOf.DecodingError``).

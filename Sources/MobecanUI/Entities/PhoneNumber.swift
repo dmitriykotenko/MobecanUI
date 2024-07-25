@@ -10,7 +10,7 @@ public struct PhoneNumber: Equatable, Hashable, Codable, Lensable, CustomStringC
   public let digits: String
   
   public init(unsanitizedString: String) {
-    self.digits = unsanitizedString.filter { $0.isDecimalDigit }
+    self.digits = unsanitizedString.filter(\.isDecimalDigit)
   }
   
   public var inInternationalFormat: String { "+\(digits)" }

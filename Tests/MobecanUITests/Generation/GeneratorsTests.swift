@@ -209,6 +209,24 @@ final class GeneratorsTests: XCTestCase {
     )
   }
 
+  func testJsonValueGeneration() {
+    check(
+      generator: MobecanGenerator<[JsonValue]>.builtin(
+        count: .fixed(100),
+        element: JsonValue.defaultGenerator.filter(
+          .init {
+            $0.height >= 3 ?
+              GeneratorResult.success($0) :
+              GeneratorResult.failure(GeneratorError(message: "Inappropriate JsonValue"))
+          },
+          maximumAttemptsCount: 1000
+        )
+      ),
+      attempts: 1,
+      ensureThatResult: \.isSuccess
+    )
+  }
+
   private func check<Value: Codable>(
     generator: MobecanGenerator<Value>,
     attempts attemptsCount: Int,
@@ -276,6 +294,21 @@ final class GeneratorsTests: XCTestCase {
       if !ensureThatResult($0) {
         XCTFail(errorMessage($0), file: file, line: line)
       }
+    }
+  }
+}
+
+
+private extension JsonValue {
+
+  var height: Int {
+    switch self {
+    case .string, .int, .bool, .double, .null:
+      return 0
+    case .object(let dictionary):
+      return dictionary.values.map(\.height).reduce(0, max) + 1
+    case .array(let array):
+      return array.map(\.height).reduce(0, max) + 1
     }
   }
 }

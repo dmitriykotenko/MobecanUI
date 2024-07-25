@@ -3,7 +3,7 @@
 import RxSwift
 
 
-extension MobecanGenerator {
+public extension MobecanGenerator {
 
   func filter(_ filter: GeneratorFilter<Value>,
               maximumAttemptsCount: Int) -> MobecanGenerator<Value> {

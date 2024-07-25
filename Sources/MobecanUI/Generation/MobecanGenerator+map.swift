@@ -3,7 +3,7 @@
 import RxSwift
 
 
-extension MobecanGenerator {
+public extension MobecanGenerator {
 
   func map<OtherValue>(_ transform: @escaping (Value) -> OtherValue) -> MobecanGenerator<OtherValue> {
     .rxFunctional {

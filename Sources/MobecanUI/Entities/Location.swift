@@ -1,8 +1,10 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 import NonEmpty
+import RxSwift
 
 
+@DerivesAutoGeneratable
 @TryInit
 public struct Location: Equatable, Hashable, Codable, Lensable {
 

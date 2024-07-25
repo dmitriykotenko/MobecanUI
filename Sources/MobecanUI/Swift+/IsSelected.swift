@@ -1,6 +1,9 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
+import RxSwift
 
+
+@DerivesAutoGeneratable
 public struct IsSelected<Value>: Lensable {
   
   public var value: Value

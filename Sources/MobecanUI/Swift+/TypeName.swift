@@ -1,6 +1,7 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
 import Foundation
+import RxSwift
 
 
 /// Текстовое представление типа данных в Свифте.
@@ -15,6 +16,7 @@ import Foundation
 /// - Warning: Функция `_typeByName()` работает нестабильно.
 /// Надёжнее всего она работает, если в качестве аргумента использовать `TypeName.mangled`.
 /// Но надёжная работа не гарантируется в будущих версиях Свифта.
+@DerivesAutoGeneratable
 public struct TypeName: Equatable, Hashable, Codable {
 
   /// Имя класса без учёта нэймспэйсов. Например: "String".

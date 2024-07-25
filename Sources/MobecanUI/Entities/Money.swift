@@ -2,8 +2,10 @@
 
 import Foundation
 import NonEmpty
+import RxSwift
 
 
+@DerivesAutoGeneratable
 @TryInit
 public struct Money: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
 

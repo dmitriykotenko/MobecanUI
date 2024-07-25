@@ -18,10 +18,6 @@ open class FunctionalGenerator<Value>: MobecanGenerator<Value> {
 
 
 public extension MobecanGenerator {
-//
-//  static func custom(_ nested: MobecanGenerator<Value>) -> FunctionalGenerator<Value> {
-//    .using(nested)
-//  }
 
   static func using(_ nested: MobecanGenerator<Value>) -> FunctionalGenerator<Value> {
     .init {

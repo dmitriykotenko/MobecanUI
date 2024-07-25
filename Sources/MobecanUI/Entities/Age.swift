@@ -1,10 +1,12 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 import NonEmpty
+import RxSwift
 
 
+@DerivesAutoGeneratable
 @TryInit
-public struct Age: Equatable, Hashable, Codable, Comparable, Lensable, CustomStringConvertible {
+public struct Age: Equatable, Hashable, Codable, Lensable, CustomStringConvertible {
   
   public var years: Int
 
@@ -17,7 +19,11 @@ public struct Age: Equatable, Hashable, Codable, Comparable, Lensable, CustomStr
       (years == -1) ? "-1 year" :
       "\(years) years"
   }
-  
+}
+
+
+extension Age: Comparable {
+
   public static func < (this: Age, that: Age) -> Bool {
     this.years < that.years
   }

@@ -1,5 +1,7 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
+import RxSwift
+
 
 /// Implementation is stolen from Swagger Swift template (https://swagger.io/tools/swagger-codegen)
 public enum JsonValue: Equatable, Hashable, Codable {

@@ -1,12 +1,15 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import RxSwift
+
 
 public extension CodableVersionOf {
   
   /// Контекст произошедшей ошибки сериализации.
   ///
   /// Аналог ``Swift.EncodingError.Context``, реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
-  struct EncodingErrorContext: Equatable, Hashable, Codable {
+  @DerivesAutoGeneratable
+  public struct EncodingErrorContext: Equatable, Hashable, Codable {
 
     /// Полный путь к полю, которое не удалось сериализовать.
     ///

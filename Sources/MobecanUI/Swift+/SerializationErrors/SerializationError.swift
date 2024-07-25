@@ -1,8 +1,11 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import RxSwift
+
 
 /// Аналог ``Swift.EncodingError``, дополненный типом сериализуемого объекта
 /// и реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
+@DerivesAutoGeneratable
 public enum SerializationError: Error, Equatable, Hashable, Codable {
 
   /// Произошёл ``EncodingError`` (который был сконвертирован в ``CodableVersionOf.EncodingError``).

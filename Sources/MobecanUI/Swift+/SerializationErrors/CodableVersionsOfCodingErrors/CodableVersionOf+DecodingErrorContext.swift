@@ -1,6 +1,7 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
 import Foundation
+import RxSwift
 
 
 extension CodableVersionOf {
@@ -8,6 +9,7 @@ extension CodableVersionOf {
   /// Контекст произошедшей ошибки десериализации.
   ///
   /// Аналог ``Swift.DecodingError.Context``, реализующий протоколы ``Equatable``, ``Hashable`` и ``Codable``.
+  @DerivesAutoGeneratable
   public struct DecodingErrorContext: Equatable, Hashable, Codable {
 
     /// Полный путь к полю, которое не удалось десериализовать.
