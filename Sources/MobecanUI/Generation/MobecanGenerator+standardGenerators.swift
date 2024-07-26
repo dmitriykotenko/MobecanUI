@@ -25,7 +25,9 @@ public extension MobecanGenerator {
     .rxFunctional { _ in
       switch variants.randomElement() {
       case nil:
-        return .just(.failure(.init(message: "Trying to generate random element from empty array")))
+        return .just(.failure(
+          .init(message: "Trying to generate random element from empty array of \(Value.self)")
+        ))
       case let element?:
         return .just(.success(element))
       }
