@@ -3,7 +3,7 @@
 import RxSwift
 
 
-public extension CodableVersionOf {
+extension CodableVersionOf {
   
   /// Контекст произошедшей ошибки сериализации.
   ///

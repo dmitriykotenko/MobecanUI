@@ -33,9 +33,16 @@ extension Optional: AutoGeneratable where Wrapped: AutoGeneratable {
 
 public extension MobecanGenerator {
 
+  static func builtin<Wrapped>(
+    isNil: MobecanGenerator<IsNil> = IsNil.defaultGenerator,
+    wrapped: MobecanGenerator<Wrapped> = Wrapped.defaultGenerator
+  ) -> MobecanGenerator<Wrapped?> where Value == Wrapped?, Wrapped: AutoGeneratable {
+    Wrapped?.BuiltinGenerator(isNil: isNil, wrapped: wrapped)
+  }
+
   func with<Wrapped>(probabilityOfNil: Double) -> MobecanGenerator<Wrapped?> where Value == Wrapped? {
     .rxFunctional {
-      Double.random(in: 0...1) <= probabilityOfNil ?
+      Double.random(in: 0..<1) < probabilityOfNil ?
         .just(.success(nil)) :
         self.generate(factory: $0)
     }

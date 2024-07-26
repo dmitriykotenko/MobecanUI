@@ -40,7 +40,7 @@ public extension MobecanGenerator<IsError> {
 
   static func withProbability(_ probability: Double) -> MobecanGenerator<IsError> {
     .pure {
-      .init(Double.random(in: 0...1) <= probability)
+      .init(Double.random(in: 0..<1) < probability)
     }
   }
 }
