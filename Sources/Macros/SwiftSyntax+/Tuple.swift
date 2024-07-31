@@ -7,9 +7,9 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-struct Tuple: Equatable, Hashable, Codable {
+struct Tuple: Equatable, Hashable, Codable, Lensable {
 
-  struct Member: Equatable, Hashable, Codable {
+  struct Member: Equatable, Hashable, Codable, Lensable {
     
     var name: String?
     var type: String

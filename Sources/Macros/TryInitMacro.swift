@@ -43,9 +43,9 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
     guard let typeName = declaration.asNamedDeclaration?.name.text
     else { return [] }
 
-    var tryInits = declaration.initializers.compactMap {
-      tryInit(originalSignature: $0.signature, typeName: typeName)
-    }
+    var tryInits = declaration
+      .initializersIncludingMacroGenerated
+      .compactMap { tryInit(originalSignature: $0.signature, typeName: typeName) }
 
     if let someEnum = declaration.asEnum {
       tryInits += tryInitObject(for: someEnum).asSequence
@@ -76,7 +76,7 @@ extension TryInitMacro: MemberMacro, MobecanDeclaration {
 
     return tryInit(
       originalSignature: .init(
-        keywords: someEnum.visibilityModifiers + ["static", "func"],
+        keywords: someEnum.visibilityModifiers.map(\.rawValue) + ["static", "func"],
         name: enumCase.name,
         genericParameters: [],
         parameters: enumCase.parameters.enumerated().map {
@@ -171,6 +171,7 @@ private extension BetterFunctionParameter {
     case .named(let parameter, _):
       // Именованные параметры оборачиваем в Result<...>.
       return parameter
+        .withNonEnscapingTypeIsNecessary
         .with(typeModificator: { "Result<\($0), SomeError>" })
         .with(defaultValueModificator: { ".success(\($0))" })
     case .unnamed(let parameter, let index):

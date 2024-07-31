@@ -33,6 +33,7 @@ class MacrosTester: XCTestCase {
   private var availableMacros: [String: Macro.Type] {
     let mangledMarcoNames = [
       "URL": "15MobecanUIMacros8UrlMacroV",
+      "MemberwiseInit": "15MobecanUIMacros19MemberwiseInitMacroV",
       "TryInit": "15MobecanUIMacros12TryInitMacroV",
       "DerivesCodingKeysReflector": "15MobecanUIMacros24CodingKeysReflectorMacroV",
       "DerivesAutoGeneratable": "15MobecanUIMacros20AutoGeneratableMacroV"

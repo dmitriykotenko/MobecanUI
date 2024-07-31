@@ -7,9 +7,9 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-struct EnumCase: Equatable, Hashable, Codable {
+struct EnumCase: Equatable, Hashable, Codable, Lensable {
 
-  struct Parameter: Equatable, Hashable, Codable {
+  struct Parameter: Equatable, Hashable, Codable, Lensable {
 
     var name: String?
     var type: String

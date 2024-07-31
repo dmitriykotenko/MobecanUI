@@ -9,7 +9,7 @@ import SwiftSyntaxMacros
 extension GeneratorDeclaration {
 
   static func from(product: ProductType,
-                   visibilityModifiers: [String],
+                   visibilityModifiers: [VisibilityModifier],
                    className: String,
                    parentClassName: String,
                    genericArgumentsCondition: String? = nil) -> Self {
@@ -34,7 +34,7 @@ extension GeneratorDeclaration {
           .init(
             kind: "var",
             name: $0.initializationName == nil ? "_\($0.name)" : $0.name,
-            type: "MobecanGenerator<\($0.type)",
+            type: "MobecanGenerator<\($0.type)>",
             defaultValue: nil
           )
         }

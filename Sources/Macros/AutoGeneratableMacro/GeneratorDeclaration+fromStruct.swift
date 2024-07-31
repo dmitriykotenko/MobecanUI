@@ -38,9 +38,9 @@ extension GeneratorDeclaration {
 
 private extension Struct {
 
-  var visibilityModifiersForProtocolExtension: [String] {
-    visibilityModifiers.contains { $0 == "public" || $0 == "open" } ?
-    ["public"] :
-    []
+  var visibilityModifiersForProtocolExtension: [VisibilityModifier] {
+    visibilityModifiers.contains(where: \.isPublicOrOpen) ?
+      [.public] :
+      []
   }
 }

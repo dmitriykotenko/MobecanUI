@@ -24,10 +24,10 @@ extension AutoGeneratableMacro: MemberMacro {
 
     return
       declaration
-        .asStruct(inEnclosingContext: context)
+        .asStruct
         .flatMap { GeneratorDeclaration.from(someStruct: $0) }
       ?? declaration
-        .asEnum(inEnclosingContext: context)
+        .asEnum
         .flatMap { GeneratorDeclaration.from(someEnum: $0) }
   }
 }
@@ -44,7 +44,7 @@ extension AutoGeneratableMacro: ExtensionMacro {
     do { try ensureIsValid(declaration: declaration) }
     catch { return [] }
 
-    guard var nominalType = declaration.asNominalType(inEnclosingContext: context)
+    guard var nominalType = declaration.asNominalType
     else { return [] }
     
     // В экстеншене надо указывать полное имя структуры или енума.
@@ -66,11 +66,11 @@ extension AutoGeneratableMacro: ExtensionMacro {
   private static func declarationOfDefaultGenerator(for declaration: some DeclGroupSyntax,
                                                     in context: some MacroExpansionContext,
                                                     qualifiedTypeName: String) -> String {
-    let visibilityModifiers = declaration.visibilityModifiers(forEnclosingContext: context)
-    let isPublic = visibilityModifiers.contains { $0 == "public" || $0 == "open" }
-    let visibility = isPublic ? "public" : nil
+    let visibilityModifiers = declaration.visibilityModifiers
+    let isPublic = visibilityModifiers.contains(where: \.isPublicOrOpen)
+    let visibility: VisibilityModifier? = isPublic ? .public : nil
 
-    let keywords = [visibility, "static", "var"].filterNil().mkStringWithSpace()
+    let keywords = [visibility?.rawValue, "static", "var"].filterNil().mkStringWithSpace()
 
     switch declaration.asEnum {
     case let someEnum? where someEnum.isPrimitive:

@@ -7,7 +7,7 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-public struct MobecanDiagnosticMessage: DiagnosticMessage {
+public struct MobecanDiagnosticMessage: DiagnosticMessage, Lensable {
 
   public var message: String
   public var diagnosticID: MessageID

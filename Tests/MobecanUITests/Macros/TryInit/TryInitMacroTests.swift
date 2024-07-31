@@ -79,4 +79,50 @@ final class TryInitMacroTests: MacrosTester {
       """
     )
   }
+
+  func testStructWithClosuresAmongStoredProperties() {
+    checkThat(
+      code: """
+      @TryInit
+      struct Pair {
+
+        var first: ((String) -> String)?
+        var second: (Int) -> Int
+      }
+      """,
+      expandsTo: """
+      struct Pair {
+
+        var first: ((String) -> String)?
+        var second: (Int) -> Int
+
+        static func tryInit<
+          SomeError: ComposableError
+        >(
+          first: Result<((String) -> String)?, SomeError> = .success(nil),
+          second: Result<(Int) -> Int, SomeError>
+        ) -> Result<Pair, SomeError> {
+          var errors: [String: SomeError] = [:]
+          first.asError.map {
+            errors["first"] = $0
+          }
+          second.asError.map {
+            errors["second"] = $0
+          }
+          if let nonEmptyErrors = NonEmpty(rawValue: errors) {
+            return .failure(.composed(from: nonEmptyErrors))
+          }
+          // swiftlint:disable force_try
+          return .success(
+            .init(
+              first: try! first.get(),
+              second: try! second.get()
+            )
+          )
+          // swiftlint:enable force_try
+        }
+      }
+      """
+    )
+  }
 }

@@ -8,9 +8,9 @@ import SwiftSyntaxMacros
 
 
 /// Абстрактный тип данных, объединяющий структуры, классы и именованные тьюплы.
-struct ProductType: Equatable, Hashable, Codable {
+struct ProductType: Equatable, Hashable, Codable, Lensable {
 
-  struct Member: Equatable, Hashable, Codable {
+  struct Member: Equatable, Hashable, Codable, Lensable {
 
     var initializationName: String?
     var name: String

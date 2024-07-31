@@ -51,6 +51,22 @@ class MacroExpansionCompileErrorsCatcher {
     }
   }
 
+  @MemberwiseInit
+  @TryInit
+  public struct Triple {
+    var first: String?
+    var second: Bool
+    var third: (Int) -> Bool  = { $0 % 2 == 0 }
+
+    init(abc: Double) {
+      self.init(
+        first: nil, 
+        second: false,
+        third: { _ in false }
+      )
+    }
+  }
+
   @DerivesAutoGeneratable
   @DerivesCodingKeysReflector
   struct GeneratableStruct {

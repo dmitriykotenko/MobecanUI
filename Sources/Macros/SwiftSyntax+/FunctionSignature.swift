@@ -7,7 +7,7 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-struct FunctionSignature {
+struct FunctionSignature: Lensable {
 
   var keywords: [String] = ["func"]
   var name: String

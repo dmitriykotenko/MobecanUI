@@ -7,9 +7,9 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-struct Struct: Equatable, Hashable, Codable {
+struct Struct: Equatable, Hashable, Codable, Lensable {
 
-  var visibilityModifiers: [String]
+  var visibilityModifiers: [VisibilityModifier]
   var name: String
   var genericArguments: [String]
   var storedProperties: [StoredProperty]
@@ -18,31 +18,8 @@ struct Struct: Equatable, Hashable, Codable {
     visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
   }
 
-  var implicitInitializer: Function {
-    let parameters = parametersOfImplicitInitializer
-
-    return .init(
-      signature: .init(
-        keywords: [],
-        name: "init",
-        parameters: parameters
-      ),
-      body: """
-      \(parameters
-        .compactMap(\.innerName)
-        .map { "self.\($0) = \($0)" }
-        .mkStringWithNewLine()
-      )
-      """
-    )
-  }
-
-  var parametersOfImplicitInitializer: [FunctionParameter] {
-    storedProperties.filter(\.canBeInitialized).map {
-      $0.asFunctionParameter(
-        defaultValue: $0.type.hasSuffix("?") ? "nil" : $0.defaultValue
-      )
-    }
+  var inferredMemberwiseInitializer: Function {
+    .memberwiseInit(storedProperties: storedProperties)
   }
 
   var asNominalType: NominalType {

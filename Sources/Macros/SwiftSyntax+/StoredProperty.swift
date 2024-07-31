@@ -7,7 +7,7 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-struct StoredProperty: Equatable, Hashable, Codable {
+struct StoredProperty: Equatable, Hashable, Codable, Lensable {
 
   var kind: String?
   var name: String
@@ -47,6 +47,14 @@ struct StoredProperty: Equatable, Hashable, Codable {
   var varDeclaration: String { declaration(prefix: "var") }
   var lazyVarDeclaration: String { declaration(prefix: "lazy var") }
 
+  var isOptionalProperty: Bool {
+    TypeSyntax("\(raw: type)").is(OptionalTypeSyntax.self)
+  }
+
+  var implicitDefaultValue: String? {
+    isOptionalProperty ? "nil" : nil
+  }
+
   func declaration(prefix: String) -> String {
     "\(prefix) \(name): \(type)"
   }
@@ -74,9 +82,11 @@ struct StoredProperty: Equatable, Hashable, Codable {
     return result
   }
 
+  func modifyingType(_ modification: (String) -> String) -> Self {
+    self[\.type, { modification($0) }]
+  }
+
   func with(typeContainer: String) -> Self {
-    var result = self
-    result.type = typeContainer + "<" + type  + ">"
-    return result
+    self[\.type, typeContainer + "<" + type  + ">"]
   }
 }

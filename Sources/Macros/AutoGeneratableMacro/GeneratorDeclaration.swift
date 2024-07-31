@@ -8,7 +8,7 @@ import SwiftSyntaxMacros
 
 struct GeneratorDeclaration: MobecanDeclaration {
 
-  var visibilityModifiers: [String]
+  var visibilityModifiers: [VisibilityModifier]
   var className: String
   var inheritedClassName: String
   var valueType: String
@@ -98,7 +98,7 @@ struct GeneratorDeclaration: MobecanDeclaration {
     bodyOfGenerateMethod.map {
       Self.function(
         signature: .init(
-          keywords: ["override"] + visibilityModifiers + ["func"],
+          keywords: ["override"] + visibilityModifiers.map(\.rawValue) + ["func"],
           name: "generate",
           parameters: [.init(name: "factory", type: "GeneratorsFactory")],
           returns: "-> Single<GeneratorResult<\(valueType)>>"
@@ -121,7 +121,7 @@ struct GeneratorDeclaration: MobecanDeclaration {
   func withStaticBuiltin(from nestedGenerator: GeneratorDeclaration) -> Self {
     appendingBody(
       with: Self.function(
-        keywords: visibilityModifiers + ["static", "func"],
+        keywords: visibilityModifiers.map(\.rawValue) + ["static", "func"],
         name: "builtin",
         parameters: nestedGenerator.initializerParameters ?? [],
         returns: "-> " + className,

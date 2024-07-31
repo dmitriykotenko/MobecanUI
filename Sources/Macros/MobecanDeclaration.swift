@@ -13,7 +13,7 @@ protocol MobecanDeclaration {}
 extension MobecanDeclaration {
 
   static func declarationOf(storedProperties: [StoredProperty],
-                            visibilityModifiers: [String]) -> String {
+                            visibilityModifiers: [VisibilityModifier]) -> String {
     let visibilityPrefix =
       visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
 
@@ -26,7 +26,7 @@ extension MobecanDeclaration {
 
 extension MobecanDeclaration {
 
-  static func memberwiseInitializer(visibilityModifiers: [String],
+  static func memberwiseInitializer(visibilityModifiers: [VisibilityModifier],
                                     storedProperties: [StoredProperty],
                                     isCompact: Bool = true) -> String {
     initializer(
@@ -37,7 +37,7 @@ extension MobecanDeclaration {
     )
   }
 
-  static func memberwiseInitializer(visibilityModifiers: [String],
+  static func memberwiseInitializer(visibilityModifiers: [VisibilityModifier],
                                     parameters: [FunctionParameter],
                                     isCompact: Bool = true) -> String {
     initializer(
@@ -57,7 +57,7 @@ extension MobecanDeclaration {
     ) + .newLine + .newLine + "super.init()"
   }
 
-  static func memberwiseInitializer(visibilityModifiers: [String],
+  static func memberwiseInitializer(visibilityModifiers: [VisibilityModifier],
                                     parameters: [FunctionParameter],
                                     customName: String,
                                     selfType: String,
@@ -77,16 +77,16 @@ extension MobecanDeclaration {
       )
       )
       """
-      .compactifiedIfShort
+        .compactifiedIfShort
     )
   }
 
-  static func initializer(visibilityModifiers: [String],
+  static func initializer(visibilityModifiers: [VisibilityModifier],
                           parameters: [FunctionParameter],
                           isCompact: Bool,
                           body: String) -> String {
     function(
-      keywords: visibilityModifiers,
+      keywords: visibilityModifiers.map(\.rawValue),
       name: "init",
       parameters: parameters,
       isCompact: isCompact,
@@ -94,14 +94,14 @@ extension MobecanDeclaration {
     )
   }
 
-  static func initializer(visibilityModifiers: [String],
+  static func initializer(visibilityModifiers: [VisibilityModifier],
                           parameters: [FunctionParameter],
                           customName: String,
                           selfType: String,
                           isCompact: Bool,
                           body: String) -> String {
     function(
-      keywords: visibilityModifiers + ["static", "func"],
+      keywords: visibilityModifiers.map(\.rawValue) + ["static", "func"],
       name: customName,
       parameters: parameters,
       returns: "-> \(selfType)",
@@ -136,7 +136,15 @@ extension MobecanDeclaration {
   static func function(signature: FunctionSignature,
                        body: String) -> String {
     function(
-      signature: signature.build(isCompact: true, lineLengthThreshold: 100), 
+      signature: signature.build(isCompact: true, lineLengthThreshold: 100),
+      body: body
+    )
+  }
+
+  static func nonCompactFunction(signature: FunctionSignature,
+                                 body: String) -> String {
+    function(
+      signature: signature.build(isCompact: false, lineLengthThreshold: 100),
       body: body
     )
   }
@@ -144,9 +152,19 @@ extension MobecanDeclaration {
   static func function(signature: String,
                        body: String) -> String {
     """
-    \(signature) {
-    \("  ".prependingToLines(of: body))
-    }
+    \(signature) \(multilineCodeBlock(content: body))
     """
+  }
+
+  static func multilineCodeBlock(content: String) -> String {
+    if content.isEmpty {
+      "{}"
+    } else {
+      """
+      {
+      \("  ".prependingToLines(of: content))
+      }
+      """
+    }
   }
 }

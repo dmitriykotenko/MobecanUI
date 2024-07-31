@@ -9,8 +9,10 @@ import SwiftSyntaxMacros
 
 extension InitializerDeclSyntax {
 
-  var visibilityModifiers: [String] {
-    modifiers.filter(\.isVisibilityModifier).map(\.name.text)
+  var visibilityModifiers: [VisibilityModifier] {
+    modifiers
+      .filter(\.isVisibilityModifier)
+      .compactMap { .init(rawValue: $0.name.text) }
   }
 
   var asFunctionName: String {
@@ -45,7 +47,7 @@ extension InitializerDeclSyntax {
 
   var asFunctionSignature: FunctionSignature {
     .init(
-      keywords: visibilityModifiers,
+      keywords: visibilityModifiers.map(\.rawValue),
       name: asFunctionName,
       genericParameters: genericParameters,
       parameters: signature.parameterClause.parameters.map(\.asFunctionParameter),

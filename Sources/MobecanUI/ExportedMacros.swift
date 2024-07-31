@@ -11,6 +11,17 @@ public macro URL(_ string: String) -> URL = #externalMacro(
 )
 
 
+/// Добавляет дефолтный конструктор,
+/// заполняющий все поля класса или структуры и имеющий такую же видимость,
+/// как и сам класс или сама структура.
+@attached(member, names: named(init))
+@available(swift 5.9)
+public macro MemberwiseInit() = #externalMacro(
+  module: "MobecanUIMacros",
+  type: "MemberwiseInitMacro"
+)
+
+
 /// Добавляет tryInit-версии для большинства конструкторов класса, структуры или енума.
 ///
 /// tryInit-версия принимает параметры в форме Result<...>,

@@ -15,7 +15,7 @@ public extension MobecanGenerator {
   }
 
   static func oneOf(_ firstVariant: Value,
-                           _ otherVariants: Value...) -> MobecanGenerator<Value> {
+                    _ otherVariants: Value...) -> MobecanGenerator<Value> {
     .functional { _ in
       ([firstVariant] + otherVariants).randomElement()!
     }

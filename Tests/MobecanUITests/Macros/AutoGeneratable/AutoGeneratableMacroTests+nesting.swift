@@ -81,14 +81,14 @@ extension AutoGeneratableMacroTests {
   func testNestedStruct3() {
     checkThat(
       code: """
-      public extension A {
-        @DerivesAutoGeneratable struct B {
+      extension A {
+        @DerivesAutoGeneratable public struct B {
         }
       }
       """,
       expandsTo: """
-      public extension A {
-        struct B {
+      extension A {
+        public struct B {
 
           public class BuiltinGenerator: MobecanGenerator<B> {
 
@@ -149,8 +149,8 @@ extension AutoGeneratableMacroTests {
       code: """
       public struct A {}
 
-      public extension A {
-        @DerivesAutoGeneratable enum B {
+      extension A {
+        @DerivesAutoGeneratable public enum B {
           case instance(string: String, int: Int)
         }
       }
@@ -158,8 +158,8 @@ extension AutoGeneratableMacroTests {
       expandsTo: """
       public struct A {}
 
-      public extension A {
-        enum B {
+      extension A {
+        public enum B {
           case instance(string: String, int: Int)
 
           public class BuiltinGenerator: MobecanGenerator<B> {

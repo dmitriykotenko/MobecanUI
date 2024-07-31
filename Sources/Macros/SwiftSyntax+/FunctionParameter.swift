@@ -7,7 +7,7 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 
-struct FunctionParameter: Equatable, Hashable, Codable {
+struct FunctionParameter: Equatable, Hashable, Codable, Lensable {
 
   var outerName: String?
   var innerName: String?
@@ -93,6 +93,26 @@ struct FunctionParameter: Equatable, Hashable, Codable {
     var result = self
     result.type = typeModificator(type)
     return result
+  }
+
+  var withEscapingTypeIsNecessary: Self {
+    with(
+      typeModificator: {
+        TypeSyntax("\(raw: $0)").is(FunctionTypeSyntax.self) ?
+          "@escaping \($0)" :
+          $0
+      }
+    )
+  }
+
+  var withNonEnscapingTypeIsNecessary: Self {
+    with(
+      typeModificator: {
+        $0.starts(with: "@escaping ") ?
+          $0.replacingOccurrences(of: "@escaping ", with: "") :
+          $0
+      }
+    )
   }
 
   func with(defaultValueModificator: (String) -> String) -> Self {
