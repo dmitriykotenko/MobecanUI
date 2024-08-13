@@ -14,7 +14,7 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/ios12"),
+    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/ios12v2"),
     .package(url: "https://github.com/pointfreeco/swift-nonempty", .upToNextMajor(from: "0.4.0")),
     .package(url: "https://github.com/ReactiveX/RxSwift", from: .init(6, 2, 0)),
     .package(url: "https://github.com/RxSwiftCommunity/RxOptional", from: .init(5, 0, 4)),
