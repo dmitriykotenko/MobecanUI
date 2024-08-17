@@ -162,6 +162,12 @@ public extension DiverseButton {
   }
 
   @discardableResult
+  func nativeSizePolicy(_ nativeSizePolicy: NativeSizePolicy) -> Self {
+    self.nativeSizePolicy = nativeSizePolicy
+    return self
+  }
+
+  @discardableResult
   func titleTransformer(_ titleTransformer: @escaping (String?) -> String?) -> Self {
     self.titleTransformer = titleTransformer
     return self

@@ -6,7 +6,7 @@ import RxTest
 @testable import MobecanUI
 
 
-class DiverseButtonTests: XCTestCase {
+class DiverseButtonTitleTransformerTests: XCTestCase {
 
   func testTitleTransformer() {
     let button = DiverseButton()

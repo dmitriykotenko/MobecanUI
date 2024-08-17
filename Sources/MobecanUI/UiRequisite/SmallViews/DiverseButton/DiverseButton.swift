@@ -4,7 +4,29 @@ import UIKit
 
 
 open class DiverseButton: UIButton, SizableView {
-  
+
+  /// Как вычислять желаемый размер для ``DiverseButton``:
+  /// или использовать `super.sizeThatFits(_:)`,
+  /// или вычислять размер на основе ``titleLabel``, игнорируя картинку.
+  ///
+  /// Вариант, основанный на ``titleLabel``,
+  /// предназначен для кнопок с многострочными заголовками,
+  /// потому что для них `super.sizeThatFits(_:)` работает неправильно.
+  public enum NativeSizePolicy {
+
+    /// Вычислять `sizeThatFits`, вызвав `super.sizeThatFits(_:)`.
+    case superSizeThatFits
+
+    /// Вычислять `sizeThatFits` на основе `titleLabel.sizeThatFits(_:)`.
+    ///
+    /// Вариант предназначен для кнопок с многострочными заголовками,
+    /// потому что для них `UIButton.sizeThatFits(_:)` работает неправильно.
+    ///
+    /// - Warning: Этот вариант правильно работает только для кнопок без картинок
+    /// (то есть для тех, у которых `UIButton.image(for: ...)` всегда возвращает `nil`).
+    case titleLabelBased
+  }
+
   /// If non-zero, extends tap area outside button's frame (usually used for small buttons).
   open var tapInsets: UIEdgeInsets = .zero
   
@@ -29,6 +51,15 @@ open class DiverseButton: UIButton, SizableView {
   override open var isSelected: Bool { didSet { updateColorsAndAlpha() } }
 
   open var titleTransformer: (String?) -> (String?) = { $0 }
+
+  /// Как вычислять желаемый размер для ``DiverseButton``:
+  /// или использовать `super.sizeThatFits(_:)`,
+  /// или вычислять размер на основе ``titleLabel``, игнорируя картинку.
+  ///
+  /// Вариант, основанный на ``titleLabel``,
+  /// предназначен для кнопок с многострочными заголовками,
+  /// потому что для них `super.sizeThatFits(_:)` работает неправильно.
+  open var nativeSizePolicy: NativeSizePolicy = .superSizeThatFits
 
   open var sizer = ViewSizer()
 
@@ -88,7 +119,22 @@ open class DiverseButton: UIButton, SizableView {
   override open func sizeThatFits(_ size: CGSize) -> CGSize {
     sizer.sizeThatFits(
       size,
-      nativeSizing: super.sizeThatFits
+      nativeSizing: nativeSizeThatFits
     )
+  }
+
+  private func nativeSizeThatFits(_ size: CGSize) -> CGSize {
+    switch nativeSizePolicy {
+    case .superSizeThatFits: 
+      super.sizeThatFits(size)
+    case .titleLabelBased:
+      if let titleLabel {
+        titleLabel
+          .sizeThatFits(size.insetBy(contentEdgeInsets))
+          .insetBy(contentEdgeInsets.negated)
+      } else {
+        super.sizeThatFits(size)
+      }
+    }
   }
 }
