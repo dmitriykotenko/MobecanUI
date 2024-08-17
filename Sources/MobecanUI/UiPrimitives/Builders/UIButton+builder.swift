@@ -31,6 +31,12 @@ public extension UIButton {
   }
   
   @discardableResult
+  func contentVerticalAlignment(_ alignment: UIControl.ContentVerticalAlignment) -> Self {
+    self.contentVerticalAlignment = alignment
+    return self
+  }
+
+  @discardableResult
   func title(_ title: String) -> Self {
     setTitle(title, for: UIControl.State.normal)
     
