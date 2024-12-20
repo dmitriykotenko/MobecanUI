@@ -32,16 +32,17 @@ public extension UIView {
                      insets: UIEdgeInsets = .zero) -> UIView {
     
     let labelHeight = alignment.height(font: label.font)
-    let bulletHeight = bulletView.frame.height
 
-    let bulletBottomOffset = (labelHeight - bulletHeight) / 2
+    let bulletHeight = bulletView.sizeThatFits(CGSize.greatestFinite).height
+
+    let bulletTopOffset = (labelHeight - bulletHeight) / 2
 
     return .hstack(
-      alignment: .firstBaseline,
+      alignment: .top,
       distribution: distribution,
       spacing: spacing,
       [
-        bulletView.withInsets(.bottom(bulletBottomOffset)),
+        bulletView.withInsets(.top(bulletTopOffset)),
         label
       ],
       insets: insets

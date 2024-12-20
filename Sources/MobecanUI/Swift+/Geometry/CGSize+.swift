@@ -27,6 +27,11 @@ public extension CGSize {
     )
   }
 
+  static let greatestFinite = CGSize(
+    width: CGFloat.greatestFiniteMagnitude,
+    height: CGFloat.greatestFiniteMagnitude
+  )
+
   static func square(size: CGFloat) -> CGSize {
     .init(width: size, height: size)
   }
