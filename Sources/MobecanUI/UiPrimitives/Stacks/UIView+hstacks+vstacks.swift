@@ -22,26 +22,26 @@ public extension UIView {
     )
   }
   
-  /// Returns horizontal stack
-  /// with icon's vertical center visually aligned with vertical center of label's first line.
+  /// Горизонтальный стэк,
+  /// у которого `bulletView` вертикально выравнен по первой строке текста лэйбла.
   static func hstack(distribution: UIStackView.Distribution? = nil,
-                     alignment: IconTextAlignment = .xHeight,
+                     alignment: BulletToTextAlignment = .xHeight,
                      spacing: CGFloat? = nil,
-                     icon: UIImageView,
+                     bulletView: UIView,
                      label: UILabel,
                      insets: UIEdgeInsets = .zero) -> UIView {
     
     let labelHeight = alignment.height(font: label.font)
-    let iconHeight = icon.frame.height
-    
-    let iconBottomOffset = (labelHeight - iconHeight) / 2
-    
+    let bulletHeight = bulletView.frame.height
+
+    let bulletBottomOffset = (labelHeight - bulletHeight) / 2
+
     return .hstack(
       alignment: .firstBaseline,
       distribution: distribution,
       spacing: spacing,
       [
-        icon.withInsets(.bottom(iconBottomOffset)),
+        bulletView.withInsets(.bottom(bulletBottomOffset)),
         label
       ],
       insets: insets

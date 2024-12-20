@@ -3,7 +3,7 @@
 import UIKit
 
 
-public enum IconTextAlignment: String, Equatable, Hashable, Codable {
+public enum BulletToTextAlignment: String, Equatable, Hashable, Codable {
   
   case xHeight
   case capHeight

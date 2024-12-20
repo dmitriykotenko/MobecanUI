@@ -1,33 +1,33 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
-
+import LayoutKit
 import RxCocoa
 import RxSwift
 import UIKit
 
 
-public class BulletedPanel: UIView {
-  
+public class BulletedPanel: LayoutableView {
+
   @RxUiInput(false) public var hidesWhenEmpty: AnyObserver<Bool>
   @RxUiInput(nil) public var text: AnyObserver<String?>
   
-  private let icon: UIImageView
+  private let bulletView: UIView
   private let label: UILabel
   
   private let disposeBag = DisposeBag()
 
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
-  public init(icon: UIImageView,
+  public init(bulletView: UIView,
               label: UILabel,
-              alignment: IconTextAlignment = .xHeight,
+              alignment: BulletToTextAlignment = .xHeight,
               spacing: CGFloat,
               insets: UIEdgeInsets,
               hidesWhenEmpty: Bool = false) {
-    self.icon = icon
+    self.bulletView = bulletView
     self.label = label
     
-    super.init(frame: .zero)
+    super.init()
     
     addSubviews(alignment: alignment, spacing: spacing, insets: insets)
     
@@ -36,17 +36,17 @@ public class BulletedPanel: UIView {
     self.hidesWhenEmpty.onNext(hidesWhenEmpty)
   }
   
-  private func addSubviews(alignment: IconTextAlignment,
+  private func addSubviews(alignment: BulletToTextAlignment,
                            spacing: CGFloat,
                            insets: UIEdgeInsets) {
-    putSubview(
-      UIView.hstack(
+    layout = BoilerplateLayout(
+      .hstack(
         alignment: alignment,
         spacing: spacing,
-        icon: icon,
+        bulletView: bulletView,
         label: label,
         insets: insets
-      )      
+      )
     )
   }
   
