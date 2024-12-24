@@ -25,17 +25,14 @@ public extension UIView {
   /// Горизонтальный стэк,
   /// у которого `bulletView` вертикально выравнен по первой строке текста лэйбла.
   static func hstack(distribution: UIStackView.Distribution? = nil,
-                     alignment: BulletToTextAlignment = .xHeight,
+                     alignment: TextToBulletAlignment = .xHeight,
                      spacing: CGFloat? = nil,
                      bulletView: UIView,
                      label: UILabel,
                      insets: UIEdgeInsets = .zero) -> UIView {
-    
-    let labelHeight = alignment.height(font: label.font)
-
+    let bulletCenterY = alignment.bulletCenterY(font: label.font)
     let bulletHeight = bulletView.sizeThatFits(CGSize.greatestFinite).height
-
-    let bulletTopOffset = (labelHeight - bulletHeight) / 2
+    let bulletTopOffset = bulletCenterY - 0.5 * bulletHeight
 
     return .hstack(
       alignment: .top,

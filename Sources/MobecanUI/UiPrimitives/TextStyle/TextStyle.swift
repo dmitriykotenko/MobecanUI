@@ -3,6 +3,7 @@
 import UIKit
 
 
+@MemberwiseInit
 public struct TextStyle: Lensable {
   
   public var fontStyle: FontStyle?
@@ -16,15 +17,7 @@ public struct TextStyle: Lensable {
   public static var monospacedDigits = TextStyle(
     fontStyle: .init(features: [FontStyle.monospacedDigits])
   )
-  
-  public init(fontStyle: FontStyle? = nil,
-              alignment: NSTextAlignment? = nil,
-              color: UIColor? = nil) {
-    self.fontStyle = fontStyle
-    self.alignment = alignment
-    self.color = color
-  }
-  
+
   public func with(fontStyle: FontStyle? = nil,
                    alignment: NSTextAlignment? = nil,
                    color: UIColor? = nil) -> TextStyle {

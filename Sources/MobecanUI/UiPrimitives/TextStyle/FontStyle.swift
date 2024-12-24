@@ -7,6 +7,7 @@ public typealias FontFeature = [UIFontDescriptor.FeatureKey: Int]
 public typealias FontTraits = UIFontDescriptor.SymbolicTraits
 
 
+@MemberwiseInit
 public struct FontStyle: Lensable {
   
   public var familyName: String?
@@ -14,19 +15,7 @@ public struct FontStyle: Lensable {
   public var weight: UIFont.Weight?
   public var traits: FontTraits?
   public var features: [FontFeature]?
-  
-  public init(familyName: String? = nil,
-              size: CGFloat? = nil,
-              weight: UIFont.Weight? = nil,
-              traits: FontTraits? = nil,
-              features: [FontFeature]? = nil) {
-    self.familyName = familyName
-    self.size = size
-    self.weight = weight
-    self.traits = traits
-    self.features = features
-  }
-  
+
   public func with(familyName: String? = nil,
                    size: CGFloat? = nil,
                    weight: UIFont.Weight? = nil,

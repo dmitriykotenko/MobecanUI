@@ -27,7 +27,7 @@ public extension UIView {
   /// Горизонтальный стэк,
   /// у которого `bulletView` вертикально выравнен по первой строке текста лэйбла.
   static func autolayoutHstack(distribution: UIStackView.Distribution? = nil,
-                               alignment: BulletToTextAlignment = .xHeight,
+                               alignment: TextToBulletAlignment = .xHeight,
                                spacing: CGFloat? = nil,
                                bulletView: UIView,
                                label: UILabel,

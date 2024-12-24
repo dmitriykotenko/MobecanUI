@@ -20,7 +20,7 @@ public class BulletedPanel: LayoutableView {
 
   public init(bulletView: UIView,
               label: UILabel,
-              alignment: BulletToTextAlignment = .xHeight,
+              alignment: TextToBulletAlignment = .xHeight,
               spacing: CGFloat,
               insets: UIEdgeInsets,
               hidesWhenEmpty: Bool = false) {
@@ -36,7 +36,7 @@ public class BulletedPanel: LayoutableView {
     self.hidesWhenEmpty.onNext(hidesWhenEmpty)
   }
   
-  private func addSubviews(alignment: BulletToTextAlignment,
+  private func addSubviews(alignment: TextToBulletAlignment,
                            spacing: CGFloat,
                            insets: UIEdgeInsets) {
     layout = BoilerplateLayout(
