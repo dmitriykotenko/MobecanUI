@@ -14,7 +14,7 @@ class TableViewStickerListener<Header, Event> {
   
   func listen(sticker: UITableViewHeaderFooterView,
               events: Observable<Event>) {
-    // Avoid multiple subscriptions to same cell
+    // На каждый стикер подписываемся только один раз.
     guard !listenedStickers.contains(sticker) else { return }
     
     listenedStickers.insert(sticker)

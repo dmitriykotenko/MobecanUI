@@ -1,60 +1,64 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 
-public struct TableViewSection<Header, Element> {
-  
-  public let header: Header
-  public let elements: [Element]
-  
-  public init(header: Header,
-              elements: [Element]) {
-    self.header = header
-    self.elements = elements
-  }
-  
-  public var withoutElements: TableViewSection<Header, Element> {
-    TableViewSection(header: header, elements: [])
+@MemberwiseInit
+public struct TableViewSection<Header, Element, Footer>: Lensable {
+
+  public var header: Header
+  public var elements: [Element]
+  public var footer: Footer
+
+  public var withoutElements: TableViewSection<Header, Element, Footer> {
+    .init(
+      header: header,
+      elements: [],
+      footer: footer
+    )
   }
   
   public func filterElements(_ predicate: (Element) -> Bool) -> Self {
-    TableViewSection(
+    .init(
       header: header,
-      elements: elements.filter(predicate)
+      elements: elements.filter(predicate),
+      footer: footer
     )
   }
 
   public func mapElements<OtherElement>(_ transform: (Element) -> OtherElement)
-    -> TableViewSection<Header, OtherElement> {
-      
-      TableViewSection<Header, OtherElement>(
-        header: header,
-        elements: elements.map(transform)
-      )
+  -> TableViewSection<Header, OtherElement, Footer> {
+    .init(
+      header: header,
+      elements: elements.map(transform),
+      footer: footer
+    )
   }
   
   public func compactMapElements<OtherElement>(_ transform: (Element) -> OtherElement?)
-    -> TableViewSection<Header, OtherElement> {
-      
-      TableViewSection<Header, OtherElement>(
-        header: header,
-        elements: elements.compactMap(transform)
-      )
+  -> TableViewSection<Header, OtherElement, Footer> {
+    .init(
+      header: header,
+      elements: elements.compactMap(transform),
+      footer: footer
+    )
   }
 }
 
 
-extension TableViewSection: Equatable where Header: Equatable, Element: Equatable {
-  
-  public static func == (this: TableViewSection<Header, Element>,
-                         that: TableViewSection<Header, Element>) -> Bool {
-    this.header == that.header && this.elements == that.elements
+extension TableViewSection: Equatable where Header: Equatable, Element: Equatable, Footer: Equatable {
+
+  public static func == (this: TableViewSection<Header, Element, Footer>,
+                         that: TableViewSection<Header, Element, Footer>) -> Bool {
+    this.header == that.header
+    && this.elements == that.elements
+    && this.footer == that.footer
   }
 }
 
 
-extension TableViewSection: Hashable where Header: Hashable, Element: Equatable {
+extension TableViewSection: Hashable where Header: Hashable, Element: Equatable, Footer: Hashable {
 
   public func hash(into hasher: inout Hasher) {
     hasher.combine(header)
+    hasher.combine(footer)
   }
 }

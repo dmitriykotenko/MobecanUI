@@ -5,14 +5,25 @@ import RxSwift
 import UIKit
 
 
-open class TableViewDriver<Header, Element, StickerEvent, CellEvent, Sticker>: NSObject,
+open class TableViewDriver<
+  Element,
+  CellEvent,
+  Header,
+  TopStickerEvent,
+  TopSticker,
+  Footer,
+  BottomStickerEvent,
+  BottomSticker
+>: NSObject,
   UITableViewDataSource, UITableViewDelegate
 where
-  Sticker: UITableViewHeaderFooterView & HeightAwareView,
-  Sticker.Value == Header {
+  TopSticker: UITableViewHeaderFooterView & HeightAwareView,
+  TopSticker.Value == Header,
+  BottomSticker: UITableViewHeaderFooterView & HeightAwareView,
+  BottomSticker.Value == Footer {
 
-  public typealias Section = TableViewSection<Header, Element>
-  
+  public typealias Section = TableViewSection<Header, Element, Footer>
+
   public typealias CellAndEvents =
     (UITableView, Element, RowRelativePosition) -> (UITableViewCell, Observable<CellEvent>)
 
@@ -21,21 +32,25 @@ where
   @RxUiInput(nil) public var focusedIndexPath: AnyObserver<IndexPath?>
 
   public var cellEvents: Observable<CellEvent> { cellListener.events }
-  public var stickerEvents: Observable<StickerEvent> { stickerListener.events }
+  public var topStickerEvents: Observable<TopStickerEvent> { topStickerListener.events }
+  public var bottomStickerEvents: Observable<BottomStickerEvent> { bottomStickerListener.events }
 
-  /// Bottom-right counterpart of UIScrollView.contentOffset property.
-  ///
-  /// Horizontal and vertical distance
-  /// between table view's visible area bottom-right corner and table view content's bottom-right corner.
+  /// Противоположность свойства UIScrollView.contentOffset:
+  /// горизонтальное и вертикальное расстояние
+  /// от правого нижнего угла видимой части тэйбл-вьюшного контента
+  /// до правого нижнего угла всего контента.
   public var oppositeContentOffset: Observable<CGPoint> { oppositeContentOffsetTracker.value }
 
   private let tableView: UITableView
   
-  private let stickerTuner: TableViewStickerTuner<Header, Sticker, StickerEvent>
-  private let stickerListener: TableViewStickerListener<Header, StickerEvent>
+  private let topStickerTuner: TableViewTopStickerTuner<Header, TopSticker, TopStickerEvent>
+  private let topStickerListener: TableViewStickerListener<Header, TopStickerEvent>
+
+  private let bottomStickerTuner: TableViewBottomStickerTuner<Footer, BottomSticker, BottomStickerEvent>
+  private let bottomStickerListener: TableViewStickerListener<Footer, BottomStickerEvent>
+
   private let cellTuner: TableViewCellTuner<Element, CellEvent>
   private let cellListener: TableViewCellListener<Element, CellEvent>
-  private let spacing: CGFloat?
 
   private let shaker: TableViewShaker
 
@@ -49,14 +64,14 @@ where
   private let disposeBag = DisposeBag()
 
   public init(tableView: UITableView,
-              displayHeader: ((Header, Sticker, SectionRelativePosition) -> Void)? = nil,
-              stickerEvents: ((Sticker) -> Observable<StickerEvent>)? = nil,
-              spacing: CGFloat,
+              displayHeader: ((Header, TopSticker, SectionRelativePosition) -> Void)? = nil,
+              topStickerEvents: ((TopSticker) -> Observable<TopStickerEvent>)? = nil,
+              displayFooter: ((Footer, BottomSticker, SectionRelativePosition) -> Void)? = nil,
+              bottomStickerEvents: ((BottomSticker) -> Observable<BottomStickerEvent>)? = nil,
               registerCells: @escaping (UITableView) -> Void,
               cellAndEvents: @escaping CellAndEvents,
               automaticReloading: Bool = true) {
     self.tableView = tableView
-    self.spacing = spacing
 
     self.cellTuner = TableViewCellTuner(
       tableView: tableView,
@@ -66,14 +81,22 @@ where
     
     self.cellListener = TableViewCellListener()
 
-    self.stickerTuner = TableViewStickerTuner(
+    self.topStickerTuner = TableViewTopStickerTuner(
       tableView: tableView,
       displayHeader: displayHeader,
-      stickerEvents: stickerEvents
+      stickerEvents: topStickerEvents
     )
     
-    self.stickerListener = TableViewStickerListener()
-    
+    self.topStickerListener = TableViewStickerListener()
+
+    self.bottomStickerTuner = TableViewBottomStickerTuner(
+      tableView: tableView,
+      displayFooter: displayFooter,
+      stickerEvents: bottomStickerEvents
+    )
+
+    self.bottomStickerListener = TableViewStickerListener()
+
     self.shaker = TableViewShaker(tableView)
     
     super.init()
@@ -110,12 +133,12 @@ where
         .withLatestFrom(_focusedIndexPath) { (keyboardHeight: $0, focusedIndexPath: $1) }
         ==> { [weak self] (keyboardHeight, focusedIndexPath) in
           self.map {
-            // 1. Fix table view's bottom content inset.
+            // 1. Исправляем у тэйбл-вью нижний contentInset.
             var newContentInset = $0.tableView.contentInset
             newContentInset.bottom = keyboardHeight + 35
             $0.tableView.contentInset = newContentInset
 
-            // 2. Keep focused element visible.
+            // 2. Скроллим, чтобы клавиатура не закрывала элемент, на котором сейчас фокус.
             $0.keepFocusedIndexPathVisible(focusedIndexPath: focusedIndexPath)
           }
         }
@@ -142,15 +165,15 @@ where
   
   public func tableView(_ tableView: UITableView,
                         viewForHeaderInSection sectionIndex: Int) -> UIView? {
-    let sticker = stickerTuner.sticker(
+    let sticker = topStickerTuner.sticker(
       header: section(sectionIndex).header,
       relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
     )
     
     sticker.map {
-      let events = stickerTuner.events(sticker: $0) ?? .never()
+      let events = topStickerTuner.events(sticker: $0) ?? .never()
       
-      stickerListener.listen(sticker: $0, events: events)
+      topStickerListener.listen(sticker: $0, events: events)
     }
     
     return sticker
@@ -158,26 +181,36 @@ where
   
   public func tableView(_ tableView: UITableView,
                         heightForHeaderInSection sectionIndex: Int) -> CGFloat {
-    stickerTuner.heightForHeader(
+    topStickerTuner.heightForHeader(
       section(sectionIndex).header,
       relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
     )
   }
-  
+
   public func tableView(_ tableView: UITableView,
-                        viewForFooterInSection section: Int) -> UIView? {
-    footerView()
+                        viewForFooterInSection sectionIndex: Int) -> UIView? {
+    let sticker = bottomStickerTuner.sticker(
+      footer: section(sectionIndex).footer,
+      relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
+    )
+
+    sticker.map {
+      let events = bottomStickerTuner.events(sticker: $0) ?? .never()
+
+      bottomStickerListener.listen(sticker: $0, events: events)
+    }
+
+    return sticker
   }
-  
-  private func footerView() -> UIView? {
-    spacing.map { UIView.spacer(height: $0) }
-  }
-  
+
   public func tableView(_ tableView: UITableView,
-                        heightForFooterInSection section: Int) -> CGFloat {
-    spacing ?? 0
+                        heightForFooterInSection sectionIndex: Int) -> CGFloat {
+    bottomStickerTuner.heightForFooter(
+      section(sectionIndex).footer,
+      relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
+    )
   }
-  
+
   public func tableView(_ tableView: UITableView,
                         numberOfRowsInSection sectionIndex: Int) -> Int {
     section(sectionIndex).elements.count

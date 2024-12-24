@@ -10,16 +10,19 @@ where Element: ViewRepresentable, Element.ContentView.ViewEvent == CellEvent {
   private typealias ElementCell = WrapperCell<Element, Element.ContentView>
 
   convenience init(tableView: UITableView,
-                   displayHeader: ((Header, Sticker, SectionRelativePosition) -> Void)? = nil,
-                   stickerEvents: ((Sticker) -> Observable<StickerEvent>)? = nil,
+                   displayHeader: ((Header, TopSticker, SectionRelativePosition) -> Void)? = nil,
+                   topStickerEvents: ((TopSticker) -> Observable<TopStickerEvent>)? = nil,
+                   displayFooter: ((Footer, BottomSticker, SectionRelativePosition) -> Void)? = nil,
+                   bottomStickerEvents: ((BottomSticker) -> Observable<BottomStickerEvent>)? = nil,
                    initElementView: @escaping () -> Element.ContentView = { Element.ContentView() },
                    spacing: CGFloat,
                    automaticReloading: Bool = true) {
     self.init(
       tableView: tableView,
       displayHeader: displayHeader,
-      stickerEvents: stickerEvents,
-      spacing: spacing,
+      topStickerEvents: topStickerEvents,
+      displayFooter: displayFooter,
+      bottomStickerEvents: bottomStickerEvents,
       registerCells: { tableView in
         tableView.register(ElementCell.self)
       },

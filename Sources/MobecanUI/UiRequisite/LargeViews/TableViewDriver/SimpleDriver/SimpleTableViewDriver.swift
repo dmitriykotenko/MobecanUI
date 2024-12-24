@@ -6,11 +6,15 @@ import UIKit
 
 
 open class SimpleTableViewDriver<Element, CellEvent>: TableViewDriver<
-  SimpleTableViewHeader?,
   Element,
-  Void,
   CellEvent,
-  SimpleTableViewSticker> {
+  SimpleTableViewHeader?,
+  Void,
+  SimpleTableViewSticker,
+  EquatableVoid,
+  Void,
+  EmptyTableViewSticker
+> {
 
   public init(tableView: UITableView,
               stickerSettings: SimpleTableViewSticker.TextSettings = .defaultTextSettings,
@@ -24,8 +28,11 @@ open class SimpleTableViewDriver<Element, CellEvent>: TableViewDriver<
         sticker.textSettings = stickerSettings
         sticker.displayValue(header)
       },
-      stickerEvents: { _ in .never() },
-      spacing: spacing,
+      topStickerEvents: { _ in .never() },
+      displayFooter: spacing == 0 ? nil : { _, sticker, _ in
+        sticker.height = spacing
+      },
+      bottomStickerEvents: { _ in .never() },
       registerCells: registerCells,
       cellAndEvents: cellAndEvents,
       automaticReloading: automaticReloading

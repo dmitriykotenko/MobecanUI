@@ -10,33 +10,57 @@ public enum SimpleTableViewHeader {
 }
 
 
-public extension TableViewSection where Header == SimpleTableViewHeader? {
-  
-  static var loadingInProgress: TableViewSection<Header, Element> {
-    TableViewSection(header: .loadingInProgress, elements: [])
+public extension TableViewSection where Header == SimpleTableViewHeader?, Footer == EquatableVoid {
+
+  static var loadingInProgress: TableViewSection<Header, Element, Footer> {
+    .init(
+      header: .loadingInProgress,
+      elements: [],
+      footer: .instance
+    )
   }
   
-  static var nothingFound: TableViewSection<Header, Element> {
-    TableViewSection(header: .nothingFound, elements: [])
+  static var nothingFound: TableViewSection<Header, Element, Footer> {
+    .init(
+      header: .nothingFound,
+      elements: [],
+      footer: .instance
+    )
   }
 
-  static func error(_ errorText: String?) -> TableViewSection<Header, Element> {
-    TableViewSection(header: .error(errorText), elements: [])
+  static func error(_ errorText: String?) -> TableViewSection<Header, Element, Footer> {
+    .init(
+      header: .error(errorText),
+      elements: [],
+      footer: .instance
+    )
   }
 
-  static func string(_ string: String?) -> TableViewSection<Header, Element> {
-    TableViewSection(header: .string(string), elements: [])
+  static func string(_ string: String?) -> TableViewSection<Header, Element, Footer> {
+    .init(
+      header: .string(string),
+      elements: [],
+      footer: .instance
+    )
   }
 }
 
 
 public extension Array {
   
-  func withTitle(_ title: String) -> TableViewSection<SimpleTableViewHeader?, Element> {
-    TableViewSection(header: .string(title), elements: self)
+  func withTitle(_ title: String) -> TableViewSection<SimpleTableViewHeader?, Element, EquatableVoid> {
+    .init(
+      header: .string(title),
+      elements: self,
+      footer: .instance
+    )
   }
   
-  func withoutTitle() -> TableViewSection<SimpleTableViewHeader?, Element> {
-    TableViewSection(header: nil, elements: self)
+  func withoutTitle() -> TableViewSection<SimpleTableViewHeader?, Element, EquatableVoid> {
+    .init(
+      header: nil, 
+      elements: self,
+      footer: .instance
+    )
   }
 }

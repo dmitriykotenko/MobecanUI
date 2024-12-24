@@ -10,7 +10,13 @@ public extension TableViewDriver where CellEvent == Tap<Element> {
 }
 
 
-public extension TableViewDriver where StickerEvent == Tap<Header> {
-  
-  var stickerTaps: Observable<Header> { stickerEvents.map { $0.element } }
+public extension TableViewDriver where TopStickerEvent == Tap<Header> {
+
+  var topStickerTaps: Observable<Header> { topStickerEvents.map { $0.element } }
+}
+
+
+public extension TableViewDriver where BottomStickerEvent == Tap<Footer> {
+
+  var bottomStickerTaps: Observable<Footer> { bottomStickerEvents.map { $0.element } }
 }

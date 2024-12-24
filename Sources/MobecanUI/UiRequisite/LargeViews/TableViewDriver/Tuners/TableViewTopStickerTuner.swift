@@ -5,7 +5,7 @@ import RxSwift
 import UIKit
 
 
-class TableViewStickerTuner<Header, Sticker: UITableViewHeaderFooterView & HeightAwareView, Event>
+class TableViewTopStickerTuner<Header, Sticker: UITableViewHeaderFooterView & HeightAwareView, Event>
 where Sticker.Value == Header {
   
   private var tableView: UITableView
