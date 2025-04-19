@@ -165,6 +165,8 @@ where
   
   public func tableView(_ tableView: UITableView,
                         viewForHeaderInSection sectionIndex: Int) -> UIView? {
+    guard sectionsSnapshot.isNotEmpty else { return nil }
+
     let sticker = topStickerTuner.sticker(
       header: section(sectionIndex).header,
       relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
@@ -181,7 +183,9 @@ where
   
   public func tableView(_ tableView: UITableView,
                         heightForHeaderInSection sectionIndex: Int) -> CGFloat {
-    topStickerTuner.heightForHeader(
+    guard sectionsSnapshot.isNotEmpty else { return 0 }
+
+    return topStickerTuner.heightForHeader(
       section(sectionIndex).header,
       relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
     )
@@ -189,6 +193,8 @@ where
 
   public func tableView(_ tableView: UITableView,
                         viewForFooterInSection sectionIndex: Int) -> UIView? {
+    guard sectionsSnapshot.isNotEmpty else { return nil }
+
     let sticker = bottomStickerTuner.sticker(
       footer: section(sectionIndex).footer,
       relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
@@ -205,7 +211,9 @@ where
 
   public func tableView(_ tableView: UITableView,
                         heightForFooterInSection sectionIndex: Int) -> CGFloat {
-    bottomStickerTuner.heightForFooter(
+    guard sectionsSnapshot.isNotEmpty else { return 0 }
+
+    return bottomStickerTuner.heightForFooter(
       section(sectionIndex).footer,
       relativePosition: .init(section: sectionIndex, of: sectionsSnapshot.count)
     )
@@ -213,11 +221,13 @@ where
 
   public func tableView(_ tableView: UITableView,
                         numberOfRowsInSection sectionIndex: Int) -> Int {
-    section(sectionIndex).elements.count
+    sectionsSnapshot.isEmpty ? 0 : section(sectionIndex).elements.count
   }
   
   public func tableView(_ tableView: UITableView,
                         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    guard sectionsSnapshot.isNotEmpty else { return UITableViewCell() }
+
     let (cell, events) = cellTuner.cellAndEvents(
       element: element(indexPath),
       relativePosition: .init(indexPath: indexPath, of: sectionLengthsSnapshot)
