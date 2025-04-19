@@ -39,8 +39,12 @@ public extension UIView {
       distribution: distribution,
       spacing: spacing,
       [
-        bulletView.withInsets(.top(bulletTopOffset)),
-        label
+        // Отступ `insets.top` должен отсчитываться от самого высоко расположенного элемента.
+        // Поэтому:
+        // — Если иконка должна начинаться ниже лэйбла, сдвигаем вниз иконку.
+        bulletView.withInsets(bulletTopOffset > 0 ? .top(bulletTopOffset) : .zero),
+        // — Иначе — сдвигаем вниз лэйбл.
+        label.withInsets(bulletTopOffset < 0 ? .top(-bulletTopOffset) : .zero)
       ],
       insets: insets
     )

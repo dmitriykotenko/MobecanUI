@@ -44,7 +44,8 @@ class StackViewTextToBulletAlignmentTests: XCTestCase {
           font: font,
           alignment: .xHeight,
           imageViewSize: .init(width: 4, height: 4),
-          expectedImageViewY: font.ascender - 0.5 * font.xHeight - 2
+          expectedImageViewY: font.ascender - 0.5 * font.xHeight - 2,
+          expectedLabelY: 0
         )
       }
     }
@@ -58,7 +59,8 @@ class StackViewTextToBulletAlignmentTests: XCTestCase {
           font: font,
           alignment: .xHeight,
           imageViewSize: .init(width: 4, height: 400),
-          expectedImageViewY: font.ascender - 0.5 * font.xHeight - 200
+          expectedImageViewY: 0,
+          expectedLabelY: 200 - (font.ascender - 0.5 * font.xHeight)
         )
       }
     }
@@ -72,7 +74,8 @@ class StackViewTextToBulletAlignmentTests: XCTestCase {
           font: font,
           alignment: .capHeight,
           imageViewSize: .init(width: 4, height: 4),
-          expectedImageViewY: font.ascender - 0.5 * font.capHeight - 2
+          expectedImageViewY: font.ascender - 0.5 * font.capHeight - 2,
+          expectedLabelY: 0
         )
       }
     }
@@ -86,7 +89,8 @@ class StackViewTextToBulletAlignmentTests: XCTestCase {
           font: font,
           alignment: .capHeight,
           imageViewSize: .init(width: 4, height: 400),
-          expectedImageViewY: font.ascender - 0.5 * font.capHeight - 200
+          expectedImageViewY: 0,
+          expectedLabelY: 200 - (font.ascender - 0.5 * font.capHeight)
         )
       }
     }
@@ -96,7 +100,10 @@ class StackViewTextToBulletAlignmentTests: XCTestCase {
                      font: UIFont,
                      alignment: TextToBulletAlignment,
                      imageViewSize: CGSize,
-                     expectedImageViewY: CGFloat) {
+                     expectedImageViewY: CGFloat,
+                     expectedLabelY: CGFloat,
+                     file: StaticString = #file,
+                     line: UInt = #line) {
     let imageView = UIImageView.sizable(size: imageViewSize)
 
     let label = DiverseLabel().multilined()
@@ -118,7 +125,21 @@ class StackViewTextToBulletAlignmentTests: XCTestCase {
 
     let imageViewFrame = imageView.convert(imageView.bounds, to: stackView)
 
-    XCTAssertEqual(imageViewFrame.origin.y, expectedImageViewY)
+    XCTAssertEqual(
+      imageViewFrame.origin.y, 
+      expectedImageViewY,
+      file: file,
+      line: line
+    )
+
+    let labelFrame = label.convert(label.bounds, to: stackView)
+
+    XCTAssertEqual(
+      labelFrame.origin.y,
+      expectedLabelY,
+      file: file,
+      line: line
+    )
   }
 }
 
