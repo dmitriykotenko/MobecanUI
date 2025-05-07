@@ -14,7 +14,7 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/ios12"),
+    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/swift6.1_ios12"),
     .package(url: "https://github.com/pointfreeco/swift-nonempty", .upToNextMajor(from: "0.4.0")),
     .package(url: "https://github.com/ReactiveX/RxSwift", from: .init(6, 2, 0)),
     .package(url: "https://github.com/RxSwiftCommunity/RxOptional", from: .init(5, 0, 4)),
@@ -36,6 +36,12 @@ let package = Package(
         "LayoutKit",
         "Kingfisher",
         "SwiftDateTime"
+      ],
+      swiftSettings: [
+        .unsafeFlags([
+          "-Xfrontend",
+          "-disable-round-trip-debug-types"
+        ], .when(configuration: .debug))
       ]
     ),
     .macro(
@@ -45,7 +51,13 @@ let package = Package(
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
       ],
-      path: "Sources/Macros"
+      path: "Sources/Macros",
+      swiftSettings: [
+        .unsafeFlags([
+          "-Xfrontend",
+          "-disable-round-trip-debug-types"
+        ], .when(configuration: .debug))
+      ]
     ),
     .testTarget(
       name: "MobecanUITests",
@@ -57,6 +69,12 @@ let package = Package(
         "LayoutKit",
         .product(name: "RxTest", package: "RxSwift"),
         .product(name: "RxBlocking", package: "RxSwift")
+      ],
+      swiftSettings: [
+        .unsafeFlags([
+          "-Xfrontend",
+          "-disable-round-trip-debug-types"
+        ], .when(configuration: .debug))
       ]
     )
   ]

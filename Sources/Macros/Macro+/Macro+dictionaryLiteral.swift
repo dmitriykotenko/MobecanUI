@@ -9,7 +9,6 @@ import SwiftSyntaxMacros
 
 extension Macro {
 
-
   static func dictionaryLiteral(keysAndValues: [(String, String)]) -> String {
     guard keysAndValues.isNotEmpty else { return "[:]" }
 
