@@ -3,10 +3,10 @@
     {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/onevcat/Kingfisher",
+      "location" : "https://github.com/dmitriykotenko/Kingfisher",
       "state" : {
-        "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
-        "version" : "7.11.0"
+        "branch" : "7.12xcode16",
+        "revision" : "ac1a5740456482e9ca7299f45a342c10d34c1605"
       }
     },
     {
