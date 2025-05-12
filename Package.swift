@@ -36,12 +36,6 @@ let package = Package(
         "LayoutKit",
         "Kingfisher",
         "SwiftDateTime"
-      ],
-      swiftSettings: [
-        .unsafeFlags([
-          "-Xfrontend",
-          "-disable-round-trip-debug-types"
-        ], .when(configuration: .debug))
       ]
     ),
     .macro(
@@ -51,13 +45,7 @@ let package = Package(
         .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
         .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
       ],
-      path: "Sources/Macros",
-      swiftSettings: [
-        .unsafeFlags([
-          "-Xfrontend",
-          "-disable-round-trip-debug-types"
-        ], .when(configuration: .debug))
-      ]
+      path: "Sources/Macros"
     ),
     .testTarget(
       name: "MobecanUITests",
@@ -69,12 +57,6 @@ let package = Package(
         "LayoutKit",
         .product(name: "RxTest", package: "RxSwift"),
         .product(name: "RxBlocking", package: "RxSwift")
-      ],
-      swiftSettings: [
-        .unsafeFlags([
-          "-Xfrontend",
-          "-disable-round-trip-debug-types"
-        ], .when(configuration: .debug))
       ]
     )
   ]
