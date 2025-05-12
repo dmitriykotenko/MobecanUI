@@ -131,7 +131,7 @@ class DeserializationTester: XCTestCase {
 
   func codingKey(_ index: Int) -> CodableVersionOf.CodingKey {
     .init(
-      originalCodingKeyType: originalTypeOfIndexBasedCodingKey,
+      originalCodingKeyType: originalTypeOfIntCodingKey,
       intValue: index,
       stringValue: "Index \(index)"
     )
@@ -166,7 +166,7 @@ class DeserializationTester: XCTestCase {
     }
   }
 
-  private var originalTypeOfIndexBasedCodingKey: String {
+  private var originalTypeOfIntCodingKey: String {
     if #available(iOS 18.0, *) {
       "_CodingKey"
     } else {
