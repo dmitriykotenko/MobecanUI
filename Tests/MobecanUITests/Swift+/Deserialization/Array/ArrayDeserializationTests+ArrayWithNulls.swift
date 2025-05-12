@@ -76,7 +76,7 @@ extension ArrayDeserializationTests {
           codingPath: [
             codingKey(2),
           ],
-          debugDescription: "Cannot get keyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: [String: Any].self),
           underlyingError: nil
         )
       )

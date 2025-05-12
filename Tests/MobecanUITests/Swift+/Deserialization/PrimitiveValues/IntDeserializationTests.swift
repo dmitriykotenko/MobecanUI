@@ -154,7 +154,7 @@ final class IntDeserializationTests: DeserializationTester {
         expectedType: .init(type: Int.self),
         context: .init(
           codingPath: [],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: Int.self),
           underlyingError: nil
         )
       )

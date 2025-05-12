@@ -44,7 +44,7 @@ extension CustomTypeDeserializationTests {
           codingPath: [
             codingKey("score")
           ],
-          debugDescription: "Cannot get keyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: [String: Any].self),
           underlyingError: nil
         )
       )
@@ -88,7 +88,7 @@ extension CustomTypeDeserializationTests {
             codingKey("score"),
             codingKey("sets")
           ],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: [Any].self),
           underlyingError: nil
         )
       )
@@ -147,7 +147,7 @@ extension CustomTypeDeserializationTests {
             codingKey("sets"),
             codingKey(2)
           ],
-          debugDescription: "Cannot get keyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: [String: Any].self),
           underlyingError: nil
         )
       )
@@ -206,7 +206,7 @@ extension CustomTypeDeserializationTests {
             codingKey(2),
             codingKey("winnerGames")
           ],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: Int.self),
           underlyingError: nil
         )
       )
@@ -225,7 +225,7 @@ extension CustomTypeDeserializationTests {
         expectedType: .init(type: URL.self),
         context: .init(
           codingPath: [codingKey("home_page")],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: URL.self),
           underlyingError: nil
         )
       )
