@@ -16,6 +16,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/swift6.1_ios12"),
     .package(url: "https://github.com/pointfreeco/swift-nonempty", .upToNextMajor(from: "0.4.0")),
+    .package(url: "https://github.com/dmitriykotenko/swift-custom-dump", branch: "ios12xcode16"),
     .package(url: "https://github.com/ReactiveX/RxSwift", from: .init(6, 2, 0)),
     .package(url: "https://github.com/RxSwiftCommunity/RxOptional", from: .init(5, 0, 4)),
     .package(url: "https://github.com/RxSwiftCommunity/RxGesture", from: .init(4, 0, 2)),
@@ -31,6 +32,7 @@ let package = Package(
       dependencies: [
         "MobecanUIMacros",
         .product(name: "NonEmpty", package: "swift-nonempty"),
+        .product(name: "CustomDump", package: "swift-custom-dump"),
         "RxSwift", "RxOptional", "RxGesture", "RxKeyboard",
         "SnapKit",
         "LayoutKit",
@@ -53,6 +55,7 @@ let package = Package(
         "MobecanUI",
         "MobecanUIMacros",
         .product(name: "NonEmpty", package: "swift-nonempty"),
+        .product(name: "CustomDump", package: "swift-custom-dump"),
         .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
         "LayoutKit",
         .product(name: "RxTest", package: "RxSwift"),

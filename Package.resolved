@@ -64,6 +64,15 @@
       }
     },
     {
+      "identity" : "swift-custom-dump",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/swift-custom-dump",
+      "state" : {
+        "branch" : "ios12xcode16",
+        "revision" : "26a351fa733755e33458c6a3121c9680ba5cf604"
+      }
+    },
+    {
       "identity" : "swift-nonempty",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-nonempty",
@@ -79,6 +88,15 @@
       "state" : {
         "branch" : "feature/swift6.1_ios12",
         "revision" : "4060788cec7efe6d0921937726d0b522605797d5"
+      }
+    },
+    {
+      "identity" : "swiftcollectiondifference",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/SwiftCollectionDifference.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "705021f684396812e9b3ac2f6683635d544fb0e1"
       }
     },
     {
