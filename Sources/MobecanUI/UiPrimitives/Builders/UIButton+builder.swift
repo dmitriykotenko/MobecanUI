@@ -78,7 +78,13 @@ public extension UIButton {
     setTextStyle(textStyle)
     return self
   }
-  
+
+  @discardableResult
+  func textStyle2(_ textStyle: TextStyle2) -> Self {
+    setTextStyle2(textStyle)
+    return self
+  }
+
   
   @discardableResult
   func lineBreakMode(_ lineBreakMode: NSLineBreakMode) -> Self {

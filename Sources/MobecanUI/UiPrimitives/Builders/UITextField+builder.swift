@@ -30,6 +30,12 @@ public extension UITextField {
   }
 
   @discardableResult
+  func textStyle2(_ textStyle: TextStyle2) -> Self {
+    setTextStyle2(textStyle)
+    return self
+  }
+
+  @discardableResult
   func keyboard(_ keyboardType: UIKeyboardType) -> Self {
     self.keyboardType = keyboardType
     return self

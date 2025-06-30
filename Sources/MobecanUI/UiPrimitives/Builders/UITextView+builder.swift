@@ -10,7 +10,13 @@ public extension UITextView {
     setTextStyle(textStyle)
     return self
   }
-  
+
+  @discardableResult
+  func textStyle2(_ textStyle: TextStyle2) -> Self {
+    setTextStyle2(textStyle)
+    return self
+  }
+
   @discardableResult
   func textContainerInset(_ textContainerInset: UIEdgeInsets) -> Self {
     self.textContainerInset = textContainerInset

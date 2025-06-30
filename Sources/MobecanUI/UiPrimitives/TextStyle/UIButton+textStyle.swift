@@ -20,4 +20,20 @@ public extension UIButton {
       titleLabel.textAlignment = alignment
     }
   }
+
+  func setTextStyle2(_ textStyle: TextStyle2) {
+    guard let titleLabel = titleLabel else { return }
+
+    if let fontStyle = textStyle.fontStyle {
+      titleLabel.font = fontStyle.apply(to: titleLabel.font)
+    }
+
+    if let color = textStyle.color {
+      setTitleColor(color.uiColor, for: .normal)
+    }
+
+    if let alignment = textStyle.alignment {
+      titleLabel.textAlignment = alignment.nsTextAlignment
+    }
+  }
 }

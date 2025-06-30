@@ -10,7 +10,13 @@ public extension UILabel {
     setTextStyle(textStyle)
     return self
   }
-  
+
+  @discardableResult
+  func textStyle2(_ textStyle: TextStyle2) -> Self {
+    setTextStyle2(textStyle)
+    return self
+  }
+
   @discardableResult
   func text(_ text: String?) -> Self {
     self.text = text
