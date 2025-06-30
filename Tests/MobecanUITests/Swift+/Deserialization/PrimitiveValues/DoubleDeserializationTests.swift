@@ -140,7 +140,7 @@ final class DoubleDeserializationTests: DeserializationTester {
         expectedType: .init(type: Double.self),
         context: .init(
           codingPath: [],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: Double.self),
           underlyingError: nil
         )
       )

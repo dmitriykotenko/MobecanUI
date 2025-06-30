@@ -42,5 +42,5 @@ public struct NonEditableTextInteraction: Equatable, Hashable, Codable, Lensable
 }
 
 
-extension UIDataDetectorTypes: Hashable {}
-extension UIDataDetectorTypes: Codable {}
+extension UIDataDetectorTypes: @retroactive Hashable {}
+extension UIDataDetectorTypes: @retroactive Codable {}

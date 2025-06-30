@@ -24,6 +24,8 @@ extension TypeSyntax {
       .genericArgumentClause?
       .arguments
       .map(\.argument)
+      .compactMap { $0.as(TypeSyntax.self) }
+      // TODO: решить, что делать с синглтон-типами (например, MyContainer<3> вместо MyContainer<Int>)
   }
 
   var wrappedType: TypeSyntax? {

@@ -146,7 +146,7 @@ final class StringBasedEnumDeserializationTests: DeserializationTester {
         expectedType: .init(type: String.self),
         context: .init(
           codingPath: [],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: String.self),
           underlyingError: nil
         )
       )

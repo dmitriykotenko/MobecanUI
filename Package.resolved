@@ -3,10 +3,10 @@
     {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/onevcat/Kingfisher",
+      "location" : "https://github.com/dmitriykotenko/Kingfisher",
       "state" : {
-        "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
-        "version" : "7.11.0"
+        "branch" : "7.12xcode16",
+        "revision" : "ac1a5740456482e9ca7299f45a342c10d34c1605"
       }
     },
     {
@@ -64,6 +64,15 @@
       }
     },
     {
+      "identity" : "swift-custom-dump",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/swift-custom-dump",
+      "state" : {
+        "branch" : "ios12xcode16",
+        "revision" : "26a351fa733755e33458c6a3121c9680ba5cf604"
+      }
+    },
+    {
       "identity" : "swift-nonempty",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-nonempty",
@@ -77,8 +86,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dmitriykotenko/swift-syntax",
       "state" : {
-        "branch" : "feature/ios12",
-        "revision" : "38a1a779aaa0942432d7733c7e164cbfede2c652"
+        "branch" : "feature/swift6.1_ios12",
+        "revision" : "4060788cec7efe6d0921937726d0b522605797d5"
+      }
+    },
+    {
+      "identity" : "swiftcollectiondifference",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmitriykotenko/SwiftCollectionDifference.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "705021f684396812e9b3ac2f6683635d544fb0e1"
       }
     },
     {

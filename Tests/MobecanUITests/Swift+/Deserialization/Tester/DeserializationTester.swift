@@ -4,6 +4,7 @@ import XCTest
 
 import RxCocoa
 import RxSwift
+import CustomDump
 
 @testable import MobecanUI
 
@@ -95,35 +96,42 @@ class DeserializationTester: XCTestCase {
         if actualValue != expectedValue {
           report(
             """
+            \("Неправильный результат десериализации:\n".prependTo(diff(expectedValue, actualValue)) ?? "")
+            
             При десериализации получился такой объект:
             \(actualValue)
 
             А ожидался такой:
-            \(expectedValue)
+            \(expectedValue)            
             """
           )
         }
       case (.failure(let actualError), .failure(let expectedError)):
         if actualError != expectedError {
+          let expectedErrorJson = expectedError.toJsonValue()
+          let actualErrorJson = actualError.toJsonValue()
+          let expectedErrorJsonString = expectedError.toJsonString(outputFormatting: [.prettyPrinted, .sortedKeys])
+          let actualErrorJsonString = actualError.toJsonString(outputFormatting: [.prettyPrinted, .sortedKeys])
+
           report(
             """
+            \("Не та ошибка:\n".prependTo(diff(expectedErrorJson, actualErrorJson)) ?? "")
+            
             Пришла ошибка:
-            \(actualError.toJsonString(outputFormatting: [.prettyPrinted, .sortedKeys]))
+            \(actualErrorJsonString)
 
             А ожидалась ошибка:
-            \(expectedError.toJsonString(outputFormatting: [.prettyPrinted, .sortedKeys]))
+            \(expectedErrorJsonString)
             """
           )
         }
-//
-//        report(actualError.formattedForTestReport())
       }
     }
   }
 
   func codingKey(_ index: Int) -> CodableVersionOf.CodingKey {
     .init(
-      originalCodingKeyType: "_JSONKey",
+      originalCodingKeyType: originalTypeOfIntCodingKey,
       intValue: index,
       stringValue: "Index \(index)"
     )
@@ -134,5 +142,35 @@ class DeserializationTester: XCTestCase {
       originalCodingKeyType: "CodingKeys",
       stringValue: propertyName
     )
+  }
+
+  func unexpectedNullErrorMessage<Value>(exectedType type: Value.Type) -> String {
+    let typeName = TypeName(type: type)
+
+    return if #available(iOS 18.0, *) {
+      switch typeName {
+      case .dictionaryOfStringAndAny:
+        "Cannot get keyed decoding container -- found null value instead"
+      case .arrayOfAny:
+        "Cannot get unkeyed decoding container -- found null value instead"
+      default:
+        "Cannot get value of type \(typeName.nonQualified) -- found null value instead"
+      }
+    } else {
+      switch typeName {
+      case .dictionaryOfStringAndAny:
+        "Cannot get keyed decoding container -- found null value instead"
+      default:
+        "Cannot get unkeyed decoding container -- found null value instead"
+      }
+    }
+  }
+
+  private var originalTypeOfIntCodingKey: String {
+    if #available(iOS 18.0, *) {
+      "_CodingKey"
+    } else {
+      "_JSONKey"
+    }
   }
 }

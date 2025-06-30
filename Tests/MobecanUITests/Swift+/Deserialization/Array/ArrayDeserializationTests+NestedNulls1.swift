@@ -32,7 +32,7 @@ extension  ArrayDeserializationTests {
             codingKey(0),
             codingKey("firstName"),
           ],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: String.self),
           underlyingError: nil
         )
       )
@@ -75,7 +75,7 @@ extension  ArrayDeserializationTests {
             codingKey("sets"),
             codingKey(0)
           ],
-          debugDescription: "Cannot get keyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: [String: Any].self),
           underlyingError: nil
         )
       )

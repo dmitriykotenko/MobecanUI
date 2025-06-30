@@ -144,7 +144,7 @@ final class DecimalDeserializationTests: DeserializationTester {
         expectedType: .init(type: Decimal.self),
         context: .init(
           codingPath: [],
-          debugDescription: "Cannot get unkeyed decoding container -- found null value instead",
+          debugDescription: unexpectedNullErrorMessage(exectedType: Decimal.self),
           underlyingError: nil
         )
       )

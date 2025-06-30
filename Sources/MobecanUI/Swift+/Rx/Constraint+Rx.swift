@@ -7,7 +7,7 @@ import RxSwift
 import SnapKit
 
 
-extension Constraint: ReactiveCompatible {}
+extension Constraint: @retroactive ReactiveCompatible {}
 
 
 public extension Reactive where Base: Constraint {
