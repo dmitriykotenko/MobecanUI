@@ -18,6 +18,17 @@ public macro URL(_ string: String) -> URL = #externalMacro(
 @available(swift 5.9)
 public macro MemberwiseInit() = #externalMacro(
   module: "MobecanUIMacros",
+  type: "MemberwiseInitMacro2"
+)
+
+
+/// Добавляет дефолтный конструктор,
+/// заполняющий все поля класса или структуры и имеющий такую же видимость,
+/// как и сам класс или сама структура.
+@attached(member, names: named(init))
+@available(swift 5.9)
+public macro MemberwiseInit2() = #externalMacro(
+  module: "MobecanUIMacros",
   type: "MemberwiseInitMacro"
 )
 

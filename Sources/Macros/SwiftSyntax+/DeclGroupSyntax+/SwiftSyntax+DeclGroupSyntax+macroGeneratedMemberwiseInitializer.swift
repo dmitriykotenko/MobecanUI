@@ -24,4 +24,20 @@ extension DeclGroupSyntax {
       nil
     }
   }
+
+  var inferredMemberwiseInitializer2: InitializerDeclSyntax? {
+    asStruct2?.buildMemberwiseInitializer()
+    ?? asClass2?.buildMemberwiseInitializer()
+  }
+
+  var macroGeneratedMemberwiseInitializer2: InitializerDeclSyntax? {
+//    if contains(attribute: "MemberwiseInit") {
+      inferredMemberwiseInitializer2
+//        .prepending(visibilities: visibilityModifiers)
+//        .withOpenVisibilityConvertedToPublic()
+//        .withoutNonPublicVisibility()
+//    } else {
+//      nil
+//    }
+  }
 }

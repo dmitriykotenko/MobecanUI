@@ -31,4 +31,17 @@ extension VariableDeclSyntax {
       )
     }
   }
+
+  var asStoredProperty2: StoredProperty2? {
+    guard isStoredProperty else { return nil }
+
+    return bindings.first.flatMap {
+      StoredProperty2(
+        kind: bindingSpecifier.text,
+        name: $0.pattern.as(IdentifierPatternSyntax.self)?.identifier,
+        typeDecl: $0.typeAnnotation?.type,
+        defaultValueDecl: $0.initializer
+      )
+    }
+  }
 }

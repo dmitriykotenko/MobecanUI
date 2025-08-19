@@ -14,6 +14,7 @@ struct Struct: Equatable, Hashable, Codable, Lensable {
   var genericArguments: [String]
   var storedProperties: [StoredProperty]
 
+
   var visibilityPrefix: String {
     visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
   }
@@ -45,6 +46,34 @@ struct Struct: Equatable, Hashable, Codable, Lensable {
 
   func genericArgumentsConformanceRequirement(protocolName: String) -> String? {
     genericArguments.map { "\($0): \(protocolName)" }
+      .mkStringWithComma()
+      .notBlankOrNil
+  }
+}
+
+
+struct Struct2: Equatable, Hashable, Lensable {
+
+  var visibilityModifiers: [DeclModifierSyntax]
+  var name: TokenSyntax
+  var genericArguments: GenericParameterClauseSyntax?
+  var storedProperties: [StoredProperty2]
+
+  var visibilityPrefix2: [DeclModifierSyntax] {
+    visibilityModifiers.compactMap(\.asMemberwiseInitVisibilityModifier)
+  }
+//
+//  var asNominalType: NominalType {
+//    .init(
+//      visibilityModifiers: visibilityModifiers,
+//      name: name,
+//      genericArguments: genericArguments
+//    )
+//  }
+
+  func genericArgumentsConformanceRequirement2(protocolName: String) -> String? {
+    (genericArguments?.parameters.map(\.name.text) ?? [])
+      .map { "\($0): \(protocolName)" }
       .mkStringWithComma()
       .notBlankOrNil
   }

@@ -22,4 +22,15 @@ extension DeclGroupSyntax {
       )
     }
   }
+
+  var asClass2: Class2? {
+    self.as(ClassDeclSyntax.self).map {
+      Class2(
+        visibilityModifiers: visibilityModifiers2,
+        name: $0.name,
+        genericArguments: $0.genericParameterClause,
+        storedProperties: storedProperties2
+      )
+    }
+  }
 }

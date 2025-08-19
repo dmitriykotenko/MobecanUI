@@ -49,3 +49,48 @@ struct Class: Equatable, Hashable, Codable, Lensable {
       .notBlankOrNil
   }
 }
+
+
+struct Class2: Equatable, Hashable, Lensable {
+
+  var visibilityModifiers: [DeclModifierSyntax]
+  var name: TokenSyntax
+  var genericArguments: GenericParameterClauseSyntax?
+  var storedProperties: [StoredProperty2]
+
+  var visibilityPrefix2: [DeclModifierSyntax] {
+    visibilityModifiers.compactMap(\.asMemberwiseInitVisibilityModifier)
+  }
+//
+//  var inferredMemberwiseInitializer: Function {
+//    .memberwiseInit(storedProperties: storedProperties)
+//  }
+//
+//  var asNominalType: NominalType {
+//    .init(
+//      visibilityModifiers: visibilityModifiers,
+//      name: name,
+//      genericArguments: genericArguments
+//    )
+//  }
+//
+//  var asProductType: ProductType {
+//    .init(
+//      nominalName: name,
+//      members: storedProperties.map {
+//        .init(
+//          initializationName: $0.name,
+//          name: $0.name,
+//          type: $0.type
+//        )
+//      }
+//    )
+//  }
+
+  func genericArgumentsConformanceRequirement2(protocolName: String) -> String? {
+    (genericArguments?.parameters.map(\.name.text) ?? [])
+      .map { "\($0): \(protocolName)" }
+      .mkStringWithComma()
+      .notBlankOrNil
+  }
+}

@@ -38,6 +38,10 @@ extension DeclGroupSyntax {
       .compactMap { .init(rawValue: $0.name.text) }
   }
 
+  var visibilityModifiers2: [DeclModifierSyntax] {
+    modifiers.filter(\.isVisibilityModifier2)
+  }
+
   var visibilityPrefix: String {
     visibilityModifiers.isEmpty ? "" : visibilityModifiers.mkStringWithComma() + " "
   }
@@ -56,6 +60,12 @@ extension DeclGroupSyntax {
     let members = memberBlock.members
     let variables = members.compactMap { $0.decl.as(VariableDeclSyntax.self) }
     return variables.compactMap(\.asStoredProperty)
+  }
+
+  var storedProperties2: [StoredProperty2] {
+    memberBlock.members
+      .compactMap { $0.decl.as(VariableDeclSyntax.self) }
+      .compactMap(\.asStoredProperty2)
   }
 
   var explicitCodingKeys: [EnumCase]? {
