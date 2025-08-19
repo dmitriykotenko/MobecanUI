@@ -128,9 +128,9 @@ struct StoredProperty2: Equatable, Hashable, Lensable {
     kind == "let" && defaultValueDecl != nil
   }
 
-//  var letDeclaration: String { declaration(prefix: "let") }
-//  var varDeclaration: String { declaration(prefix: "var") }
-//  var lazyVarDeclaration: String { declaration(prefix: "lazy var") }
+  //  var letDeclaration: String { declaration(prefix: "let") }
+  //  var varDeclaration: String { declaration(prefix: "var") }
+  //  var lazyVarDeclaration: String { declaration(prefix: "lazy var") }
 
   var isOptionalProperty: Bool {
     typeDecl.is(OptionalTypeSyntax.self)
@@ -146,6 +146,10 @@ struct StoredProperty2: Equatable, Hashable, Lensable {
     } else {
       nil
     }
+  }
+
+  var typeDeclWithEscapingIfNecessary: TypeSyntax {
+    typeDecl.withEscapingIfNecessary
   }
 //
 //  func declaration(prefix: String) -> String {
@@ -183,4 +187,28 @@ struct StoredProperty2: Equatable, Hashable, Lensable {
 //  func with(typeContainer: String) -> Self {
 //    self[\.type, typeContainer + "<" + type  + ">"]
 //  }
+}
+
+
+extension TypeSyntax {
+
+  var withEscapingIfNecessary: TypeSyntax {
+    guard self.is(FunctionTypeSyntax.self) else { return self }
+
+    return TypeSyntax(
+      AttributedTypeSyntax(
+        specifiers: [],
+        attributes: AttributeListSyntax([.attribute(escapingAttribute())]),
+        baseType: self
+      )
+    )
+  }
+}
+
+
+private func escapingAttribute() -> AttributeSyntax {
+  AttributeSyntax(
+    atSignToken: .atSignToken(),
+    attributeName: IdentifierTypeSyntax(name: .identifier("escaping"))
+  )
 }

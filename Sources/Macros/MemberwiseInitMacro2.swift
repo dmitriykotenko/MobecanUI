@@ -94,7 +94,7 @@ extension Struct2 {
           firstName: p.name,
           // secondName: nil,
           colon: .colonToken(),
-          type: p.typeDecl, // keep as TypeSyntax (don’t stringify)
+          type: p.typeDeclWithEscapingIfNecessary, // keep as TypeSyntax (don’t stringify)
           // ellipsis: nil,
           defaultValue: p.defaultValueDecl ?? p.implicitDefaultValueDecl, // InitializerClauseSyntax? (or nil)
           trailingComma: .commaToken(trailingTrivia: .space)
@@ -149,7 +149,7 @@ extension Class2 {
           firstName: p.name,
           // secondName: nil,
           colon: .colonToken(),
-          type: p.typeDecl, // keep as TypeSyntax (don’t stringify)
+          type: p.typeDeclWithEscapingIfNecessary, // keep as TypeSyntax (don’t stringify)
           // ellipsis: nil,
           defaultValue: p.defaultValueDecl ?? p.implicitDefaultValueDecl, // InitializerClauseSyntax? (or nil)
           // trailingComma: nil
