@@ -26,18 +26,11 @@ extension DeclGroupSyntax {
   }
 
   var inferredMemberwiseInitializer2: InitializerDeclSyntax? {
-    asStruct2?.buildMemberwiseInitializer()
-    ?? asClass2?.buildMemberwiseInitializer()
+    asStruct2?.buildMemberwiseInitializer2()
+    ?? asClass2?.buildMemberwiseInitializer2()
   }
 
   var macroGeneratedMemberwiseInitializer2: InitializerDeclSyntax? {
-//    if contains(attribute: "MemberwiseInit") {
       inferredMemberwiseInitializer2
-//        .prepending(visibilities: visibilityModifiers)
-//        .withOpenVisibilityConvertedToPublic()
-//        .withoutNonPublicVisibility()
-//    } else {
-//      nil
-//    }
   }
 }

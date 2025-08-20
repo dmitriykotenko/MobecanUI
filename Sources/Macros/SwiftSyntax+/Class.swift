@@ -51,16 +51,13 @@ struct Class: Equatable, Hashable, Codable, Lensable {
 }
 
 
-struct Class2: Equatable, Hashable, Lensable {
+struct Class2: Equatable, Hashable, Lensable, MemberwiseType {
 
   var visibilityModifiers: [DeclModifierSyntax]
   var name: TokenSyntax
   var genericArguments: GenericParameterClauseSyntax?
   var storedProperties: [StoredProperty2]
 
-  var visibilityPrefix2: [DeclModifierSyntax] {
-    visibilityModifiers.compactMap(\.asMemberwiseInitVisibilityModifier)
-  }
 //
 //  var inferredMemberwiseInitializer: Function {
 //    .memberwiseInit(storedProperties: storedProperties)
@@ -86,11 +83,4 @@ struct Class2: Equatable, Hashable, Lensable {
 //      }
 //    )
 //  }
-
-  func genericArgumentsConformanceRequirement2(protocolName: String) -> String? {
-    (genericArguments?.parameters.map(\.name.text) ?? [])
-      .map { "\($0): \(protocolName)" }
-      .mkStringWithComma()
-      .notBlankOrNil
-  }
 }
