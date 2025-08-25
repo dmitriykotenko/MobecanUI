@@ -8,3 +8,6 @@ public enum EquatableVoid: Int, Equatable, Hashable, Codable {
 
   case instance
 }
+
+
+public typealias EVoid = EquatableVoid
