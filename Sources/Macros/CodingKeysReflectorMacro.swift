@@ -58,8 +58,8 @@ extension CodingKeysReflectorMacro: MemberMacro {
 //    }
 
     return _computedVar(
-      "codingKeyTypes",
       modifiers: [m.static],
+      "codingKeyTypes",
       _t(_dictionary: _t("String"), _t("CodingKeysReflector")._t("Type"))
     ) {
       if variables2.isEmpty {

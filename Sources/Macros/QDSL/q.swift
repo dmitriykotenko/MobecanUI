@@ -366,6 +366,10 @@ extension TypeSyntax {
   var opt: TypeSyntax {
     q.t.optional(self)
   }
+
+  func optIf(_ condition: Bool) -> TypeSyntax {
+    condition ? opt : self
+  }
 }
 
 

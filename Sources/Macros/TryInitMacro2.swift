@@ -156,7 +156,11 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
             p.asTryInitParameter(index: index, error: "SomeError")
           }
         ),
-        returns: _t("Result", [_t(typeName), _t("SomeError")]),
+        returns: _t(
+          _result:
+            _t(typeName).optIf(originalInitializerDecl.isOptional),
+            _t("SomeError")
+        ),
         whereClause: originalInitializerDecl.genericWhereClause,
         body: {
           //      var errors: [String: SomeError] = [:]
@@ -249,7 +253,11 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
             p.asTryInitParameter(index: index, error: "SomeError")
           }
         ),
-        returns: _t(_result: _t(typeName), _t("SomeError")),
+        returns: _t(
+          _result:
+            _t(typeName).optIf(originalFunctionDecl.doesReturnOptional),
+            _t("SomeError")
+        ),
         whereClause: originalFunctionDecl.genericWhereClause,
         body: {
           //      var errors: [String: SomeError] = [:]

@@ -104,24 +104,24 @@ public enum qdecls {
 }
 
 
-@inlinable public func _computedVar(_ name: String,
-                                    modifiers: DeclModifierListSyntax = [],
+@inlinable public func _computedVar(modifiers: DeclModifierListSyntax = [],
+                                    _ name: String,
                                     _ type: TypeSyntax? = nil,
                                     @qstmts body: () -> [CodeBlockItemSyntax]) -> DeclSyntax {
   qdecls.computedVar(name, modifiers: modifiers, type, body: body)
 }
 
 
-@inlinable public func _let(_ name: String,
-                            modifiers: DeclModifierListSyntax = [],
+@inlinable public func _let(modifiers: DeclModifierListSyntax = [],
+                            _ name: String,
                             _ type: TypeSyntax? = nil,
                             _ initializer: InitializerClauseSyntax? = nil) -> DeclSyntax {
   qdecls.let(name, modifiers: modifiers, type, initializer)
 }
 
 
-@inlinable public func _typealias(_ name: String,
-                                  modifiers: DeclModifierListSyntax = [],
+@inlinable public func _typealias(modifiers: DeclModifierListSyntax = [],
+                                  _ name: String,
                                   _ aliased: TypeSyntax) -> DeclSyntax {
   qdecls.typealias(
     name,
