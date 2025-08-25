@@ -50,18 +50,18 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
       .initializersIncludingMacroGenerated2
       .compactMap { tryInit(originalInitializerDecl: $0, typeName: typeName) }
 
-    if let someEnum = declaration.asEnum {
-      tryInits += tryInitObject(for: someEnum, enumDecl: declaration).asSequence
+    if let someEnum = declaration.as(EnumDeclSyntax.self) {
+      tryInits += tryInitObject(enumDecl: someEnum).asSequence
     }
+
+//    if let someEnum = declaration.asEnum {
+//      tryInits += tryInitObject(for: someEnum, enumDecl: declaration).asSequence
+//    }
 
     return tryInits
   }
 
-  private static func tryInitObject(for someEnum: Enum,
-                                    enumDecl: DeclGroupSyntax) -> DeclSyntax? {
-    let nonTrivialCases2 = someEnum.nonTrivialCases
-    guard nonTrivialCases2.isNotEmpty else { return nil }
-
+  private static func tryInitObject(enumDecl: EnumDeclSyntax) -> DeclSyntax? {
     let nonTrivialCases = enumDecl.memberBlock.members
       .compactMap { $0.decl.as(EnumCaseDeclSyntax.self) }
       .filter { $0.elements.compactMap { $0.parameterClause?.parameters}.isNotEmpty }
@@ -74,7 +74,7 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
           tryInit(
             enumCaseDecl: nonTrivialCase,
             enumCaseElement: nonTrivialCase.elements.first!,
-            ofEnum: someEnum
+            enumDecl: enumDecl
           )!
         }
       }
@@ -83,14 +83,14 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
 
   private static func tryInit(enumCaseDecl: EnumCaseDeclSyntax,
                               enumCaseElement: EnumCaseElementSyntax,
-                              ofEnum someEnum: Enum) -> DeclSyntax? {
+                              enumDecl: EnumDeclSyntax) -> DeclSyntax? {
     guard enumCaseElement.parameterClause?.parameters.isNotEmpty == true else { return nil }
 
     return tryInit(
       originalFunctionDecl: .init(
         leadingTrivia: enumCaseDecl.leadingTrivia,
         attributes: enumCaseDecl.attributes,
-        modifiers: enumCaseDecl.modifiers,
+        modifiers: enumDecl.modifiers,
         name: enumCaseElement.name,
         genericParameterClause: nil,
         signature: .init(
@@ -108,14 +108,14 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
             )
           ),
           returnClause: ReturnClauseSyntax(
-            type: _t(someEnum.name)
+            type: _t(enumDecl.name)
           )
         ),
         genericWhereClause: nil,
         body: nil,
         trailingTrivia: enumCaseDecl.trailingTrivia
       ),
-      typeName: _token(someEnum.name)
+      typeName: enumDecl.name
     )
 
 //    return tryInit(
