@@ -203,12 +203,20 @@ extension TypeSyntax {
       )
     )
   }
+
+  var withoutEscapingIfNecessary: TypeSyntax {
+    guard var result = self.as(AttributedTypeSyntax.self) else { return self }
+
+    result.attributes = []
+
+    return TypeSyntax(result)
+  }
 }
 
 
 private func escapingAttribute() -> AttributeSyntax {
   AttributeSyntax(
-    atSignToken: .atSignToken(),
+    atSign: .atSignToken(),
     attributeName: IdentifierTypeSyntax(name: .identifier("escaping"))
   )
 }

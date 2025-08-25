@@ -8,6 +8,7 @@ import SwiftSyntaxMacros
 
 
 enum VisibilityModifier: String, Equatable, Hashable, Codable {
+
   case `private`
   case `fileprivate`
   case `internal`

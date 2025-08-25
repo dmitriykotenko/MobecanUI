@@ -22,6 +22,12 @@ extension MemberwiseType {
     visibilityModifiers.compactMap(\.asMemberwiseInitVisibilityModifier)
   }
 
+  var visibilityPrefix3: DeclModifierListSyntax {
+    .init(
+      visibilityModifiers.compactMap(\.asMemberwiseInitVisibilityModifier)
+    )
+  }
+
   func genericArgumentsConformanceRequirement2(protocolName: String) -> String? {
     (genericArguments?.parameters.map(\.name.text) ?? [])
       .map { "\($0): \(protocolName)" }

@@ -31,47 +31,21 @@ extension MemberwiseInitMacro2: MemberMacro, MobecanDeclaration {
 extension MemberwiseType {
 
   func buildMemberwiseInitializer2() -> InitializerDeclSyntax {
-    InitializerDeclSyntax(
-      modifiers: .init(visibilityPrefix2),
-      initKeyword: .keyword(.`init`),
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax(
-          parameters: FunctionParameterListSyntax {
-            for p in storedProperties where p.canBeInitialized {
-              FunctionParameterSyntax(
-                leadingTrivia: .newline,
-                firstName: p.name,
-                colon: .colonToken(),
-                type: p.typeDeclWithEscapingIfNecessary,
-                defaultValue: p.defaultValueDecl ?? p.implicitDefaultValueDecl,
-                trailingComma: .commaToken()
-              )
-            }
-          }
-        )
-      ),
-      body: CodeBlockSyntax(
-        leftBrace: .leftBraceToken(),
-        statements: CodeBlockItemListSyntax {
-          for p in storedProperties where p.canBeInitialized {
-            CodeBlockItemSyntax(
-              item: .expr(
-                ExprSyntax(SequenceExprSyntax {
-                  ExprSyntax(MemberAccessExprSyntax(
-                    base: DeclReferenceExprSyntax(baseName: .keyword(.self)),
-                    period: .periodToken(),
-                    declName: DeclReferenceExprSyntax(baseName: p.name)
-                  ))
-                  ExprSyntax(AssignmentExprSyntax(equal: .equalToken()))
-                  ExprSyntax(DeclReferenceExprSyntax(baseName: p.name))
-                })
-              )
-            )
-          }
-        },
-        rightBrace: .rightBraceToken()
-      )
-    )
+    _init(
+      modifiers: visibilityPrefix3,
+      params: qparamsList {
+        for p in storedProperties where p.canBeInitialized {
+          _funcParam(
+            p.name,
+            p.typeDeclWithEscapingIfNecessary,
+            default: p.defaultValueDecl ?? p.implicitDefaultValueDecl
+          )
+        }
+    }) {
+      for p in storedProperties where p.canBeInitialized {
+        _self_dot(p.name) ^== _ref(p.name)
+      }
+    }
   }
 
   func buildMemberwiseInitializer() -> InitializerDeclSyntax {

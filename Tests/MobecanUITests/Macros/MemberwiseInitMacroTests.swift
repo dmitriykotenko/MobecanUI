@@ -8,6 +8,44 @@ import MobecanUI
 
 final class MemberwiseInitMacroTests: MacrosTester {
 
+  func testPerformance1() {
+    if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
+      measure {
+        for _ in 1...100 {
+          checkThat(
+            code: """
+            @MemberwiseInit
+            open class Triple {
+            
+              public var first: String = ""
+              private var second: Int
+              let third: Double
+            }
+            """,
+            expandsTo: """
+            open class Triple {
+            
+              public var first: String = ""
+              private var second: Int
+              let third: Double
+            
+              public init(
+                first: String = "",
+                second: Int,
+                third: Double
+              ) {
+                self.first = first
+                self.second = second
+                self.third = third
+              }
+            }
+            """
+          )
+        }
+      }
+    }
+  }
+
   func testEmptyStruct() {
     checkThat(
       code: "@MemberwiseInit struct Empty {}",

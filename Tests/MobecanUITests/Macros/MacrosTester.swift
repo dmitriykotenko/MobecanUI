@@ -34,7 +34,9 @@ class MacrosTester: XCTestCase {
     let mangledMarcoNames = [
       "URL": "15MobecanUIMacros8UrlMacroV",
       "MemberwiseInit": "15MobecanUIMacros19MemberwiseInitMacroV",
+      "MemberwiseInit2": "15MobecanUIMacros20MemberwiseInitMacro2V",
       "TryInit": "15MobecanUIMacros12TryInitMacroV",
+      "TryInit2": "15MobecanUIMacros13TryInitMacro2V",
       "DerivesCodingKeysReflector": "15MobecanUIMacros24CodingKeysReflectorMacroV",
       "DerivesAutoGeneratable": "15MobecanUIMacros20AutoGeneratableMacroV"
     ]

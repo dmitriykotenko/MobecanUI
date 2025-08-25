@@ -27,22 +27,72 @@ extension CodingKeysReflectorMacro: MemberMacro {
 
     let members = declaration.memberBlock.members
     let variables = members.compactMap { $0.decl.as(VariableDeclSyntax.self) }
-    let storedProperties = variables.compactMap(\.asStoredProperty)
+    let variables2 = variables.filter(\.isStoredProperty)
+//    let storedProperties = variables.compactMap(\.asStoredProperty)
 
     let codingKeysEnum = declaration.findNestedEnum(name: "CodingKeys")
     let codingCases = codingKeysEnum?.simplifiedCases.asSet ?? []
 
-    let correctedStoredProperties =
-      storedProperties.map { $0.replacingName(usingCodingKeys: codingCases) }
+    func getCodingKey(_ variable: VariableDeclSyntax) -> String {
+      codingKey(variable: variable, codingKeys: codingCases)
+    }
 
-    let codingKeyTypes =
-      dictionaryLiteral(keysAndValues: correctedStoredProperties.map {($0.name, $0.type + ".self") })
+//    let correctedStoredProperties =
+//      storedProperties.map { $0.replacingName(usingCodingKeys: codingCases) }
+//
+//    let codingKeyTypes =
+//      dictionaryLiteral(keysAndValues: correctedStoredProperties.map {($0.name, $0.type + ".self") })
 
-    return """
-      static var codingKeyTypes: [String: CodingKeysReflector.Type] {
-      \(raw: "  ".prependingToLines(of: codingKeyTypes))
+//    return """
+//      static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+//      \(raw: "  ".prependingToLines(of: codingKeyTypes))
+//      }
+//      """
+
+//    static var codingKeyTypes: [String: CodingKeysReflector.Type] {
+//      [
+//        "id": String?.self,
+//        "title": String.self,
+//        "modified_at": Int64.self
+//      ]
+//    }
+
+    return _computedVar(
+      "codingKeyTypes",
+      modifiers: [m.static],
+      _t(_dictionary: _t("String"), _t("CodingKeysReflector")._t("Type"))
+    ) {
+      if variables2.isEmpty {
+        _emptyDictionaryLiteral
+      } else {
+        _dictionaryLiteral {
+          for variable in variables2 {
+            _string(getCodingKey(variable)) <- _e(variable.aType!).dot("self")
+          }
+        }
+//        q.e.dictionaryLiteral(.init(variables2.enumerated().map { index, variable in
+//          DictionaryElementSyntax(
+//            leadingTrivia: .newline,
+//            key: _string(
+//              codingKey(variable: variable, codingKeys: codingCases)
+//            ),
+//            colon: .colonToken(trailingTrivia: .space),
+//            value: _e(variable.aType!).dot("self"),
+//            trailingComma: variables2.trailingComma(forIndex: index),
+//            trailingTrivia: index == variables2.count - 1 ? .newline : nil
+//          )
+//        }))
       }
-      """
+    }
+  }
+
+  static func codingKey(variable: VariableDeclSyntax,
+                        codingKeys: Set<EnumCase>) -> String {
+    let rawValue = codingKeys.first { $0.name == variable.aName?.text }?.rawValue?
+      .trimmingCharacters(in: .init(charactersIn: "\""))
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+
+    return rawValue ?? variable.aName!.text
   }
 }
 
@@ -60,5 +110,19 @@ extension CodingKeysReflectorMacro: ExtensionMacro {
         to: declaration.isRawValueRepresentableEnum ? "EmptyCodingKeysReflector" : "SimpleCodingKeysReflector"
       )
     ]
+  }
+}
+
+
+extension VariableDeclSyntax {
+
+  var aName: TokenSyntax? {
+    bindings.first?
+      .pattern.as(IdentifierPatternSyntax.self)?
+      .identifier
+  }
+
+  var aType: TypeSyntax? {
+    bindings.first?.typeAnnotation?.type
   }
 }

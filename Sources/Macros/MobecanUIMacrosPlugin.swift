@@ -13,6 +13,7 @@ struct MobecanUIMacrosPlugin: CompilerPlugin {
     MemberwiseInitMacro.self,
     MemberwiseInitMacro2.self,
     TryInitMacro.self,
+    TryInitMacro2.self,
     CodingKeysReflectorMacro.self,
     AutoGeneratableMacro.self,
   ]

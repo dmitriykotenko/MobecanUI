@@ -16,7 +16,7 @@ public macro URL(_ string: String) -> URL = #externalMacro(
 /// как и сам класс или сама структура.
 @attached(member, names: named(init))
 @available(swift 5.9)
-public macro MemberwiseInit() = #externalMacro(
+public macro MemberwiseInit2() = #externalMacro(
   module: "MobecanUIMacros",
   type: "MemberwiseInitMacro2"
 )
@@ -27,7 +27,7 @@ public macro MemberwiseInit() = #externalMacro(
 /// как и сам класс или сама структура.
 @attached(member, names: named(init))
 @available(swift 5.9)
-public macro MemberwiseInit2() = #externalMacro(
+public macro MemberwiseInit() = #externalMacro(
   module: "MobecanUIMacros",
   type: "MemberwiseInitMacro"
 )
@@ -56,9 +56,16 @@ public macro MemberwiseInit2() = #externalMacro(
 /// ```
 @attached(member, names: named(tryInit))
 @available(swift 5.9)
-public macro TryInit() = #externalMacro(
+public macro TryInit2() = #externalMacro(
   module: "MobecanUIMacros",
   type: "TryInitMacro"
+)
+
+@attached(member, names: named(tryInit))
+@available(swift 5.9)
+public macro TryInit() = #externalMacro(
+  module: "MobecanUIMacros",
+  type: "TryInitMacro2"
 )
 
 

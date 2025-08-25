@@ -94,7 +94,6 @@ extension DeclGroupSyntax {
     + macroGeneratedMemberwiseInitializer.asSequence
   }
 
-
   var explicitInitializers: [Function] {
     memberBlock.members
       .compactMap { $0.decl.as(InitializerDeclSyntax.self) }
@@ -105,6 +104,50 @@ extension DeclGroupSyntax {
     (asStruct?.inferredMemberwiseInitializer)
       .filter { _ in explicitInitializers.isEmpty }
       .filter { _ in macroGeneratedMemberwiseInitializer == nil }
+  }
+
+  var initializersIncludingMacroGenerated2: [InitializerDeclSyntax] {
+    explicitInitializers2
+    + implicitInitializer2.asSequence
+    + macroGeneratedMemberwiseInitializer2.asSequence
+  }
+
+  var explicitInitializers2: [InitializerDeclSyntax] {
+    memberBlock.members.compactMap { $0.decl.as(InitializerDeclSyntax.self) }
+  }
+
+  var implicitInitializer2: InitializerDeclSyntax? {
+    inferredMemberwiseInitializer4
+      .filter { _ in explicitInitializers2.isEmpty }
+      .filter { _ in macroGeneratedMemberwiseInitializer == nil }
+  }
+}
+
+
+extension DeclGroupSyntax {
+
+  var visibilityPrefix3: DeclModifierListSyntax {
+    .init(
+      modifiers.compactMap(\.asMemberwiseInitVisibilityModifier)
+    )
+  }
+
+  var inferredMemberwiseInitializer4: InitializerDeclSyntax? {
+    _init(
+      modifiers: visibilityPrefix3,
+      params: qparamsList {
+        for p in storedProperties2 where p.canBeInitialized {
+          _funcParam(
+            p.name,
+            p.typeDeclWithEscapingIfNecessary,
+            default: p.defaultValueDecl ?? p.implicitDefaultValueDecl
+          )
+        }
+      }) {
+        for p in storedProperties where p.canBeInitialized {
+          _self_dot(p.name) ^== _ref(p.name)
+        }
+      }
   }
 }
 
