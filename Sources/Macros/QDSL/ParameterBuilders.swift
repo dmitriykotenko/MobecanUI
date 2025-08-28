@@ -37,15 +37,13 @@ public struct qparams {
 }
 
 
-public func qparamsList(@qparams _ make: () -> [FunctionParameterSyntax]) -> FunctionParameterListSyntax {
+public func _funcParams(@qparams _ make: () -> [FunctionParameterSyntax]) -> FunctionParameterListSyntax {
   let list = make()
 
   return FunctionParameterListSyntax(
     list.enumerated().map { index, parameter in
-      parameter.with(
-        \.trailingComma,
-        index < list.count - 1 ? .commaToken(trailingTrivia: .space) : nil
-      )
+      parameter
+        .with(\.trailingComma, list.trailingComma(forIndex: index))
     }
   )
 }

@@ -33,7 +33,7 @@ extension MemberwiseType {
   func buildMemberwiseInitializer2() -> InitializerDeclSyntax {
     _init(
       modifiers: visibilityPrefix3,
-      params: qparamsList {
+      params: _funcParams {
         for p in storedProperties where p.canBeInitialized {
           _funcParam(
             p.name,

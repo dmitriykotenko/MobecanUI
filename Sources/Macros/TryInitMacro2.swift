@@ -97,13 +97,7 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
           parameterClause: .init(
             parameters: .init(
               enumCaseElement.parameterClause?.parameters.enumerated().map { index, parameter in
-                FunctionParameterSyntax(
-                  firstName: parameter.firstName ?? .wildcardToken(),
-                  secondName: parameter.firstName ?? parameter.secondName ?? _token("_\(index)"),
-                  type: parameter.type,
-                  defaultValue: parameter.defaultValue,
-                  trailingComma: .commaToken()
-                )
+                parameter.asFunctionParameter(index: index)
               } ?? []
             )
           ),
@@ -151,11 +145,11 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
           + [
             _gen.param("SomeError", inherits: _t("ComposableError"))
           ]),
-        params: .init(
-          parameters.enumerated().map { index, p in
+        params: _funcParams {
+          for (index, p) in parameters.enumerated() {
             p.asTryInitParameter(index: index, error: "SomeError")
           }
-        ),
+        },
         returns: _t(
           _result:
             _t(typeName).optIf(originalInitializerDecl.isOptional),
@@ -219,7 +213,6 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
                   }
                 }
               )
-              .asForceUnwrapped(if: originalInitializerDecl.doesReturnOptional)
             )
             .asForceTry
           )
@@ -248,11 +241,11 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
           + [
             _gen.param("SomeError", inherits: _t("ComposableError"))
           ]),
-        params: .init(
-          parameters.enumerated().map { index, p in
+        params: _funcParams {
+          for (index, p) in parameters.enumerated() {
             p.asTryInitParameter(index: index, error: "SomeError")
           }
-        ),
+        },
         returns: _t(
           _result:
             _t(typeName).optIf(originalFunctionDecl.doesReturnOptional),
@@ -312,7 +305,6 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
                   }
                 }
               )
-              .asForceUnwrapped(if: originalFunctionDecl.doesReturnOptional)
             )
             .asForceTry
           )
@@ -456,5 +448,19 @@ extension FunctionDeclSyntax {
 
   var doesReturnOptional: Bool {
     signature.returnClause?.type.is(OptionalTypeSyntax.self) == true
+  }
+}
+
+
+extension EnumCaseParameterSyntax {
+
+  func asFunctionParameter(index: Int) -> FunctionParameterSyntax {
+    .init(
+      firstName: firstName ?? .wildcardToken(),
+      secondName: firstName == nil ? _token("_\(index)") : nil,
+      type: type,
+      defaultValue: defaultValue,
+      trailingComma: .commaToken()
+    )
   }
 }

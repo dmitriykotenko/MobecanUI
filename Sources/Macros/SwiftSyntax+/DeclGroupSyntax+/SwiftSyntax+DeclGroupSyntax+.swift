@@ -135,7 +135,7 @@ extension DeclGroupSyntax {
   var inferredMemberwiseInitializer4: InitializerDeclSyntax? {
     _init(
       modifiers: visibilityPrefix3,
-      params: qparamsList {
+      params: _funcParams {
         for p in storedProperties2 where p.canBeInitialized {
           _funcParam(
             p.name,

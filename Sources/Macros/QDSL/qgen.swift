@@ -98,7 +98,7 @@ public enum qdecl_ext {
   public static func `func`(_ name: String,
                             modifiers: DeclModifierListSyntax = [],
                             generics: GenericParameterClauseSyntax? = nil,
-                            params: FunctionParameterListSyntax = qparamsList { },
+                            params: FunctionParameterListSyntax = _funcParams { },
                             returns: TypeSyntax? = nil,
                             whereClause: GenericWhereClauseSyntax? = nil,
                             @qstmts body: () -> [CodeBlockItemSyntax]) -> FunctionDeclSyntax {
@@ -117,7 +117,7 @@ public enum qdecl_ext {
   public static func `func`(_ name: TokenSyntax,
                             modifiers: DeclModifierListSyntax = [],
                             generics: GenericParameterClauseSyntax? = nil,
-                            params: FunctionParameterListSyntax = qparamsList { },
+                            params: FunctionParameterListSyntax = _funcParams { },
                             returns: TypeSyntax? = nil,
                             whereClause: GenericWhereClauseSyntax? = nil,
                             @qstmts body: () -> [CodeBlockItemSyntax]) -> FunctionDeclSyntax {

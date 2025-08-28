@@ -81,7 +81,7 @@ public enum q {
     public static func forceTry(_ throwingExpr: ExprSyntaxProtocol) -> ExprSyntax {
       ExprSyntax(TryExprSyntax(
         tryKeyword: tok.keyword(.try),
-        questionOrExclamationMark: .exclamationMarkToken(),
+        questionOrExclamationMark: .exclamationMarkToken(trailingTrivia: .space),
         expression: throwingExpr
       ))
     }
@@ -377,7 +377,7 @@ extension TypeSyntax {
 @inlinable public func _func(_ name: String,
                              modifiers: DeclModifierListSyntax = [],
                              generics: GenericParameterClauseSyntax? = nil,
-                             params: FunctionParameterListSyntax = qparamsList { },
+                             params: FunctionParameterListSyntax = _funcParams { },
                              returns: TypeSyntax? = nil,
                              whereClause: GenericWhereClauseSyntax? = nil,
                              @qstmts body: () -> [CodeBlockItemSyntax]) -> FunctionDeclSyntax {
@@ -395,7 +395,7 @@ extension TypeSyntax {
 @inlinable public func _func(_ name: TokenSyntax,
                              modifiers: DeclModifierListSyntax = [],
                              generics: GenericParameterClauseSyntax? = nil,
-                             params: FunctionParameterListSyntax = qparamsList { },
+                             params: FunctionParameterListSyntax = _funcParams { },
                              returns: TypeSyntax? = nil,
                              whereClause: GenericWhereClauseSyntax? = nil,
                              @qstmts body: () -> [CodeBlockItemSyntax]) -> FunctionDeclSyntax {
