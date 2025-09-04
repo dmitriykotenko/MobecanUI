@@ -4,7 +4,7 @@ import RxSwift
 import UIKit
 
 
-public protocol MiniModule {
+public protocol MiniModule: AnyObject {
   
   var uiView: UIView { get }
   var demonstrator: Demonstrator? { get set }
