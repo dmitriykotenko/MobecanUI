@@ -38,7 +38,7 @@ open class EmptyTableViewSticker: UITableViewHeaderFooterView, HeightAwareView {
     mainSubview?.layoutIfNeeded()
   }
 
-  open func heightFor(value: EquatableVoid,
+  open func heightFor(value: EVoid,
                       width: CGFloat) -> CGFloat {
     height
   }

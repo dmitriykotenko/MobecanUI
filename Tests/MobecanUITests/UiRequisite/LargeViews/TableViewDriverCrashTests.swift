@@ -18,7 +18,7 @@ class TableViewDriverCrashTests: XCTestCase {
 
     window.addSubview(tableView)
 
-    let driver = SimpleTableViewDriver<EquatableVoid, EquatableVoid>(
+    let driver = SimpleTableViewDriver<EVoid, EVoid>(
       tableView: tableView,
       spacing: 0,
       automaticReloading: false
@@ -29,13 +29,13 @@ class TableViewDriverCrashTests: XCTestCase {
 }
 
 
-extension EquatableVoid: ViewRepresentable {
-  public typealias ContentView = EquatableVoidContentView
+extension EVoid: ViewRepresentable {
+  public typealias ContentView = EVoidContentView
 }
 
 
-public class EquatableVoidContentView: UIView, DataView, EventfulView {
+public class EVoidContentView: UIView, DataView, EventfulView {
 
-  public var viewEvents: Observable<EquatableVoid> = .never()
-  @RxUiInput public var value: AnyObserver<EquatableVoid?>
+  public var viewEvents: Observable<EVoid> = .never()
+  @RxUiInput public var value: AnyObserver<EVoid?>
 }

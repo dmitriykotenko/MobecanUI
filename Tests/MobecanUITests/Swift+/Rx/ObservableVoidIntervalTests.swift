@@ -12,11 +12,11 @@ final class ObservableVoidIntervalTests: XCTestCase {
   func test() {
     let scheduler = TestScheduler(initialClock: 0)
     let signal: Observable<Void> = Observable.voidInterval(33.seconds, scheduler: scheduler).take(4)
-    let listener = scheduler.createObserver(EquatableVoid.self)
+    let listener = scheduler.createObserver(EVoid.self)
 
     let disposeBag = DisposeBag()
 
-    disposeBag { signal.map { EquatableVoid.instance } ==> listener }
+    disposeBag { signal.map { EVoid.instance } ==> listener }
 
     scheduler.start()
 

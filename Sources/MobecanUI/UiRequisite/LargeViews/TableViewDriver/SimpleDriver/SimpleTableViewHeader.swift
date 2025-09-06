@@ -10,7 +10,7 @@ public enum SimpleTableViewHeader {
 }
 
 
-public extension TableViewSection where Header == SimpleTableViewHeader?, Footer == EquatableVoid {
+public extension TableViewSection where Header == SimpleTableViewHeader?, Footer == EVoid {
 
   static var loadingInProgress: TableViewSection<Header, Element, Footer> {
     .init(
@@ -48,7 +48,7 @@ public extension TableViewSection where Header == SimpleTableViewHeader?, Footer
 
 public extension Array {
   
-  func withTitle(_ title: String) -> TableViewSection<SimpleTableViewHeader?, Element, EquatableVoid> {
+  func withTitle(_ title: String) -> TableViewSection<SimpleTableViewHeader?, Element, EVoid> {
     .init(
       header: .string(title),
       elements: self,
@@ -56,7 +56,7 @@ public extension Array {
     )
   }
   
-  func withoutTitle() -> TableViewSection<SimpleTableViewHeader?, Element, EquatableVoid> {
+  func withoutTitle() -> TableViewSection<SimpleTableViewHeader?, Element, EVoid> {
     .init(
       header: nil, 
       elements: self,

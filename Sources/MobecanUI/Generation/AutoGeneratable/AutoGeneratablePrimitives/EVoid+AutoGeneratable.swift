@@ -4,7 +4,7 @@ import Foundation
 import RxSwift
 
 
-extension EquatableVoid: AutoGeneratable {
+extension EVoid: AutoGeneratable {
 
   public static var defaultGenerator: MobecanGenerator<Self> { .fixed(.instance) }
 }

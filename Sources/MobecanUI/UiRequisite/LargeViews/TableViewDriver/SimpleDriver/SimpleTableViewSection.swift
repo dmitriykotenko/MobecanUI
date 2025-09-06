@@ -1,10 +1,10 @@
 // Copyright © 2020 Mobecan. All rights reserved.
 
 
-public typealias SimpleTableViewSection<Element> = TableViewSection<SimpleTableViewHeader?, Element, EquatableVoid>
+public typealias SimpleTableViewSection<Element> = TableViewSection<SimpleTableViewHeader?, Element, EVoid>
 
 
-public extension TableViewSection where Header == SimpleTableViewHeader?, Footer == EquatableVoid {
+public extension TableViewSection where Header == SimpleTableViewHeader?, Footer == EVoid {
 
   init(header: Header = nil,
        elements: [Element] = []) {

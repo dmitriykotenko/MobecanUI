@@ -11,7 +11,7 @@ open class SimpleTableViewDriver<Element, CellEvent>: TableViewDriver<
   SimpleTableViewHeader?,
   Void,
   SimpleTableViewSticker,
-  EquatableVoid,
+  EVoid,
   Void,
   EmptyTableViewSticker
 > {
