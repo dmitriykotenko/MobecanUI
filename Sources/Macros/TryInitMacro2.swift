@@ -90,7 +90,7 @@ extension TryInitMacro2: MemberMacro, MobecanDeclaration {
       originalFunctionDecl: .init(
         leadingTrivia: enumCaseDecl.leadingTrivia,
         attributes: enumCaseDecl.attributes,
-        modifiers: enumDecl.modifiers,
+        modifiers: enumDecl.modifiers.filterNot { $0.name.tokenKind == .keyword(.indirect) },
         name: enumCaseElement.name,
         genericParameterClause: nil,
         signature: .init(
