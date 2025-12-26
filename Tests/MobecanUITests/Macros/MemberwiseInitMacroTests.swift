@@ -166,6 +166,26 @@ final class MemberwiseInitMacroTests: MacrosTester {
     )
   }
 
+  func testClassWithLazyVars() {
+    checkThat(
+      code: """
+      @MemberwiseInit class AlmostEmpty {
+        lazy var uselessLazyVar: Int = 0
+      }
+      """,
+      expandsTo: """
+      class AlmostEmpty {
+        lazy var uselessLazyVar: Int = 0
+      
+        init(
+      
+        ) {
+        }
+      }
+      """
+    )
+  }
+
   func testClassWithClosuresAmongStoredProperties() {
     checkThat(
       code: """
