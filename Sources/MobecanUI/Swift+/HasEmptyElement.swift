@@ -10,12 +10,6 @@ public protocol HasEmptyElement {
 }
 
 
-extension String: HasEmptyElement {
-
-  public static func emptyElement() -> String { "" }
-}
-
-
 extension Optional: HasEmptyElement {
 
   public static func emptyElement() -> Wrapped? { nil }
