@@ -5,7 +5,6 @@ import RxSwift
 
 /// Is analogous to Swift.Result, but has an additional `.hybrid` case,
 /// containing both Success value and error.
-@DerivesAutoGeneratable
 public enum SoftResult<Success, Failure: Error> {
 
   case success(Success)

@@ -3,7 +3,6 @@
 import RxSwift
 
 
-@DerivesAutoGeneratable
 public struct Queried<Query, Result>: Lensable, CustomStringConvertible {
 
   public var query: Query

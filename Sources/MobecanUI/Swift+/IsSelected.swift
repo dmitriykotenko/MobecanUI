@@ -3,7 +3,6 @@
 import RxSwift
 
 
-@DerivesAutoGeneratable
 public struct IsSelected<Value>: Lensable {
   
   public var value: Value

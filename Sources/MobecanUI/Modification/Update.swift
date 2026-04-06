@@ -3,7 +3,6 @@
 import RxSwift
 
 
-@DerivesAutoGeneratable
 public struct Update<Value>: Lensable, CustomStringConvertible {
 
   public var old: Value

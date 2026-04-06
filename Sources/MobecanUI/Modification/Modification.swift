@@ -3,7 +3,6 @@
 import RxSwift
 
 
-@DerivesAutoGeneratable
 public enum Modification<Value>: CustomStringConvertible {
 
   case create(Value)
