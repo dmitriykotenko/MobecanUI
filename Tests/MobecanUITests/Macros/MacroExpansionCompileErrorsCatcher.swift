@@ -85,7 +85,8 @@ class MacroExpansionCompileErrorsCatcher {
     case ddd(Int, Int, final: String)
   }
 
-  @DerivesAutoGeneratable
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
+//  @DerivesAutoGeneratable
   enum GenericEnum<BBB, DDD> {
     case aaa
     case bbb(BBB)
@@ -94,7 +95,8 @@ class MacroExpansionCompileErrorsCatcher {
   }
 
 
-  @DerivesAutoGeneratable
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
+//  @DerivesAutoGeneratable
   enum Subject<Animal, Human> {
     case legalPerson
     case animal(Animal)
