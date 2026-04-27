@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/dmitriykotenko/swift-syntax",
       "state" : {
-        "branch" : "feature/swift6.1_ios12",
-        "revision" : "4060788cec7efe6d0921937726d0b522605797d5"
+        "branch" : "feature/swift6.2.2_ios12",
+        "revision" : "780088bf717e923209849d461c39c5a6f3cb5e8a"
       }
     },
     {

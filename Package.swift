@@ -14,7 +14,7 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/swift6.1_ios12"),
+    .package(url: "https://github.com/dmitriykotenko/swift-syntax", branch: "feature/swift6.2.2_ios12"),
     .package(url: "https://github.com/pointfreeco/swift-nonempty", .upToNextMajor(from: "0.4.0")),
     .package(url: "https://github.com/dmitriykotenko/swift-custom-dump", branch: "ios12xcode16"),
     .package(url: "https://github.com/ReactiveX/RxSwift", from: .init(6, 2, 0)),
