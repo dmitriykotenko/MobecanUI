@@ -3,6 +3,7 @@
 import RxSwift
 
 
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
 extension Queried: AutoGeneratable where Query: AutoGeneratable, Result: AutoGeneratable {
 
   public final class BuiltinGenerator: MobecanGenerator<Queried<Query, Result>> {

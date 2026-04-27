@@ -3,6 +3,7 @@
 import RxSwift
 
 
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
 public struct IsSelected<Value>: Lensable {
   
   public var value: Value

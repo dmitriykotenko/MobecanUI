@@ -3,8 +3,7 @@
 import RxSwift
 
 
-/// Реализовано вручную, потому что Xcode 26.3 зацикливается
-/// на `@DerivesAutoGeneratable` для generic enum `SoftResult<Success, Failure: Error>`.
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
 extension SoftResult: AutoGeneratable where Success: AutoGeneratable, Failure: AutoGeneratable {
 
   public final class BuiltinGenerator: MobecanGenerator<SoftResult<Success, Failure>> {

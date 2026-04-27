@@ -3,6 +3,7 @@
 import RxSwift
 
 
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
 /// Is analogous to Swift.Result, but has an additional `.hybrid` case,
 /// containing both Success value and error.
 public enum SoftResult<Success, Failure: Error> {

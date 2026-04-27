@@ -3,6 +3,7 @@
 import RxSwift
 
 
+// TODO: Вернуть макрос @DerivesAutoGeneratable, когда придумаю, как подружить его с Xcode 26
 public struct Queried<Query, Result>: Lensable, CustomStringConvertible {
 
   public var query: Query
