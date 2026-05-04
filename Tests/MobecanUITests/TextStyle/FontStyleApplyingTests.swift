@@ -32,6 +32,14 @@ class FontStyleApplyingTests: XCTestCase {
     )
   }
 
+  func testItalicApplying() {
+    XCTAssertEqual(
+      verdanaBold50[\.traits, .traitItalic].apply(to: systemFont).fontName,
+      "Verdana-BoldItalic",
+      "FontStyle's 'Italic' trait is applied incorrectly"
+    )
+  }
+
   static var allTests = [
     ("Test that family name is applied correctly", testFamilyNameApplying),
     ("Test that family name and weight are applied correctly", testFamilyNameAndWeightApplying),

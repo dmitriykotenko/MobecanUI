@@ -86,7 +86,7 @@ public struct FontStyle: Lensable {
       let rawOldValue = (newTraits[.symbolic] as? NSNumber) ?? NSNumber(0)
       let oldValue = FontTraits(rawValue: rawOldValue.uint32Value)
       
-      newTraits[.symbolic] = oldValue.union(newValue)
+      newTraits[.symbolic] = oldValue.union(newValue).rawValue
       newAttributes[.traits] = newTraits
     }
   }
