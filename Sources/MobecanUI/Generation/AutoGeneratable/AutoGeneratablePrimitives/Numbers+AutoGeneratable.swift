@@ -78,7 +78,5 @@ extension Double: AutoGeneratable {
 
 extension Decimal: AutoGeneratable {
 
-  public static var defaultGenerator: MobecanGenerator<Self> {
-    Double.defaultGenerator.map { Decimal($0) }
-  }
+  public static var defaultGenerator: MobecanGenerator<Self> { .pure { Self.random } }
 }

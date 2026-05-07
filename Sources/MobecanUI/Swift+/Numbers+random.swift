@@ -1,5 +1,6 @@
 // Copyright © 2024 Mobecan. All rights reserved.
 
+import Foundation
 import RxSwift
 
 
@@ -85,5 +86,53 @@ public extension Double {
     Bool.random() ?
       .random(in: -Double.greatestFiniteMagnitude...0) :
       .random(in: 0...Double.greatestFiniteMagnitude)
+  }
+}
+
+
+public extension Decimal {
+
+  static var random: Decimal { randomAcrossFoundationRange() }
+
+  static func randomAcrossFoundationRange<Generator: RandomNumberGenerator>(
+    using generator: inout Generator
+  ) -> Decimal {
+    // Иногда возвращаем ноль отдельно,
+    // потому что схема ниже генерирует только ненулевые числа.
+    if Int.random(in: 0..<1000, using: &generator) == 0 { return 0 }
+
+    let isNegative = Bool.random(using: &generator)
+
+    // Decimal / NSDecimalNumber: мантисса до 38 десятичных цифр.
+    let digitCount = Int.random(in: 1...38, using: &generator)
+
+    // Первая цифра не ноль, чтобы не получать неканонические варианты
+    // вроде 00000123e10.
+    let firstDigit = Int.random(in: 1...9, using: &generator)
+
+    let tailDigits: [Int] = (1..<digitCount).map { _ in
+      .random(in: 0...9, using: &generator)
+    }
+
+    let digits = ([firstDigit] + tailDigits).mkString()
+
+    // Decimal / NSDecimalNumber: exponent от -128 до 127.
+    let exponent = Int.random(in: -128...127, using: &generator)
+
+    let string = "\(isNegative ? "-" : "")\(digits)e\(exponent)"
+
+    guard let result = Decimal(string: string, locale: Locale(identifier: "en_US_POSIX")) else {
+      // Теоретически сюда не должны попасть, если Foundation соблюдает
+      // документированный диапазон.
+      return Self.randomAcrossFoundationRange(using: &generator)
+    }
+
+    return result
+  }
+
+  static func randomAcrossFoundationRange() -> Decimal {
+    var generator = SystemRandomNumberGenerator()
+
+    return randomAcrossFoundationRange(using: &generator)
   }
 }
