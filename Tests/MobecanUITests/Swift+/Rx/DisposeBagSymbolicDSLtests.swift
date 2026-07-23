@@ -36,4 +36,19 @@ final class DisposeBagSymbolicDSLtests: XCTestCase {
 
     XCTAssertEqual( try listener.value(), 42)
   }
+
+  func testRightArrowWithScheduler() {
+    let scheduler = TestScheduler(initialClock: 0)
+    let listener: BehaviorSubject<Int?> = .init(value: 17)
+
+    let disposeBag = DisposeBag()
+
+    disposeBag(scheduler) { Observable.just(42) ==> listener }
+
+    XCTAssertEqual( try listener.value(), 17)
+
+    scheduler.start()
+
+    XCTAssertEqual( try listener.value(), 42)
+  }
 }
