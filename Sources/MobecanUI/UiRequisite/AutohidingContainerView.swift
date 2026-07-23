@@ -5,13 +5,9 @@ import RxSwift
 import UIKit
 
 
-/// Automatically hides and shows itself when content view's visibility changes.
+/// Автоматически скрывает или показывает себя, когда меняется видимость контент-вьюшки.
 public class AutohidingContainerView: LayoutableView {
-  
-  private var visibilityListener: NSKeyValueObservation?
-  
-  private let disposeBag = DisposeBag()
-  
+
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
   public init(_ subview: UIView,
@@ -24,8 +20,6 @@ public class AutohidingContainerView: LayoutableView {
 
     self.layout = BoilerplateLayout(layout(subview)).withInsets(insets)
 
-    visibilityListener = subview.observe(\.isHidden, options: .initial) { [weak self] view, _ in
-      self?.isHidden = view.isHidden
-    }
+    withVisibility(derivedFrom: subview)
   }
 }

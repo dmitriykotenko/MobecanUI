@@ -16,6 +16,9 @@ open class LayoutableView: UIView {
     }
   }
 
+  private var visibilityListeners: [NSKeyValueObservation] = []
+  private var derivedIsVisible: (() -> Bool)?
+
   public required init?(coder: NSCoder) { interfaceBuilderNotSupportedError() }
 
   public init() {
@@ -59,13 +62,81 @@ open class LayoutableView: UIView {
     return self
   }
 
-  /// Makes the view transparent for clicks.
+  /// Делает вьюшку прозрачной для прикосновений.
   ///
-  /// Does the same as `isClickThroughEnabled(true)`, but has more concise name.
+  /// Полностью аналогичен `isClickThroughEnabled(true)`, но записывается короче.
   @discardableResult
   open func clickThrough() -> Self {
     self.isClickThroughEnabled = true
     return self
+  }
+
+  /// Автоматически подстраивает видимость вьюшки под видимости других указанных вьюшек:
+  /// каждый раз, когда у любой вьюшки из массива `views` меняется видимость,
+  /// видимость текущей вьюшки пересчитывается по формуле, указанной в `condition`.
+  ///
+  /// - Parameters:
+  ///   - views: Вьюшки, на основе которых надо подстраивать видимость.
+  ///   - condition: Определяет, как видимость текущей вьюшки зависит от видимостей вьюшек, указанных в `derivedFromViews`.
+  ///
+  /// - Warning: Если включена автоподстройка видимости,
+  /// опасно использовать ручное управление флагами `isVisible` и `isHidden`,
+  /// потому что будет сложно предсказать итоговую видимость.
+  ///
+  /// Пример использования:
+  /// ```
+  /// let stackView = UIView.hstack(memberViews)
+  ///
+  /// stackView.withVisibility(derivedFromViews: memberViews) { members in
+  ///   members.contains(\.isVisible)
+  /// }
+  /// ```
+  @discardableResult
+  open func withVisibility(derivedFromViews views: [UIView],
+                           condition: @escaping ([UIView]) -> Bool) -> Self {
+    visibilityListeners = []
+    derivedIsVisible = { condition(views) }
+
+    visibilityListeners = views.map { view in
+      view.observe(\.isHidden, options: [.initial, .new]) { [weak self] _, _ in
+        self?.updateDerivedVisibility()
+      }
+    }
+
+    updateDerivedVisibility()
+
+    return self
+  }
+
+  /// Автоматически подстраивает видимость вьюшки под видимость другой указанной вьюшки:
+  /// когда `view` становится скрытым, скрывает текущую вьюшку,
+  /// когда `view` становится видимым, показывает текущую вьюшку.
+  ///
+  /// - Parameters:
+  ///   - view: Вьюшка, на основе которой будет подстраиваться видимость
+  ///
+  /// - Warning: Если включена автоподстройка видимости,
+  /// опасно использовать ручное управление флагами `isVisible` и `isHidden`,
+  /// потому что будет сложно предсказать итоговую видимость.
+  @discardableResult
+  open func withVisibility(derivedFrom view: UIView) -> Self {
+    withVisibility(derivedFromViews: [view]) {
+      $0.first?.isVisible == true
+    }
+  }
+
+  /// Выключает установленную ранее автоматическую подстройку видимости.
+  @discardableResult
+  open func withoutDerivedVisibility() -> Self {
+    visibilityListeners = []
+    derivedIsVisible = nil
+    return self
+  }
+
+  private func updateDerivedVisibility() {
+    if let newIsVisible = derivedIsVisible?(), isVisible != newIsVisible {
+      isVisible = newIsVisible
+    }
   }
 }
 
