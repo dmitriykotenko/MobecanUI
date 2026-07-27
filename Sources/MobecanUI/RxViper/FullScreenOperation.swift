@@ -16,11 +16,12 @@ open class FullScreenOperation<Input, Output> {
               show initModule: @escaping (Input) -> ModuleDependency.OneTime<Output>,
               via demonstrator: @escaping () -> Demonstrator?,
               animating: Bool? = nil,
-              bindResultTo resultObserver: AnyObserver<Output> = .empty) {
+              bindResultTo resultObserver: AnyObserver<Output> = .empty,
+              scheduler: SchedulerType = MainScheduler.instance) {
     self.when = when
     
     let moduleAndOutput =
-      when.observe(on: MainScheduler.instance).map { initModule($0) }.share()
+      when.observe(on: scheduler).map { initModule($0) }.share()
 
     disposeBag {
       moduleAndOutput.flatMap(\.output) ==> resultObserver
