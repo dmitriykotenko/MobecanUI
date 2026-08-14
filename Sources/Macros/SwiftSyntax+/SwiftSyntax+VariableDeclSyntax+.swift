@@ -24,6 +24,16 @@ extension VariableDeclSyntax {
     && !isStatic
     && !isLazy
     && bindings.first?.accessorBlock == nil
+    && !hasAttribute(where: { $0.attributeName.trimmedDescription.contains("Rx") })
+  }
+
+  func hasAttribute(where condition: (AttributeSyntax) -> Bool) -> Bool {
+    attributes.contains {
+      switch $0 {
+      case .attribute(let attribute): condition(attribute)
+      case .ifConfigDecl: false
+      }
+    }
   }
 
   var asStoredProperty: StoredProperty? {
